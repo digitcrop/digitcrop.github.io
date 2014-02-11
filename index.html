@@ -4,13 +4,31 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>responsImg</title>
 <style media="all" type="text/css">
-.wrapper { font-family: 'Helvetica Neue', Helvetica, sans-serif; margin: 0 auto; max-width: 960px; width: 100%; }
-h1 { text-align: center; }
+.wrapper {
+	font-family: 'Helvetica Neue', Helvetica, sans-serif;
+	margin: 0 auto;
+	max-width: 960px;
+	width: 100%;
+}
+h1 {
+	text-align: center;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	font-size: 36px;
+	color: #690;
+}
 a { color: #666; }
 a:hover { color: #000; }
 
 .container { background:#eee; font-family: monospace; margin: 0 0 30px; padding: 30px; }
 
+.wrapper h2 {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 24px;
+	color: #C33;
+}
+.wrapper table tr td p {
+	text-align: center;
+}
 </style>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
 <script type="text/javascript" src="../jquery.responsImg.min.js"></script>
@@ -54,46 +72,35 @@ $(document).on('ready', init);
 
 <body>
 <div class="wrapper">
-    <h1>responsImg demo</h1>
-    <p>For this demo, the allowDownsize attribute have been set to true, so that smaller sources are loaded when resizing the browser/img-tag to a smaller size.</p>
-    <h2>Media Query mode</h2>
-    <p>
-        Go ahead and resize your browser :)<br />
-        When you stop resizing, the image will change
-    </p>
+    <h1>Digitcrop New Projects</h1>
+    <ul>
+      <li>Discover Web tweaks</li>
+    </ul>
+  <hr />
+  <h2>Latest Projects</h2>
     
-    <div class="container">
-        $('.responsimg').responsImg({<br />
-        &nbsp;&nbsp;allowDownsize: true<br />
-        });
-    </div>
+<div class="container">
+  <ul>
+    <li>
+      Blogger Full Responsive (Simple Smart Template)</li>
+    <li>Meta Tags Analyser</li>
+    <li>Backlink Analyser</li>
+    <li>Blogger Comment System Customize</li>
+    <li>Blogger Online template maker</li>
+  </ul>
+</div>
 
-    <p><img src="http://placehold.it/319x200/000000/ffffff/" class="responsimg" width="100%" alt="" data-test="test2"
-        data-responsimg320="http://placehold.it/479x294/aa0000/ffffff/"
-        data-responsimg480="http://placehold.it/767x400/00aa00/ffffff/"
-        data-responsimg768="http://placehold.it/1024x500/0000aa/ffffff/"
-    /></p>
+    <p>&nbsp;</p>
     
-    <h2>Element Query mode</h2>
-    <p>
-        <a href="javascript:callRecheck('bigger');">Click here</a> to change make the image <strong>bigger</strong><br />
-        <a href="javascript:callRecheck('smaller');">Click here</a> to change make the image <strong>smaller</strong>
-    </p>
+    <h2>&nbsp;</h2>
 
     <div class="container">
-        $('.responsimg-element').responsImg({<br />
-        &nbsp;&nbsp;elementQuery: true,<br />
-        &nbsp;&nbsp;allowDownsize: true<br />
-        });
-    </div>
+        Digitcrop Dev is a Concept Project</div>
     
-    <p><img src="http://placehold.it/50x100/000000/ffffff/" width="200" height="100" class="responsimg-element" alt=""
-        data-responsimg100="http://placehold.it/100x50/005500/ffffff/"
-        data-responsimg200="http://placehold.it/200x100/000055/ffffff/"
-        data-responsimg400="http://placehold.it/400x200/550000/ffffff/"
-    /></p>
-
-    <p>Keep in mind that this is the same <img> tag. Only the width and height are changed.</p>
+  <p>&nbsp;</p>
+<div class="copyright" align="center" >
+    <p>© 2014 digitcrop.com</p>
+    
 </div>
 </body>
 </html>

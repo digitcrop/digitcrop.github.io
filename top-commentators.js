@@ -2,10 +2,10 @@ var txtTopLine = '<b>[#].</b> [image] [user] ([count])';
 var txtNoTopCommenters = 'No top commentators at this time.';
 var txtAnonymous = '';
 //
-var sizeAvatar = 40;
+var sizeAvatar = 35;
 var cropAvatar = true;
 //
-var urlNoAvatar = "http://2.bp.blogspot.com/-pWdg8wLsedo/UmVWQxLdwrI/AAAAAAAAEVk/-z7YgKykkuU/s1600/avatar_blue_m_96.png" + sizeAvatar;
+var urlNoAvatar = "http://4.bp.blogspot.com/-Jq8GfUbUdeM/U3nk55Wlj-I/AAAAAAAABrg/zvF3nWO-rhU/s1600/avatar_blue_m_96.png" + sizeAvatar;
 var urlAnoAvatar = 'http://1.bp.blogspot.com/-6B6DXCp8dek/UmVPm7D2mOI/AAAAAAAAEVU/Xz-3z2nRpUk/s1600/avatar1.png' + sizeAvatar;
 var urlMyProfile = '';
 var urlMyAvatar = '';

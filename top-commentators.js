@@ -1,4 +1,4 @@
-var txtTopLine = '<span>[count]</span> [image] [user] ';
+var txtTopLine = ' [image] [user] <span>[count]</span>';
 var txtNoTopCommenters = 'No top commentators at this time.';
 var txtAnonymous = '';
 //

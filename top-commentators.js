@@ -1,4 +1,4 @@
-var txtTopLine = '<b>[#].</b> [image] [user] ([count])';
+var txtTopLine = '<b>[#].</b> [image] [user] <p>([count])</p>';
 var txtNoTopCommenters = 'No top commentators at this time.';
 var txtAnonymous = '';
 //

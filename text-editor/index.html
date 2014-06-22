@@ -13,11 +13,16 @@ border-radius: 10px;}
 </style>
 </head>
 <body>
-<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+<!-- Create a simple CodeMirror instance -->
+<link rel="stylesheet" href="lib/codemirror.css">
+<script src="lib/codemirror.js"></script>
+<script>
+  var editor = CodeMirror.fromTextArea(myTextarea, {
+    mode: "text/html"
+  });
+</script>
 <div style="text-align: center;">
-<code class="prettyprint">
 <textarea class="box" id="input">/* Enter CSS source code here */</textarea>
-</code>
 </div>
 </body>
 </html>

@@ -1,9 +1,13 @@
 <!DOCTYPE html><html>
 <head>
-<script src="http://dev.digitcrop.com/text-editor/codemirror.js"></script>
+<!-- Create a simple CodeMirror instance -->
 <link rel="stylesheet" href="http://dev.digitcrop.com/text-editor/codemirror.css">
-<script src="http://dev.digitcrop.com/text-editor/javascript.js"></script>
-<style>
+<script src="http://dev.digitcrop.com/text-editor/codemirror.js"></script>
+<script>
+  var editor = CodeMirror.fromTextArea(myTextarea, {
+    mode: "text/html"
+  });
+</script>
 .box {
 box-shadow: 0px 0px 10px #FFF inset;
 height: 234px;

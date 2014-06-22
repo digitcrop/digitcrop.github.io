@@ -1,13 +1,6 @@
 <!DOCTYPE html><html>
 <head>
-<!-- Create a simple CodeMirror instance -->
-<link rel="stylesheet" href="http://dev.digitcrop.com/text-editor/codemirror.css">
-<script src="http://dev.digitcrop.com/text-editor/codemirror.js"></script>
-<script>
-  var editor = CodeMirror.fromTextArea(myTextarea, {
-    mode: "text/html"
-  });
-</script>
+<style>
 .box {
 box-shadow: 0px 0px 10px #FFF inset;
 height: 234px;
@@ -16,10 +9,17 @@ width: 602px;
 background: none repeat scroll 0% 0% rgba(12, 12, 12, 1);
 color: rgba(165, 87, 87, 1);
 border-radius: 10px;}
-      
-</style>
+      </style>
 </head>
 <body>
+<!-- Create a simple CodeMirror instance -->
+<link rel="stylesheet" href="lib/codemirror.css">
+<script src="lib/codemirror.js"></script>
+<script>
+  var editor = CodeMirror.fromTextArea(myTextarea, {
+    mode: "text/html"
+  });
+</script>
 <div style="text-align: center;">
 <textarea class="box" id="input">/* Enter CSS source code here */</textarea>
 </div>

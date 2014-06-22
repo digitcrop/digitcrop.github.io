@@ -1,0 +1,34 @@
+<!DOCTYPE html><html>
+<head></head>
+<body>
+<div style="text-align: center;">
+
+</div>
+<div style="text-align: center;">
+<script src="http://dev.digitcrop.com/prefixer.js"></script><script>var input = document.querySelector('#input');
+var output = document.querySelector('#output');
+
+input.addEventListener('keyup', function () {
+    var source = this.value;
+    var compiled = autoprefixer().process(source);    
+    output.value = compiled.css;
+});
+
+// clear input on initial focus
+var clear = false;
+input.addEventListener('focus', function () {
+    if (!clear) {
+        input.value = '';
+        clear = true;
+    }
+});</script>
+<textarea id="input" style="background-color: pink; box-shadow: 0px 0px 5px inset; height: 150px; padding: 20px; width: 450px;">/* Enter CSS source code here */</textarea>
+<textarea id="output" style="background-color: #d3e2e6; box-shadow: 0px 0px 5px inset; height: 150px; margin-top: 20px; padding: 20px; width: 450px;">/* Autoprefixer generated code */</textarea></div>
+<div style="text-align: center;">
+
+</div>
+<div style="text-align: center;">
+
+</div>
+</body>
+</html>

@@ -1,34 +1,20 @@
 <!DOCTYPE html><html>
-<head></head>
+<head>
+<style>
+.box {
+box-shadow: 0px 0px 10px #FFF inset;
+height: 234px;
+padding: 20px;
+width: 602px;
+background: none repeat scroll 0% 0% rgba(12, 12, 12, 1);
+color: rgba(165, 87, 87, 1);
+border-radius: 10px;}
+      
+</style>
+</head>
 <body>
 <div style="text-align: center;">
-
-</div>
-<div style="text-align: center;">
-<script src="http://dev.digitcrop.com/prefixer.js"></script><script>var input = document.querySelector('#input');
-var output = document.querySelector('#output');
-
-input.addEventListener('keyup', function () {
-    var source = this.value;
-    var compiled = autoprefixer().process(source);    
-    output.value = compiled.css;
-});
-
-// clear input on initial focus
-var clear = false;
-input.addEventListener('focus', function () {
-    if (!clear) {
-        input.value = '';
-        clear = true;
-    }
-});</script>
-<textarea id="input" style="background-color: pink; box-shadow: 0px 0px 5px inset; height: 150px; padding: 20px; width: 450px;">/* Enter CSS source code here */</textarea>
-<textarea id="output" style="background-color: #d3e2e6; box-shadow: 0px 0px 5px inset; height: 150px; margin-top: 20px; padding: 20px; width: 450px;">/* Autoprefixer generated code */</textarea></div>
-<div style="text-align: center;">
-
-</div>
-<div style="text-align: center;">
-
+<textarea class="box" id="input">/* Enter CSS source code here */</textarea></div>
 </div>
 </body>
 </html>

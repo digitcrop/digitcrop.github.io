@@ -1,5 +1,8 @@
 <!DOCTYPE html><html>
 <head>
+<script src="lib/codemirror.js"></script>
+<link rel="stylesheet" href="../lib/codemirror.css">
+<script src="mode/javascript/javascript.js"></script>
 <style>
 .box {
 box-shadow: 0px 0px 10px #FFF inset;
@@ -13,14 +16,6 @@ border-radius: 10px;}
 </style>
 </head>
 <body>
-<!-- Create a simple CodeMirror instance -->
-<link rel="stylesheet" href="lib/codemirror.css">
-<script src="lib/codemirror.js"></script>
-<script>
-  var editor = CodeMirror.fromTextArea(myTextarea, {
-    mode: "text/html"
-  });
-</script>
 <div style="text-align: center;">
 <textarea class="box" id="input">/* Enter CSS source code here */</textarea>
 </div>

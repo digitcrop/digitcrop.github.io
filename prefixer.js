@@ -1,391 +1,74 @@
-!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.autoprefixer=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
-(function() {
-  module.exports = {
-    android: {
-      prefix: "-webkit-",
-      minor: true,
-      versions: [4.4, 4.3, 4.2, 4.1, 4, 3, 2.3, 2.2, 2.1],
-      popularity: [0.337062, 0.858555, 0.858555, 2.18772, 0.909432, 0.00635967, 1.13202, 0.0699563, 0.0254387]
-    },
-    bb: {
-      prefix: "-webkit-",
-      minor: true,
-      versions: [10, 7],
-      popularity: [0, 0.113215]
-    },
-    chrome: {
-      prefix: "-webkit-",
-      future: [37, 36, 35],
-      versions: [34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4],
-      popularity: [19.4573, 11.5844, 0.71231, 0.809784, 0.239936, 0.41239, 0.172454, 0.457378, 0.172454, 0.082478, 0.052486, 0.067482, 0.11247, 0.48737, 0.03749, 0.022494, 0.067482, 0.022494, 0.029992, 0.052486, 0.03749, 0.044988, 0.052486, 0.11247, 0.029992, 0.014996, 0.022494, 0.014996, 0.022494, 0.022494, 0.022494]
-    },
-    ff: {
-      prefix: "-moz-",
-      future: [32, 31, 30],
-      versions: [29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3.6, 3.5, 3, 2],
-      popularity: [0.48737, 11.382, 0.63733, 0.269928, 0.134964, 0.232438, 0.097474, 0.104972, 0.22494, 0.089976, 0.07498, 0.059984, 0.104972, 0.142462, 0.082478, 0.059984, 0.059984, 0.142462, 0.059984, 0.067482, 0.03749, 0.052486, 0.029992, 0.03749, 0.029992, 0.044988, 0.179952, 0.029992, 0.07498, 0.007498]
-    },
-    ie: {
-      prefix: "-ms-",
-      versions: [11, 10, 9, 8, 7, 6, 5.5],
-      popularity: [7.0483, 3.02851, 2.78654, 4.76912, 0.163914, 0.288801, 0.009298]
-    },
-    ios: {
-      prefix: "-webkit-",
-      versions: [7, 6.1, 6, 5.1, 5, 4.3, 4.2, 4.1, 4, 3.2],
-      popularity: [4.58455, 0.3607695, 0.3607695, 0.113781, 0.113781, 0.0111006, 0.0111006, 0.0055503, 0.0055503, 0]
-    },
-    opera: {
-      prefix: "-o-",
-      future: [22, 21],
-      versions: [20, 19, 18, 17, 16, 15, 12.1, 12, 11.6, 11.5, 11.1, 11, 10.6, 10.5, 10.1, 10, 9.6, 9.5],
-      popularity: [0.464876, 0.03749, 0.029992, 0.014996, 0.007498, 0.007498, 0.367402, 0.029992, 0.014996, 0.007498, 0.008219, 0.014996, 0.014996, 0.008392, 0.003749, 0.003749, 0.003749, 0.003749]
-    },
-    safari: {
-      prefix: "-webkit-",
-      versions: [7, 6.1, 6, 5.1, 5, 4, 3.2, 3.1],
-      popularity: [1.57458, 0.67482, 0.41239, 0.794788, 0.232438, 0.11247, 0.008692, 0]
+var input = $('#input')[0];
+var output = $('#output')[0];
+var btnClear = $('#btnClear')[0];
+var btnExample = $('#btnExample')[0];
+var btnSelectAll = $('#btnSelectAll')[0];
+var lblInvalid = $('#lblInvalid')[0];
+var txtExample = $('#txtExample').text();
+var inputOptions = $('#options')[0];
+var btnUseDefaults = $('#btnUseDefaults')[0];
+
+var defaultOptions = '> 1%, last 2 versions, Firefox ESR, Opera 12.1';
+
+function process() {
+    var options = inputOptions.value.split(',').map(function (s) { return s.trim(); });
+    
+    try {
+        var compiled = autoprefixer({ browsers: options }).process(input.value, { safe: true });    
+        output.value = compiled.css;
+        
+        btnSelectAll.disabled = output.value.trim().length === 0;
+        $(output).removeClass('inactive');
+        $(lblInvalid).hide();
+    } catch (err) {
+        console.log(err);
+        btnSelectAll.disabled = true;
+        $(output).addClass('inactive');
+        $(lblInvalid).show();
     }
-  };
+}
 
-}).call(this);
+$(input).on('keyup paste', function () {
+    process();    
+    btnClear.disabled = this.value.trim().length === 0;
+});
 
-},{}],2:[function(_dereq_,module,exports){
-(function() {
-  module.exports = {
-    "::placeholder": {
-      selector: true,
-      browsers: ["android 4.4", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 4 old", "ff 5 old", "ff 6 old", "ff 7 old", "ff 8 old", "ff 9 old", "ff 10 old", "ff 11 old", "ff 12 old", "ff 13 old", "ff 14 old", "ff 15 old", "ff 16 old", "ff 17 old", "ff 18 old", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ie 10", "ie 11", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 15", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    "::selection": {
-      selector: true,
-      browsers: ["ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32"]
-    },
-    ":fullscreen": {
-      selector: true,
-      browsers: ["chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ie 11", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    "@keyframes": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 12", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    "align-content": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4 2009", "chrome 5 2009", "chrome 6 2009", "chrome 7 2009", "chrome 8 2009", "chrome 9 2009", "chrome 10 2009", "chrome 11 2009", "chrome 12 2009", "chrome 13 2009", "chrome 14 2009", "chrome 15 2009", "chrome 16 2009", "chrome 17 2009", "chrome 18 2009", "chrome 19 2009", "chrome 20 2009", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ie 10", "ios 3.2 2009", "ios 4 2009", "ios 4.1 2009", "ios 4.2 2009", "ios 4.3 2009", "ios 5 2009", "ios 5.1 2009", "ios 6 2009", "ios 6.1 2009", "ios 7", "opera 15", "opera 16", "safari 3.1 2009", "safari 3.2 2009", "safari 4 2009", "safari 5 2009", "safari 5.1 2009", "safari 6 2009", "safari 6.1 2009", "safari 7"]
-    },
-    "align-items": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4 2009", "chrome 5 2009", "chrome 6 2009", "chrome 7 2009", "chrome 8 2009", "chrome 9 2009", "chrome 10 2009", "chrome 11 2009", "chrome 12 2009", "chrome 13 2009", "chrome 14 2009", "chrome 15 2009", "chrome 16 2009", "chrome 17 2009", "chrome 18 2009", "chrome 19 2009", "chrome 20 2009", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ie 10", "ios 3.2 2009", "ios 4 2009", "ios 4.1 2009", "ios 4.2 2009", "ios 4.3 2009", "ios 5 2009", "ios 5.1 2009", "ios 6 2009", "ios 6.1 2009", "ios 7", "opera 15", "opera 16", "safari 3.1 2009", "safari 3.2 2009", "safari 4 2009", "safari 5 2009", "safari 5.1 2009", "safari 6 2009", "safari 6.1 2009", "safari 7"]
-    },
-    "align-self": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4 2009", "chrome 5 2009", "chrome 6 2009", "chrome 7 2009", "chrome 8 2009", "chrome 9 2009", "chrome 10 2009", "chrome 11 2009", "chrome 12 2009", "chrome 13 2009", "chrome 14 2009", "chrome 15 2009", "chrome 16 2009", "chrome 17 2009", "chrome 18 2009", "chrome 19 2009", "chrome 20 2009", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ie 10", "ios 3.2 2009", "ios 4 2009", "ios 4.1 2009", "ios 4.2 2009", "ios 4.3 2009", "ios 5 2009", "ios 5.1 2009", "ios 6 2009", "ios 6.1 2009", "ios 7", "opera 15", "opera 16", "safari 3.1 2009", "safari 3.2 2009", "safari 4 2009", "safari 5 2009", "safari 5.1 2009", "safari 6 2009", "safari 6.1 2009", "safari 7"]
-    },
-    animation: {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 12", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    "animation-delay": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 12", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    "animation-direction": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 12", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    "animation-duration": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 12", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    "animation-fill-mode": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 12", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    "animation-iteration-count": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 12", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    "animation-name": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 12", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    "animation-play-state": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 12", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    "animation-timing-function": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 12", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    "backface-visibility": {
-      browsers: ["android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    "background-clip": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "ff 3.6", "opera 10", "opera 10.1"]
-    },
-    "background-origin": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "ff 3.6", "opera 10", "opera 10.1"]
-    },
-    "background-size": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "ff 3.6", "opera 10", "opera 10.1"]
-    },
-    "border-bottom-left-radius": {
-      mistakes: ["-ms-"],
-      browsers: ["android 2.1", "chrome 4", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ios 3.2", "safari 3.1", "safari 3.2", "safari 4"],
-      transition: true
-    },
-    "border-bottom-right-radius": {
-      mistakes: ["-ms-"],
-      browsers: ["android 2.1", "chrome 4", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ios 3.2", "safari 3.1", "safari 3.2", "safari 4"],
-      transition: true
-    },
-    "border-image": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "opera 11", "opera 11.1", "opera 11.5", "opera 11.6", "opera 12", "opera 12.1", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1"]
-    },
-    "border-radius": {
-      mistakes: ["-ms-"],
-      browsers: ["android 2.1", "chrome 4", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ios 3.2", "safari 3.1", "safari 3.2", "safari 4"],
-      transition: true
-    },
-    "border-top-left-radius": {
-      mistakes: ["-ms-"],
-      browsers: ["android 2.1", "chrome 4", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ios 3.2", "safari 3.1", "safari 3.2", "safari 4"],
-      transition: true
-    },
-    "border-top-right-radius": {
-      mistakes: ["-ms-"],
-      browsers: ["android 2.1", "chrome 4", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ios 3.2", "safari 3.1", "safari 3.2", "safari 4"],
-      transition: true
-    },
-    "box-shadow": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "bb 7", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "ff 3.5", "ff 3.6", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "safari 3.1", "safari 3.2", "safari 4", "safari 5"],
-      transition: true
-    },
-    "box-sizing": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "bb 7", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "safari 3.1", "safari 3.2", "safari 4", "safari 5"]
-    },
-    "break-after": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    "break-before": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    "break-inside": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    calc: {
-      props: ["*"],
-      browsers: ["bb 10", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 6", "ios 6.1", "safari 6"]
-    },
-    "column-count": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    "column-fill": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    "column-gap": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"],
-      transition: true
-    },
-    "column-rule": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"],
-      transition: true
-    },
-    "column-rule-color": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"],
-      transition: true
-    },
-    "column-rule-style": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    "column-rule-width": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"],
-      transition: true
-    },
-    "column-span": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    "column-width": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"],
-      transition: true
-    },
-    columns: {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"],
-      transition: true
-    },
-    "display-flex": {
-      props: ["display"],
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4 2009", "chrome 5 2009", "chrome 6 2009", "chrome 7 2009", "chrome 8 2009", "chrome 9 2009", "chrome 10 2009", "chrome 11 2009", "chrome 12 2009", "chrome 13 2009", "chrome 14 2009", "chrome 15 2009", "chrome 16 2009", "chrome 17 2009", "chrome 18 2009", "chrome 19 2009", "chrome 20 2009", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ie 10", "ios 3.2 2009", "ios 4 2009", "ios 4.1 2009", "ios 4.2 2009", "ios 4.3 2009", "ios 5 2009", "ios 5.1 2009", "ios 6 2009", "ios 6.1 2009", "ios 7", "opera 15", "opera 16", "safari 3.1 2009", "safari 3.2 2009", "safari 4 2009", "safari 5 2009", "safari 5.1 2009", "safari 6 2009", "safari 6.1 2009", "safari 7"]
-    },
-    "fill-available": {
-      props: ["width", "min-width", "max-width", "height", "min-height", "max-height"],
-      browsers: ["android 4.4", "bb 10", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 6.1", "safari 7"]
-    },
-    filter: {
-      browsers: ["android 4.4", "bb 10", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ios 6", "ios 6.1", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 6", "safari 6.1", "safari 7"],
-      transition: true
-    },
-    "fit-content": {
-      props: ["width", "min-width", "max-width", "height", "min-height", "max-height"],
-      browsers: ["android 4.4", "bb 10", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 6.1", "safari 7"]
-    },
-    flex: {
-      transition: true,
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4 2009", "chrome 5 2009", "chrome 6 2009", "chrome 7 2009", "chrome 8 2009", "chrome 9 2009", "chrome 10 2009", "chrome 11 2009", "chrome 12 2009", "chrome 13 2009", "chrome 14 2009", "chrome 15 2009", "chrome 16 2009", "chrome 17 2009", "chrome 18 2009", "chrome 19 2009", "chrome 20 2009", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ie 10", "ios 3.2 2009", "ios 4 2009", "ios 4.1 2009", "ios 4.2 2009", "ios 4.3 2009", "ios 5 2009", "ios 5.1 2009", "ios 6 2009", "ios 6.1 2009", "ios 7", "opera 15", "opera 16", "safari 3.1 2009", "safari 3.2 2009", "safari 4 2009", "safari 5 2009", "safari 5.1 2009", "safari 6 2009", "safari 6.1 2009", "safari 7"]
-    },
-    "flex-basis": {
-      transition: true,
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4 2009", "chrome 5 2009", "chrome 6 2009", "chrome 7 2009", "chrome 8 2009", "chrome 9 2009", "chrome 10 2009", "chrome 11 2009", "chrome 12 2009", "chrome 13 2009", "chrome 14 2009", "chrome 15 2009", "chrome 16 2009", "chrome 17 2009", "chrome 18 2009", "chrome 19 2009", "chrome 20 2009", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ie 10", "ios 3.2 2009", "ios 4 2009", "ios 4.1 2009", "ios 4.2 2009", "ios 4.3 2009", "ios 5 2009", "ios 5.1 2009", "ios 6 2009", "ios 6.1 2009", "ios 7", "opera 15", "opera 16", "safari 3.1 2009", "safari 3.2 2009", "safari 4 2009", "safari 5 2009", "safari 5.1 2009", "safari 6 2009", "safari 6.1 2009", "safari 7"]
-    },
-    "flex-direction": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4 2009", "chrome 5 2009", "chrome 6 2009", "chrome 7 2009", "chrome 8 2009", "chrome 9 2009", "chrome 10 2009", "chrome 11 2009", "chrome 12 2009", "chrome 13 2009", "chrome 14 2009", "chrome 15 2009", "chrome 16 2009", "chrome 17 2009", "chrome 18 2009", "chrome 19 2009", "chrome 20 2009", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ie 10", "ios 3.2 2009", "ios 4 2009", "ios 4.1 2009", "ios 4.2 2009", "ios 4.3 2009", "ios 5 2009", "ios 5.1 2009", "ios 6 2009", "ios 6.1 2009", "ios 7", "opera 15", "opera 16", "safari 3.1 2009", "safari 3.2 2009", "safari 4 2009", "safari 5 2009", "safari 5.1 2009", "safari 6 2009", "safari 6.1 2009", "safari 7"]
-    },
-    "flex-flow": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4 2009", "chrome 5 2009", "chrome 6 2009", "chrome 7 2009", "chrome 8 2009", "chrome 9 2009", "chrome 10 2009", "chrome 11 2009", "chrome 12 2009", "chrome 13 2009", "chrome 14 2009", "chrome 15 2009", "chrome 16 2009", "chrome 17 2009", "chrome 18 2009", "chrome 19 2009", "chrome 20 2009", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ie 10", "ios 3.2 2009", "ios 4 2009", "ios 4.1 2009", "ios 4.2 2009", "ios 4.3 2009", "ios 5 2009", "ios 5.1 2009", "ios 6 2009", "ios 6.1 2009", "ios 7", "opera 15", "opera 16", "safari 3.1 2009", "safari 3.2 2009", "safari 4 2009", "safari 5 2009", "safari 5.1 2009", "safari 6 2009", "safari 6.1 2009", "safari 7"]
-    },
-    "flex-grow": {
-      transition: true,
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4 2009", "chrome 5 2009", "chrome 6 2009", "chrome 7 2009", "chrome 8 2009", "chrome 9 2009", "chrome 10 2009", "chrome 11 2009", "chrome 12 2009", "chrome 13 2009", "chrome 14 2009", "chrome 15 2009", "chrome 16 2009", "chrome 17 2009", "chrome 18 2009", "chrome 19 2009", "chrome 20 2009", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ie 10", "ios 3.2 2009", "ios 4 2009", "ios 4.1 2009", "ios 4.2 2009", "ios 4.3 2009", "ios 5 2009", "ios 5.1 2009", "ios 6 2009", "ios 6.1 2009", "ios 7", "opera 15", "opera 16", "safari 3.1 2009", "safari 3.2 2009", "safari 4 2009", "safari 5 2009", "safari 5.1 2009", "safari 6 2009", "safari 6.1 2009", "safari 7"]
-    },
-    "flex-shrink": {
-      transition: true,
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4 2009", "chrome 5 2009", "chrome 6 2009", "chrome 7 2009", "chrome 8 2009", "chrome 9 2009", "chrome 10 2009", "chrome 11 2009", "chrome 12 2009", "chrome 13 2009", "chrome 14 2009", "chrome 15 2009", "chrome 16 2009", "chrome 17 2009", "chrome 18 2009", "chrome 19 2009", "chrome 20 2009", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ie 10", "ios 3.2 2009", "ios 4 2009", "ios 4.1 2009", "ios 4.2 2009", "ios 4.3 2009", "ios 5 2009", "ios 5.1 2009", "ios 6 2009", "ios 6.1 2009", "ios 7", "opera 15", "opera 16", "safari 3.1 2009", "safari 3.2 2009", "safari 4 2009", "safari 5 2009", "safari 5.1 2009", "safari 6 2009", "safari 6.1 2009", "safari 7"]
-    },
-    "flex-wrap": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4 2009", "chrome 5 2009", "chrome 6 2009", "chrome 7 2009", "chrome 8 2009", "chrome 9 2009", "chrome 10 2009", "chrome 11 2009", "chrome 12 2009", "chrome 13 2009", "chrome 14 2009", "chrome 15 2009", "chrome 16 2009", "chrome 17 2009", "chrome 18 2009", "chrome 19 2009", "chrome 20 2009", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ie 10", "ios 3.2 2009", "ios 4 2009", "ios 4.1 2009", "ios 4.2 2009", "ios 4.3 2009", "ios 5 2009", "ios 5.1 2009", "ios 6 2009", "ios 6.1 2009", "ios 7", "opera 15", "opera 16", "safari 3.1 2009", "safari 3.2 2009", "safari 4 2009", "safari 5 2009", "safari 5.1 2009", "safari 6 2009", "safari 6.1 2009", "safari 7"]
-    },
-    "font-feature-settings": {
-      browsers: ["android 4.4", "bb 10", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22"]
-    },
-    "font-kerning": {
-      browsers: ["android 4.4", "bb 10", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22"]
-    },
-    "font-language-override": {
-      browsers: ["android 4.4", "bb 10", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22"]
-    },
-    "font-variant-ligatures": {
-      browsers: ["android 4.4", "bb 10", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22"]
-    },
-    grab: {
-      props: ["cursor"],
-      browsers: ["bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7", "ff 24", "ff 25", "ff 26"]
-    },
-    grabbing: {
-      props: ["cursor"],
-      browsers: ["bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7", "ff 24", "ff 25", "ff 26"]
-    },
-    hyphens: {
-      browsers: ["ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ie 10", "ie 11", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    "inline-flex": {
-      props: ["display"],
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4 2009", "chrome 5 2009", "chrome 6 2009", "chrome 7 2009", "chrome 8 2009", "chrome 9 2009", "chrome 10 2009", "chrome 11 2009", "chrome 12 2009", "chrome 13 2009", "chrome 14 2009", "chrome 15 2009", "chrome 16 2009", "chrome 17 2009", "chrome 18 2009", "chrome 19 2009", "chrome 20 2009", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ie 10", "ios 3.2 2009", "ios 4 2009", "ios 4.1 2009", "ios 4.2 2009", "ios 4.3 2009", "ios 5 2009", "ios 5.1 2009", "ios 6 2009", "ios 6.1 2009", "ios 7", "opera 15", "opera 16", "safari 3.1 2009", "safari 3.2 2009", "safari 4 2009", "safari 5 2009", "safari 5.1 2009", "safari 6 2009", "safari 6.1 2009", "safari 7"]
-    },
-    "justify-content": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4 2009", "chrome 5 2009", "chrome 6 2009", "chrome 7 2009", "chrome 8 2009", "chrome 9 2009", "chrome 10 2009", "chrome 11 2009", "chrome 12 2009", "chrome 13 2009", "chrome 14 2009", "chrome 15 2009", "chrome 16 2009", "chrome 17 2009", "chrome 18 2009", "chrome 19 2009", "chrome 20 2009", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ie 10", "ios 3.2 2009", "ios 4 2009", "ios 4.1 2009", "ios 4.2 2009", "ios 4.3 2009", "ios 5 2009", "ios 5.1 2009", "ios 6 2009", "ios 6.1 2009", "ios 7", "opera 15", "opera 16", "safari 3.1 2009", "safari 3.2 2009", "safari 4 2009", "safari 5 2009", "safari 5.1 2009", "safari 6 2009", "safari 6.1 2009", "safari 7"]
-    },
-    "linear-gradient": {
-      props: ["background", "background-image", "border-image"],
-      mistakes: ["-ms-"],
-      browsers: ["android 2.1 old", "android 2.2 old", "android 2.3 old", "android 3 old", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2 old", "ios 4 old", "ios 4.1 old", "ios 4.2 old", "ios 4.3 old", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "opera 11.1", "opera 11.5", "opera 11.6", "opera 12", "safari 4 old", "safari 5 old", "safari 5.1", "safari 6"]
-    },
-    "max-content": {
-      props: ["width", "min-width", "max-width", "height", "min-height", "max-height"],
-      browsers: ["android 4.4", "bb 10", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 6.1", "safari 7"]
-    },
-    "min-content": {
-      props: ["width", "min-width", "max-width", "height", "min-height", "max-height"],
-      browsers: ["android 4.4", "bb 10", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 6.1", "safari 7"]
-    },
-    order: {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4 2009", "chrome 5 2009", "chrome 6 2009", "chrome 7 2009", "chrome 8 2009", "chrome 9 2009", "chrome 10 2009", "chrome 11 2009", "chrome 12 2009", "chrome 13 2009", "chrome 14 2009", "chrome 15 2009", "chrome 16 2009", "chrome 17 2009", "chrome 18 2009", "chrome 19 2009", "chrome 20 2009", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ie 10", "ios 3.2 2009", "ios 4 2009", "ios 4.1 2009", "ios 4.2 2009", "ios 4.3 2009", "ios 5 2009", "ios 5.1 2009", "ios 6 2009", "ios 6.1 2009", "ios 7", "opera 15", "opera 16", "safari 3.1 2009", "safari 3.2 2009", "safari 4 2009", "safari 5 2009", "safari 5.1 2009", "safari 6 2009", "safari 6.1 2009", "safari 7"]
-    },
-    perspective: {
-      browsers: ["android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"],
-      transition: true
-    },
-    "perspective-origin": {
-      browsers: ["android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"],
-      transition: true
-    },
-    "radial-gradient": {
-      props: ["background", "background-image", "border-image"],
-      mistakes: ["-ms-"],
-      browsers: ["android 2.1 old", "android 2.2 old", "android 2.3 old", "android 3 old", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2 old", "ios 4 old", "ios 4.1 old", "ios 4.2 old", "ios 4.3 old", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "opera 11.1", "opera 11.5", "opera 11.6", "opera 12", "safari 4 old", "safari 5 old", "safari 5.1", "safari 6"]
-    },
-    "repeating-linear-gradient": {
-      props: ["background", "background-image", "border-image"],
-      mistakes: ["-ms-"],
-      browsers: ["android 2.1 old", "android 2.2 old", "android 2.3 old", "android 3 old", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2 old", "ios 4 old", "ios 4.1 old", "ios 4.2 old", "ios 4.3 old", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "opera 11.1", "opera 11.5", "opera 11.6", "opera 12", "safari 4 old", "safari 5 old", "safari 5.1", "safari 6"]
-    },
-    "repeating-radial-gradient": {
-      props: ["background", "background-image", "border-image"],
-      mistakes: ["-ms-"],
-      browsers: ["android 2.1 old", "android 2.2 old", "android 2.3 old", "android 3 old", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2 old", "ios 4 old", "ios 4.1 old", "ios 4.2 old", "ios 4.3 old", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "opera 11.1", "opera 11.5", "opera 11.6", "opera 12", "safari 4 old", "safari 5 old", "safari 5.1", "safari 6"]
-    },
-    sticky: {
-      props: ["position"],
-      browsers: ["ios 6", "ios 6.1", "ios 7", "safari 6.1", "safari 7"]
-    },
-    "tab-size": {
-      browsers: ["ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "opera 10.6", "opera 11", "opera 11.1", "opera 11.5", "opera 11.6", "opera 12", "opera 12.1"]
-    },
-    "text-decoration-color": {
-      browsers: ["ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32"]
-    },
-    "text-decoration-line": {
-      browsers: ["ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32"]
-    },
-    "text-decoration-style": {
-      browsers: ["chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22"]
-    },
-    "touch-action": {
-      browsers: ["ie 10"]
-    },
-    transform: {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ie 9", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 10.5", "opera 10.6", "opera 11", "opera 11.1", "opera 11.5", "opera 11.6", "opera 12", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"],
-      transition: true
-    },
-    "transform-origin": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ie 9", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 10.5", "opera 10.6", "opera 11", "opera 11.1", "opera 11.5", "opera 11.6", "opera 12", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"],
-      transition: true
-    },
-    "transform-style": {
-      browsers: ["android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    transition: {
-      mistakes: ["-ms-"],
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "opera 10.5", "opera 10.6", "opera 11", "opera 11.1", "opera 11.5", "opera 11.6", "opera 12", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6"]
-    },
-    "transition-delay": {
-      mistakes: ["-ms-"],
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "opera 10.5", "opera 10.6", "opera 11", "opera 11.1", "opera 11.5", "opera 11.6", "opera 12", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6"]
-    },
-    "transition-duration": {
-      mistakes: ["-ms-"],
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "opera 10.5", "opera 10.6", "opera 11", "opera 11.1", "opera 11.5", "opera 11.6", "opera 12", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6"]
-    },
-    "transition-property": {
-      mistakes: ["-ms-"],
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "opera 10.5", "opera 10.6", "opera 11", "opera 11.1", "opera 11.5", "opera 11.6", "opera 12", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6"]
-    },
-    "transition-timing-function": {
-      mistakes: ["-ms-"],
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "opera 10.5", "opera 10.6", "opera 11", "opera 11.1", "opera 11.5", "opera 11.6", "opera 12", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6"]
-    },
-    "user-select": {
-      browsers: ["android 2.1", "android 2.2", "android 2.3", "android 3", "android 4", "android 4.1", "android 4.2", "android 4.3", "android 4.4", "bb 7", "bb 10", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "ff 24", "ff 25", "ff 26", "ff 27", "ff 28", "ff 29", "ff 30", "ff 31", "ff 32", "ie 10", "ie 11", "ios 3.2", "ios 4", "ios 4.1", "ios 4.2", "ios 4.3", "ios 5", "ios 5.1", "ios 6", "ios 6.1", "ios 7", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7"]
-    },
-    "zoom-in": {
-      props: ["cursor"],
-      browsers: ["bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7", "chrome 3"]
-    },
-    "zoom-out": {
-      props: ["cursor"],
-      browsers: ["bb 7", "bb 10", "chrome 4", "chrome 5", "chrome 6", "chrome 7", "chrome 8", "chrome 9", "chrome 10", "chrome 11", "chrome 12", "chrome 13", "chrome 14", "chrome 15", "chrome 16", "chrome 17", "chrome 18", "chrome 19", "chrome 20", "chrome 21", "chrome 22", "chrome 23", "chrome 24", "chrome 25", "chrome 26", "chrome 27", "chrome 28", "chrome 29", "chrome 30", "chrome 31", "chrome 32", "chrome 33", "chrome 34", "chrome 35", "chrome 36", "chrome 37", "ff 2", "ff 3", "ff 3.5", "ff 3.6", "ff 4", "ff 5", "ff 6", "ff 7", "ff 8", "ff 9", "ff 10", "ff 11", "ff 12", "ff 13", "ff 14", "ff 15", "ff 16", "ff 17", "ff 18", "ff 19", "ff 20", "ff 21", "ff 22", "ff 23", "opera 15", "opera 16", "opera 17", "opera 18", "opera 19", "opera 20", "opera 21", "opera 22", "safari 3.1", "safari 3.2", "safari 4", "safari 5", "safari 5.1", "safari 6", "safari 6.1", "safari 7", "chrome 3"]
-    }
-  };
+$(inputOptions).on('keyup paste', function () {
+    process();
+});
 
-}).call(this);
+$(btnClear).on('click', function () {
+    input.value = '';
+    this.disabled = true;
+    process('');
+    input.focus();
+});
 
-},{}],3:[function(_dereq_,module,exports){
+$(btnExample).on('click', function () {
+    input.value = txtExample;
+    btnClear.disabled = false;
+    process();
+});
+
+$(btnSelectAll).on('click', function () {
+    output.select();
+});
+
+$(btnUseDefaults).on('click', function () {
+    inputOptions.value = defaultOptions;
+    process();
+}).trigger('click');
+!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.autoprefixer=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function() {
   var Autoprefixer, Browsers, Prefixes, autoprefixer, infoCache, isPlainObject, postcss,
     __slice = [].slice,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  postcss = _dereq_('postcss');
+  postcss = require('postcss');
 
-  Browsers = _dereq_('./browsers');
+  Browsers = require('./browsers');
 
-  Prefixes = _dereq_('./prefixes');
+  Prefixes = require('./prefixes');
 
   infoCache = null;
 
@@ -407,6 +90,13 @@
     } else if (typeof reqs[reqs.length - 1] === 'object') {
       options = reqs.pop();
     }
+    if ((options != null ? options.browsers : void 0) != null) {
+      reqs = options.browsers;
+    } else if (reqs) {
+      if (typeof console !== "undefined" && console !== null) {
+        console.warn('autoprefixer: autoprefixer(browsers) is deprecated ' + 'and will be removed in 3.1. ' + 'Use autoprefixer({ browsers: browsers }).');
+      }
+    }
     if (reqs == null) {
       reqs = autoprefixer["default"];
     }
@@ -416,8 +106,8 @@
   };
 
   autoprefixer.data = {
-    browsers: _dereq_('../data/browsers'),
-    prefixes: _dereq_('../data/prefixes')
+    browsers: require('../data/browsers'),
+    prefixes: require('../data/prefixes')
   };
 
   Autoprefixer = (function() {
@@ -442,7 +132,7 @@
     };
 
     Autoprefixer.prototype.info = function() {
-      infoCache || (infoCache = _dereq_('./info'));
+      infoCache || (infoCache = require('./info'));
       return infoCache(this.prefixes);
     };
 
@@ -457,7 +147,9 @@
   autoprefixer["default"] = ['> 1%', 'last 2 versions', 'Firefox ESR', 'Opera 12.1'];
 
   autoprefixer.loadDefault = function() {
-    return this.defaultCache || (this.defaultCache = autoprefixer(this["default"]));
+    return this.defaultCache || (this.defaultCache = autoprefixer({
+      browsers: this["default"]
+    }));
   };
 
   autoprefixer.process = function(str, options) {
@@ -467,15 +159,8 @@
     return this.loadDefault().process(str, options);
   };
 
-  autoprefixer.compile = function(str, options) {
-    if (options == null) {
-      options = {};
-    }
-    return this.loadDefault().compile(str, options);
-  };
-
   autoprefixer.postcss = function(css) {
-    return this.loadDefault().postcss(css);
+    return autoprefixer.loadDefault().postcss(css);
   };
 
   autoprefixer.info = function() {
@@ -486,11 +171,383 @@
 
 }).call(this);
 
-},{"../data/browsers":1,"../data/prefixes":2,"./browsers":4,"./info":31,"./prefixes":36,"postcss":53}],4:[function(_dereq_,module,exports){
+},{"../data/browsers":2,"../data/prefixes":3,"./browsers":4,"./info":33,"./prefixes":38,"postcss":89}],2:[function(require,module,exports){
+(function() {
+  var convert, data, intervals, major, name, names, normalize, _ref;
+
+  names = ['firefox', 'chrome', 'safari', 'ios_saf', 'opera', 'ie', 'bb', 'android'];
+
+  major = ['firefox', 'chrome', 'safari', 'ios_saf', 'opera', 'android', 'ie', 'ie_mob'];
+
+  normalize = function(array) {
+    return array.reverse().filter(function(i) {
+      return i;
+    });
+  };
+
+  intervals = function(array) {
+    var i, interval, result, splited, sub, _i, _len;
+    result = [];
+    for (_i = 0, _len = array.length; _i < _len; _i++) {
+      interval = array[_i];
+      splited = interval.split('-');
+      splited = splited.sort().reverse();
+      sub = (function() {
+        var _j, _len1, _results;
+        _results = [];
+        for (_j = 0, _len1 = splited.length; _j < _len1; _j++) {
+          i = splited[_j];
+          _results.push([i, interval, splited.length]);
+        }
+        return _results;
+      })();
+      result = result.concat(sub);
+    }
+    return result;
+  };
+
+  convert = function(name, data) {
+    var future, result, versions;
+    future = normalize(data.versions.slice(-3));
+    versions = intervals(normalize(data.versions.slice(0, -3)));
+    result = {};
+    result.prefix = name === 'opera' ? '-o-' : "-" + data.prefix + "-";
+    if (major.indexOf(name) === -1) {
+      result.minor = true;
+    }
+    if (future.length) {
+      result.future = future;
+    }
+    result.versions = versions.map(function(i) {
+      return i[0];
+    });
+    result.popularity = versions.map(function(i) {
+      return data.usage_global[i[1]] / i[2];
+    });
+    return result;
+  };
+
+  module.exports = {};
+
+  _ref = require('caniuse-db/data').agents;
+  for (name in _ref) {
+    data = _ref[name];
+    module.exports[name] = convert(name, data);
+  }
+
+}).call(this);
+
+},{"caniuse-db/data":51}],3:[function(require,module,exports){
+(function() {
+  var browsers, feature, map, prefix, textDecoration,
+    __slice = [].slice;
+
+  browsers = require('./browsers');
+
+  feature = function(data, opts, callback) {
+    var browser, interval, match, need, sorted, support, version, versions, _i, _len, _ref, _ref1, _ref2;
+    if (!callback) {
+      _ref = [opts, {}], callback = _ref[0], opts = _ref[1];
+    }
+    match = opts.full ? /y\sx($|\s)/ : /\sx($|\s)/;
+    need = [];
+    _ref1 = data.stats;
+    for (browser in _ref1) {
+      versions = _ref1[browser];
+      for (interval in versions) {
+        support = versions[interval];
+        _ref2 = interval.split('-');
+        for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+          version = _ref2[_i];
+          if (browsers[browser] && support.match(match)) {
+            version = version.replace(/\.0$/, '');
+            need.push(browser + ' ' + version);
+          }
+        }
+      }
+    }
+    sorted = need.sort(function(a, b) {
+      a = a.split(' ');
+      b = b.split(' ');
+      if (a[0] > b[0]) {
+        return 1;
+      } else if (a[0] < b[0]) {
+        return -1;
+      } else {
+        return parseFloat(a[1]) - parseFloat(b[1]);
+      }
+    });
+    return callback(sorted);
+  };
+
+  map = function(browsers, callback) {
+    var browser, name, version, _i, _len, _ref, _results;
+    _results = [];
+    for (_i = 0, _len = browsers.length; _i < _len; _i++) {
+      browser = browsers[_i];
+      _ref = browser.split(' '), name = _ref[0], version = _ref[1];
+      version = parseFloat(version);
+      _results.push(callback(browser, name, version));
+    }
+    return _results;
+  };
+
+  prefix = function() {
+    var data, name, names, _i, _j, _len, _results;
+    names = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), data = arguments[_i++];
+    _results = [];
+    for (_j = 0, _len = names.length; _j < _len; _j++) {
+      name = names[_j];
+      _results.push(module.exports[name] = data);
+    }
+    return _results;
+  };
+
+  module.exports = {};
+
+  feature(require('caniuse-db/features-json/border-radius'), function(browsers) {
+    return prefix('border-radius', 'border-top-left-radius', 'border-top-right-radius', 'border-bottom-right-radius', 'border-bottom-left-radius', {
+      mistakes: ['-ms-'],
+      browsers: browsers,
+      transition: true
+    });
+  });
+
+  feature(require('caniuse-db/features-json/css-boxshadow'), function(browsers) {
+    return prefix('box-shadow', {
+      browsers: browsers,
+      transition: true
+    });
+  });
+
+  feature(require('caniuse-db/features-json/css-animation'), function(browsers) {
+    return prefix('animation', 'animation-name', 'animation-duration', 'animation-delay', 'animation-direction', 'animation-fill-mode', 'animation-iteration-count', 'animation-play-state', 'animation-timing-function', '@keyframes', {
+      browsers: browsers
+    });
+  });
+
+  feature(require('caniuse-db/features-json/css-transitions'), function(browsers) {
+    return prefix('transition', 'transition-property', 'transition-duration', 'transition-delay', 'transition-timing-function', {
+      mistakes: ['-ms-'],
+      browsers: browsers
+    });
+  });
+
+  feature(require('caniuse-db/features-json/transforms2d'), function(browsers) {
+    return prefix('transform', 'transform-origin', {
+      browsers: browsers,
+      transition: true
+    });
+  });
+
+  feature(require('caniuse-db/features-json/transforms3d'), function(browsers) {
+    prefix('perspective', 'perspective-origin', {
+      browsers: browsers,
+      transition: true
+    });
+    return prefix('transform-style', 'backface-visibility', {
+      browsers: browsers
+    });
+  });
+
+  feature(require('caniuse-db/features-json/css-gradients'), function(browsers) {
+    browsers = map(browsers, function(browser, name, version) {
+      if (name === 'android' && version < 4 || name === 'ios_saf' && version < 5 || name === 'safari' && version < 5.1) {
+        return browser + ' old';
+      } else {
+        return browser;
+      }
+    });
+    return prefix('linear-gradient', 'repeating-linear-gradient', 'radial-gradient', 'repeating-radial-gradient', {
+      props: ['background', 'background-image', 'border-image'],
+      mistakes: ['-ms-'],
+      browsers: browsers
+    });
+  });
+
+  feature(require('caniuse-db/features-json/css3-boxsizing'), function(browsers) {
+    return prefix('box-sizing', {
+      browsers: browsers
+    });
+  });
+
+  feature(require('caniuse-db/features-json/css-filters'), function(browsers) {
+    return prefix('filter', {
+      browsers: browsers,
+      transition: true
+    });
+  });
+
+  feature(require('caniuse-db/features-json/multicolumn'), function(browsers) {
+    prefix('columns', 'column-width', 'column-gap', 'column-rule', 'column-rule-color', 'column-rule-width', {
+      browsers: browsers,
+      transition: true
+    });
+    return prefix('column-count', 'column-rule-style', 'column-span', 'column-fill', 'break-before', 'break-after', 'break-inside', {
+      browsers: browsers
+    });
+  });
+
+  feature(require('caniuse-db/features-json/user-select-none'), function(browsers) {
+    return prefix('user-select', {
+      browsers: browsers
+    });
+  });
+
+  feature(require('caniuse-db/features-json/flexbox'), function(browsers) {
+    browsers = map(browsers, function(browser, name, version) {
+      if (name === 'safari' && version < 6.1 || name === 'ios_saf' && version < 7) {
+        return browser + ' 2009';
+      } else if (name === 'chrome' && version < 21) {
+        return browser + ' 2009';
+      } else {
+        return browser;
+      }
+    });
+    prefix('display-flex', 'inline-flex', {
+      props: ['display'],
+      browsers: browsers
+    });
+    prefix('flex', 'flex-grow', 'flex-shrink', 'flex-basis', {
+      transition: true,
+      browsers: browsers
+    });
+    return prefix('flex-direction', 'flex-wrap', 'flex-flow', 'justify-content', 'order', 'align-items', 'align-self', 'align-content', {
+      browsers: browsers
+    });
+  });
+
+  feature(require('caniuse-db/features-json/calc'), function(browsers) {
+    return prefix('calc', {
+      props: ['*'],
+      browsers: browsers
+    });
+  });
+
+  feature(require('caniuse-db/features-json/background-img-opts'), function(browsers) {
+    return prefix('background-clip', 'background-origin', 'background-size', {
+      browsers: browsers
+    });
+  });
+
+  feature(require('caniuse-db/features-json/font-feature'), function(browsers) {
+    return prefix('font-feature-settings', 'font-variant-ligatures', 'font-language-override', 'font-kerning', {
+      browsers: browsers
+    });
+  });
+
+  feature(require('caniuse-db/features-json/border-image'), function(browsers) {
+    return prefix('border-image', {
+      browsers: browsers
+    });
+  });
+
+  feature(require('caniuse-db/features-json/css-selection'), function(browsers) {
+    return prefix('::selection', {
+      selector: true,
+      browsers: browsers
+    });
+  });
+
+  feature(require('caniuse-db/features-json/css-placeholder'), function(browsers) {
+    browsers = map(browsers, function(browser, name, version) {
+      if (name === 'firefox' && version <= 18) {
+        return browser + ' old';
+      } else {
+        return browser;
+      }
+    });
+    return prefix('::placeholder', {
+      selector: true,
+      browsers: browsers
+    });
+  });
+
+  feature(require('caniuse-db/features-json/css-hyphens'), function(browsers) {
+    return prefix('hyphens', {
+      browsers: browsers
+    });
+  });
+
+  feature(require('caniuse-db/features-json/fullscreen'), function(browsers) {
+    return prefix(':fullscreen', {
+      selector: true,
+      browsers: browsers
+    });
+  });
+
+  feature(require('caniuse-db/features-json/css3-tabsize'), function(browsers) {
+    return prefix('tab-size', {
+      browsers: browsers
+    });
+  });
+
+  feature(require('caniuse-db/features-json/intrinsic-width'), function(browsers) {
+    return prefix('max-content', 'min-content', 'fit-content', 'fill-available', {
+      props: ['width', 'min-width', 'max-width', 'height', 'min-height', 'max-height'],
+      browsers: browsers
+    });
+  });
+
+  feature(require('caniuse-db/features-json/css3-cursors-newer'), function(browsers) {
+    prefix('zoom-in', 'zoom-out', {
+      props: ['cursor'],
+      browsers: browsers.concat(['chrome 3'])
+    });
+    return prefix('grab', 'grabbing', {
+      props: ['cursor'],
+      browsers: browsers.concat(['firefox 24', 'firefox 25', 'firefox 26'])
+    });
+  });
+
+  feature(require('caniuse-db/features-json/css-sticky'), function(browsers) {
+    return prefix('sticky', {
+      props: ['position'],
+      browsers: browsers
+    });
+  });
+
+  feature(require('caniuse-db/features-json/pointer'), function(browsers) {
+    return prefix('touch-action', {
+      browsers: browsers
+    });
+  });
+
+  textDecoration = require('caniuse-db/features-json/text-decoration');
+
+  feature(textDecoration, function(browsers) {
+    return prefix('text-decoration-style', {
+      browsers: browsers
+    });
+  });
+
+  feature(textDecoration, {
+    full: true
+  }, function(browsers) {
+    return prefix('text-decoration-line', 'text-decoration-color', {
+      browsers: browsers
+    });
+  });
+
+  feature(require('caniuse-db/features-json/text-size-adjust'), function(browsers) {
+    return prefix('text-size-adjust', {
+      browsers: browsers
+    });
+  });
+
+  feature(require('caniuse-db/features-json/css-masks'), function(browsers) {
+    return prefix('clip-path', 'mask', 'mask-clip', 'mask-composite', 'mask-image', 'mask-origin', 'mask-position', 'mask-repeat', 'mask-size', {
+      browsers: browsers
+    });
+  });
+
+}).call(this);
+
+},{"./browsers":2,"caniuse-db/features-json/background-img-opts":52,"caniuse-db/features-json/border-image":53,"caniuse-db/features-json/border-radius":54,"caniuse-db/features-json/calc":55,"caniuse-db/features-json/css-animation":56,"caniuse-db/features-json/css-boxshadow":57,"caniuse-db/features-json/css-filters":58,"caniuse-db/features-json/css-gradients":59,"caniuse-db/features-json/css-hyphens":60,"caniuse-db/features-json/css-masks":61,"caniuse-db/features-json/css-placeholder":62,"caniuse-db/features-json/css-selection":63,"caniuse-db/features-json/css-sticky":64,"caniuse-db/features-json/css-transitions":65,"caniuse-db/features-json/css3-boxsizing":66,"caniuse-db/features-json/css3-cursors-newer":67,"caniuse-db/features-json/css3-tabsize":68,"caniuse-db/features-json/flexbox":69,"caniuse-db/features-json/font-feature":70,"caniuse-db/features-json/fullscreen":71,"caniuse-db/features-json/intrinsic-width":72,"caniuse-db/features-json/multicolumn":73,"caniuse-db/features-json/pointer":74,"caniuse-db/features-json/text-decoration":75,"caniuse-db/features-json/text-size-adjust":76,"caniuse-db/features-json/transforms2d":77,"caniuse-db/features-json/transforms3d":78,"caniuse-db/features-json/user-select-none":79}],4:[function(require,module,exports){
 (function() {
   var Browsers, utils;
 
-  utils = _dereq_('./utils');
+  utils = require('./utils');
 
   Browsers = (function() {
     Browsers.prefixes = function() {
@@ -498,7 +555,7 @@
       if (this.prefixesCache) {
         return this.prefixesCache;
       }
-      data = _dereq_('../data/browsers');
+      data = require('../data/browsers');
       return this.prefixesCache = utils.uniq((function() {
         var _results;
         _results = [];
@@ -548,16 +605,25 @@
     };
 
     Browsers.prototype.aliases = {
-      fx: 'ff',
-      firefox: 'ff',
+      fx: 'firefox',
+      ff: 'firefox',
+      ios: 'ios_saf',
       explorer: 'ie',
-      blackberry: 'bb'
+      blackberry: 'bb',
+      explorermobile: 'ie_mob',
+      operamini: 'op_mini',
+      operamobile: 'op_mob',
+      chromeandroid: 'and_chr',
+      firefoxandroid: 'and_ff'
     };
 
     Browsers.prototype.requirements = {
       none: {
         regexp: /^none$/i,
         select: function() {
+          if (typeof console !== "undefined" && console !== null) {
+            console.warn("autoprefixer(\'none\') is deprecated and will be " + 'removed in 3.1. ' + 'Use autoprefixer({ browsers: [] })');
+          }
           return [];
         }
       },
@@ -587,13 +653,17 @@
         regexp: /^> (\d+(\.\d+)?)%$/,
         select: function(popularity) {
           return this.browsers(function(data) {
-            return data.versions.filter(function(version, i) {
-              return data.popularity[i] > popularity;
-            });
+            if (data.minor) {
+              return [];
+            } else {
+              return data.versions.filter(function(version, i) {
+                return data.popularity[i] > popularity;
+              });
+            }
           });
         }
       },
-      newerThen: {
+      newerThan: {
         regexp: /^(\w+) (>=?)\s*([\d\.]+)/,
         select: function(browser, sign, version) {
           var data, filter;
@@ -613,10 +683,30 @@
           });
         }
       },
+      olderThan: {
+        regexp: /^(\w+) (<=?)\s*([\d\.]+)/,
+        select: function(browser, sign, version) {
+          var data, filter;
+          data = this.byName(browser);
+          version = parseFloat(version);
+          if (sign === '<') {
+            filter = function(v) {
+              return v < version;
+            };
+          } else if (sign === '<=') {
+            filter = function(v) {
+              return v <= version;
+            };
+          }
+          return data.versions.filter(filter).map(function(v) {
+            return "" + data.name + " " + v;
+          });
+        }
+      },
       esr: {
         regexp: /^(firefox|ff|fx) esr$/i,
         select: function() {
-          return ['ff 24'];
+          return ['firefox 24'];
         }
       },
       direct: {
@@ -685,19 +775,19 @@
 
 }).call(this);
 
-},{"../data/browsers":1,"./utils":39}],5:[function(_dereq_,module,exports){
+},{"../data/browsers":2,"./utils":42}],5:[function(require,module,exports){
 (function() {
   var Browsers, Declaration, Prefixer, utils, vendor,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  Prefixer = _dereq_('./prefixer');
+  Prefixer = require('./prefixer');
 
-  Browsers = _dereq_('./browsers');
+  Browsers = require('./browsers');
 
-  vendor = _dereq_('postcss/lib/vendor');
+  vendor = require('postcss/lib/vendor');
 
-  utils = _dereq_('./utils');
+  utils = require('./utils');
 
   Declaration = (function(_super) {
     __extends(Declaration, _super);
@@ -739,7 +829,7 @@
     };
 
     Declaration.prototype.needCascade = function(decl) {
-      return decl._autoprefixerCascade || (decl._autoprefixerCascade = !!this.all.options.cascade && decl.before.indexOf("\n") !== -1);
+      return decl._autoprefixerCascade || (decl._autoprefixerCascade = this.all.options.cascade !== false && decl.before.indexOf("\n") !== -1);
     };
 
     Declaration.prototype.maxPrefixed = function(prefixes, decl) {
@@ -818,8 +908,9 @@
     Declaration.prototype.process = function(decl) {
       var prefixes;
       if (this.needCascade(decl)) {
-        this.restoreBefore(decl);
-        if (prefixes = Declaration.__super__.process.apply(this, arguments)) {
+        prefixes = Declaration.__super__.process.apply(this, arguments);
+        if (prefixes != null ? prefixes.length : void 0) {
+          this.restoreBefore(decl);
           return decl.before = this.calcBefore(prefixes, decl);
         }
       } else {
@@ -839,15 +930,15 @@
 
 }).call(this);
 
-},{"./browsers":4,"./prefixer":35,"./utils":39,"postcss/lib/vendor":59}],6:[function(_dereq_,module,exports){
+},{"./browsers":4,"./prefixer":37,"./utils":42,"postcss/lib/vendor":94}],6:[function(require,module,exports){
 (function() {
   var AlignContent, Declaration, flexSpec,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  flexSpec = _dereq_('./flex-spec');
+  flexSpec = require('./flex-spec');
 
-  Declaration = _dereq_('../declaration');
+  Declaration = require('../declaration');
 
   AlignContent = (function(_super) {
     __extends(AlignContent, _super);
@@ -898,15 +989,15 @@
 
 }).call(this);
 
-},{"../declaration":5,"./flex-spec":20}],7:[function(_dereq_,module,exports){
+},{"../declaration":5,"./flex-spec":22}],7:[function(require,module,exports){
 (function() {
   var AlignItems, Declaration, flexSpec,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  flexSpec = _dereq_('./flex-spec');
+  flexSpec = require('./flex-spec');
 
-  Declaration = _dereq_('../declaration');
+  Declaration = require('../declaration');
 
   AlignItems = (function(_super) {
     __extends(AlignItems, _super);
@@ -957,15 +1048,15 @@
 
 }).call(this);
 
-},{"../declaration":5,"./flex-spec":20}],8:[function(_dereq_,module,exports){
+},{"../declaration":5,"./flex-spec":22}],8:[function(require,module,exports){
 (function() {
   var AlignSelf, Declaration, flexSpec,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  flexSpec = _dereq_('./flex-spec');
+  flexSpec = require('./flex-spec');
 
-  Declaration = _dereq_('../declaration');
+  Declaration = require('../declaration');
 
   AlignSelf = (function(_super) {
     __extends(AlignSelf, _super);
@@ -1014,13 +1105,47 @@
 
 }).call(this);
 
-},{"../declaration":5,"./flex-spec":20}],9:[function(_dereq_,module,exports){
+},{"../declaration":5,"./flex-spec":22}],9:[function(require,module,exports){
+(function() {
+  var BackgroundSize, Declaration,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Declaration = require('../declaration');
+
+  BackgroundSize = (function(_super) {
+    __extends(BackgroundSize, _super);
+
+    function BackgroundSize() {
+      return BackgroundSize.__super__.constructor.apply(this, arguments);
+    }
+
+    BackgroundSize.names = ['background-size'];
+
+    BackgroundSize.prototype.set = function(decl, prefix) {
+      var value;
+      value = decl.value.toLowerCase();
+      if (prefix === '-webkit-' && value.indexOf(' ') === -1 && value !== 'contain' && value !== 'cover') {
+        decl.value = decl.value + ' ' + decl.value;
+      }
+      return BackgroundSize.__super__.set.call(this, decl, prefix);
+    };
+
+    return BackgroundSize;
+
+  })(Declaration);
+
+  module.exports = BackgroundSize;
+
+}).call(this);
+
+},{"../declaration":5}],10:[function(require,module,exports){
 (function() {
   var BorderImage, Declaration,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  Declaration = _dereq_('../declaration');
+  Declaration = require('../declaration');
 
   BorderImage = (function(_super) {
     __extends(BorderImage, _super);
@@ -1044,13 +1169,13 @@
 
 }).call(this);
 
-},{"../declaration":5}],10:[function(_dereq_,module,exports){
+},{"../declaration":5}],11:[function(require,module,exports){
 (function() {
   var BorderRadius, Declaration,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  Declaration = _dereq_('../declaration');
+  Declaration = require('../declaration');
 
   BorderRadius = (function(_super) {
     var hor, mozilla, normal, ver, _i, _j, _len, _len1, _ref, _ref1;
@@ -1102,13 +1227,13 @@
 
 }).call(this);
 
-},{"../declaration":5}],11:[function(_dereq_,module,exports){
+},{"../declaration":5}],12:[function(require,module,exports){
 (function() {
   var BreakInside, Declaration,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  Declaration = _dereq_('../declaration');
+  Declaration = require('../declaration');
 
   BreakInside = (function(_super) {
     __extends(BreakInside, _super);
@@ -1158,17 +1283,17 @@
 
 }).call(this);
 
-},{"../declaration":5}],12:[function(_dereq_,module,exports){
+},{"../declaration":5}],13:[function(require,module,exports){
 (function() {
   var DisplayFlex, OldDisplayFlex, OldValue, Value, flexSpec,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  flexSpec = _dereq_('./flex-spec');
+  flexSpec = require('./flex-spec');
 
-  OldValue = _dereq_('../old-value');
+  OldValue = require('../old-value');
 
-  Value = _dereq_('../value');
+  Value = require('../value');
 
   OldDisplayFlex = (function(_super) {
     __extends(OldDisplayFlex, _super);
@@ -1227,15 +1352,15 @@
 
 }).call(this);
 
-},{"../old-value":34,"../value":40,"./flex-spec":20}],13:[function(_dereq_,module,exports){
+},{"../old-value":36,"../value":43,"./flex-spec":22}],14:[function(require,module,exports){
 (function() {
   var FillAvailable, OldValue, Value,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  OldValue = _dereq_('../old-value');
+  OldValue = require('../old-value');
 
-  Value = _dereq_('../value');
+  Value = require('../value');
 
   FillAvailable = (function(_super) {
     __extends(FillAvailable, _super);
@@ -1270,13 +1395,50 @@
 
 }).call(this);
 
-},{"../old-value":34,"../value":40}],14:[function(_dereq_,module,exports){
+},{"../old-value":36,"../value":43}],15:[function(require,module,exports){
+(function() {
+  var FilterValue, Value,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Value = require('../value');
+
+  FilterValue = (function(_super) {
+    __extends(FilterValue, _super);
+
+    function FilterValue() {
+      return FilterValue.__super__.constructor.apply(this, arguments);
+    }
+
+    FilterValue.names = ['filter'];
+
+    FilterValue.prototype.replace = function(value, prefix) {
+      if (prefix === '-webkit-') {
+        if (value.indexOf('-webkit-filter') === -1) {
+          return FilterValue.__super__.replace.apply(this, arguments) + ', ' + value;
+        } else {
+          return value;
+        }
+      } else {
+        return FilterValue.__super__.replace.apply(this, arguments);
+      }
+    };
+
+    return FilterValue;
+
+  })(Value);
+
+  module.exports = FilterValue;
+
+}).call(this);
+
+},{"../value":43}],16:[function(require,module,exports){
 (function() {
   var Declaration, Filter,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  Declaration = _dereq_('../declaration');
+  Declaration = require('../declaration');
 
   Filter = (function(_super) {
     __extends(Filter, _super);
@@ -1290,7 +1452,7 @@
     Filter.prototype.check = function(decl) {
       var v;
       v = decl.value;
-      return v.toLowerCase().indexOf('alpha(') === -1 && v.indexOf('DXImageTransform.Microsoft') === -1;
+      return v.toLowerCase().indexOf('alpha(') === -1 && v.indexOf('DXImageTransform.Microsoft') === -1 && v.indexOf('data:image/svg+xml') === -1;
     };
 
     return Filter;
@@ -1301,15 +1463,15 @@
 
 }).call(this);
 
-},{"../declaration":5}],15:[function(_dereq_,module,exports){
+},{"../declaration":5}],17:[function(require,module,exports){
 (function() {
   var Declaration, FlexBasis, flexSpec,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  flexSpec = _dereq_('./flex-spec');
+  flexSpec = require('./flex-spec');
 
-  Declaration = _dereq_('../declaration');
+  Declaration = require('../declaration');
 
   FlexBasis = (function(_super) {
     __extends(FlexBasis, _super);
@@ -1350,15 +1512,15 @@
 
 }).call(this);
 
-},{"../declaration":5,"./flex-spec":20}],16:[function(_dereq_,module,exports){
+},{"../declaration":5,"./flex-spec":22}],18:[function(require,module,exports){
 (function() {
   var Declaration, FlexDirection, flexSpec,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  flexSpec = _dereq_('./flex-spec');
+  flexSpec = require('./flex-spec');
 
-  Declaration = _dereq_('../declaration');
+  Declaration = require('../declaration');
 
   FlexDirection = (function(_super) {
     __extends(FlexDirection, _super);
@@ -1423,15 +1585,15 @@
 
 }).call(this);
 
-},{"../declaration":5,"./flex-spec":20}],17:[function(_dereq_,module,exports){
+},{"../declaration":5,"./flex-spec":22}],19:[function(require,module,exports){
 (function() {
   var Declaration, FlexFlow, flexSpec,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  flexSpec = _dereq_('./flex-spec');
+  flexSpec = require('./flex-spec');
 
-  Declaration = _dereq_('../declaration');
+  Declaration = require('../declaration');
 
   FlexFlow = (function(_super) {
     __extends(FlexFlow, _super);
@@ -1460,15 +1622,15 @@
 
 }).call(this);
 
-},{"../declaration":5,"./flex-spec":20}],18:[function(_dereq_,module,exports){
+},{"../declaration":5,"./flex-spec":22}],20:[function(require,module,exports){
 (function() {
   var Declaration, Flex, flexSpec,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  flexSpec = _dereq_('./flex-spec');
+  flexSpec = require('./flex-spec');
 
-  Declaration = _dereq_('../declaration');
+  Declaration = require('../declaration');
 
   Flex = (function(_super) {
     __extends(Flex, _super);
@@ -1503,15 +1665,15 @@
 
 }).call(this);
 
-},{"../declaration":5,"./flex-spec":20}],19:[function(_dereq_,module,exports){
+},{"../declaration":5,"./flex-spec":22}],21:[function(require,module,exports){
 (function() {
   var Declaration, FlexShrink, flexSpec,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  flexSpec = _dereq_('./flex-spec');
+  flexSpec = require('./flex-spec');
 
-  Declaration = _dereq_('../declaration');
+  Declaration = require('../declaration');
 
   FlexShrink = (function(_super) {
     __extends(FlexShrink, _super);
@@ -1552,7 +1714,7 @@
 
 }).call(this);
 
-},{"../declaration":5,"./flex-spec":20}],20:[function(_dereq_,module,exports){
+},{"../declaration":5,"./flex-spec":22}],22:[function(require,module,exports){
 (function() {
   module.exports = function(prefix) {
     var spec;
@@ -1565,15 +1727,15 @@
 
 }).call(this);
 
-},{}],21:[function(_dereq_,module,exports){
+},{}],23:[function(require,module,exports){
 (function() {
   var Declaration, FlexWrap, flexSpec,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  flexSpec = _dereq_('./flex-spec');
+  flexSpec = require('./flex-spec');
 
-  Declaration = _dereq_('../declaration');
+  Declaration = require('../declaration');
 
   FlexWrap = (function(_super) {
     __extends(FlexWrap, _super);
@@ -1600,15 +1762,15 @@
 
 }).call(this);
 
-},{"../declaration":5,"./flex-spec":20}],22:[function(_dereq_,module,exports){
+},{"../declaration":5,"./flex-spec":22}],24:[function(require,module,exports){
 (function() {
   var Declaration, Flex, flexSpec,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  flexSpec = _dereq_('./flex-spec');
+  flexSpec = require('./flex-spec');
 
-  Declaration = _dereq_('../declaration');
+  Declaration = require('../declaration');
 
   Flex = (function(_super) {
     __extends(Flex, _super);
@@ -1658,13 +1820,13 @@
 
 }).call(this);
 
-},{"../declaration":5,"./flex-spec":20}],23:[function(_dereq_,module,exports){
+},{"../declaration":5,"./flex-spec":22}],25:[function(require,module,exports){
 (function() {
   var Fullscreen, Selector,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  Selector = _dereq_('../selector');
+  Selector = require('../selector');
 
   Fullscreen = (function(_super) {
     __extends(Fullscreen, _super);
@@ -1693,19 +1855,19 @@
 
 }).call(this);
 
-},{"../selector":38}],24:[function(_dereq_,module,exports){
+},{"../selector":40}],26:[function(require,module,exports){
 (function() {
   var Gradient, OldValue, Value, isDirection, list, utils,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  OldValue = _dereq_('../old-value');
+  OldValue = require('../old-value');
 
-  Value = _dereq_('../value');
+  Value = require('../value');
 
-  utils = _dereq_('../utils');
+  utils = require('../utils');
 
-  list = _dereq_('postcss/lib/list');
+  list = require('postcss/lib/list');
 
   isDirection = /top|left|right|bottom/gi;
 
@@ -1719,8 +1881,7 @@
     Gradient.names = ['linear-gradient', 'repeating-linear-gradient', 'radial-gradient', 'repeating-radial-gradient'];
 
     Gradient.prototype.replace = function(string, prefix) {
-      var values;
-      values = list.comma(string).map((function(_this) {
+      return list.space(string).map((function(_this) {
         return function(value) {
           var after, args, close, params;
           if (value.slice(0, +_this.name.length + 1 || 9e9) !== _this.name + '(') {
@@ -1738,8 +1899,7 @@
             return prefix + _this.name + '(' + params.join(', ') + ')' + after;
           }
         };
-      })(this));
-      return values.join(', ');
+      })(this)).join(' ');
     };
 
     Gradient.prototype.directions = {
@@ -1858,17 +2018,17 @@
 
     Gradient.prototype.colorStops = function(params) {
       return params.map(function(param, i) {
-        var color, position, separator;
+        var color, match, position, _ref;
         if (i === 0) {
           return param;
         }
-        separator = param.lastIndexOf(' ');
-        if (separator === -1) {
-          color = param;
-          position = void 0;
-        } else {
-          color = param.slice(0, separator);
-          position = param.slice(separator + 1);
+        _ref = list.space(param), color = _ref[0], position = _ref[1];
+        if (position == null) {
+          match = param.match(/^(.*\))(\d.*)$/);
+          if (match) {
+            color = match[1];
+            position = match[2];
+          }
         }
         if (position && position.indexOf(')') !== -1) {
           color += ' ' + position;
@@ -1912,15 +2072,15 @@
 
 }).call(this);
 
-},{"../old-value":34,"../utils":39,"../value":40,"postcss/lib/list":49}],25:[function(_dereq_,module,exports){
+},{"../old-value":36,"../utils":42,"../value":43,"postcss/lib/list":85}],27:[function(require,module,exports){
 (function() {
   var Declaration, JustifyContent, flexSpec,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  flexSpec = _dereq_('./flex-spec');
+  flexSpec = require('./flex-spec');
 
-  Declaration = _dereq_('../declaration');
+  Declaration = require('../declaration');
 
   JustifyContent = (function(_super) {
     __extends(JustifyContent, _super);
@@ -1976,15 +2136,15 @@
 
 }).call(this);
 
-},{"../declaration":5,"./flex-spec":20}],26:[function(_dereq_,module,exports){
+},{"../declaration":5,"./flex-spec":22}],28:[function(require,module,exports){
 (function() {
   var Declaration, Order, flexSpec,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  flexSpec = _dereq_('./flex-spec');
+  flexSpec = require('./flex-spec');
 
-  Declaration = _dereq_('../declaration');
+  Declaration = require('../declaration');
 
   Order = (function(_super) {
     __extends(Order, _super);
@@ -2030,13 +2190,13 @@
 
 }).call(this);
 
-},{"../declaration":5,"./flex-spec":20}],27:[function(_dereq_,module,exports){
+},{"../declaration":5,"./flex-spec":22}],29:[function(require,module,exports){
 (function() {
   var Placeholder, Selector,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  Selector = _dereq_('../selector');
+  Selector = require('../selector');
 
   Placeholder = (function(_super) {
     __extends(Placeholder, _super);
@@ -2071,13 +2231,13 @@
 
 }).call(this);
 
-},{"../selector":38}],28:[function(_dereq_,module,exports){
+},{"../selector":40}],30:[function(require,module,exports){
 (function() {
   var Declaration, TransformDecl,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  Declaration = _dereq_('../declaration');
+  Declaration = require('../declaration');
 
   TransformDecl = (function(_super) {
     __extends(TransformDecl, _super);
@@ -2104,6 +2264,9 @@
 
     TransformDecl.prototype.contain3d = function(decl) {
       var func, _i, _len, _ref;
+      if (decl.prop === 'transform-origin') {
+        return false;
+      }
       _ref = TransformDecl.functions3d;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         func = _ref[_i];
@@ -2119,6 +2282,10 @@
         if (!this.contain3d(decl) && !this.keykrameParents(decl)) {
           return TransformDecl.__super__.insert.apply(this, arguments);
         }
+      } else if (prefix === '-o-') {
+        if (!this.contain3d(decl)) {
+          return TransformDecl.__super__.insert.apply(this, arguments);
+        }
       } else {
         return TransformDecl.__super__.insert.apply(this, arguments);
       }
@@ -2132,13 +2299,13 @@
 
 }).call(this);
 
-},{"../declaration":5}],29:[function(_dereq_,module,exports){
+},{"../declaration":5}],31:[function(require,module,exports){
 (function() {
   var TransformValue, Value,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  Value = _dereq_('../value');
+  Value = require('../value');
 
   TransformValue = (function(_super) {
     __extends(TransformValue, _super);
@@ -2165,15 +2332,15 @@
 
 }).call(this);
 
-},{"../value":40}],30:[function(_dereq_,module,exports){
+},{"../value":43}],32:[function(require,module,exports){
 (function() {
   var OldValue, Transition, Value,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  OldValue = _dereq_('../old-value');
+  OldValue = require('../old-value');
 
-  Value = _dereq_('../value');
+  Value = require('../value');
 
   Transition = (function(_super) {
     __extends(Transition, _super);
@@ -2204,7 +2371,7 @@
 
 }).call(this);
 
-},{"../old-value":34,"../value":40}],31:[function(_dereq_,module,exports){
+},{"../old-value":36,"../value":43}],33:[function(require,module,exports){
 (function() {
   var capitalize, names, prefix;
 
@@ -2214,8 +2381,12 @@
 
   names = {
     ie: 'IE',
-    ff: 'Firefox',
-    ios: 'iOS'
+    ie_mob: 'IE Mobile',
+    ios_saf: 'iOS',
+    op_mini: 'Opera Mini',
+    op_mob: 'Opera Mobile',
+    and_chr: 'Chrome for Android',
+    and_ff: 'Firefox for Android'
   };
 
   prefix = function(name, transition, prefixes) {
@@ -2315,18 +2486,21 @@
     if (values !== '') {
       out += "\nValues:\n" + values;
     }
+    if (atrules === '' && selectors === '' && props === '' && values === '') {
+      out += '\nAwesome! Your browsers don\'t require any vendor prefixes.' + '\nNow you can remove Autoprefixer from build steps.';
+    }
     return out;
   };
 
 }).call(this);
 
-},{}],32:[function(_dereq_,module,exports){
+},{}],34:[function(require,module,exports){
 (function() {
   var Keyframes, Prefixer,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  Prefixer = _dereq_('./prefixer');
+  Prefixer = require('./prefixer');
 
   Keyframes = (function(_super) {
     __extends(Keyframes, _super);
@@ -2334,10 +2508,6 @@
     function Keyframes() {
       return Keyframes.__super__.constructor.apply(this, arguments);
     }
-
-    Keyframes.prototype.check = function(atRule) {
-      return atRule.name === 'keyframes';
-    };
 
     Keyframes.prototype.add = function(atRule, prefix) {
       var already, cloned, prefixed;
@@ -2354,6 +2524,21 @@
       return atRule.parent.insertBefore(atRule, cloned);
     };
 
+    Keyframes.prototype.process = function(node) {
+      var parent, prefix, _i, _len, _ref, _results;
+      parent = this.parentPrefix(node);
+      _ref = this.prefixes;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        prefix = _ref[_i];
+        if (parent && parent !== prefix) {
+          continue;
+        }
+        _results.push(this.add(node, prefix));
+      }
+      return _results;
+    };
+
     return Keyframes;
 
   })(Prefixer);
@@ -2362,7 +2547,7 @@
 
 }).call(this);
 
-},{"./prefixer":35}],33:[function(_dereq_,module,exports){
+},{"./prefixer":37}],35:[function(require,module,exports){
 (function() {
   var OldSelector;
 
@@ -2432,11 +2617,11 @@
 
 }).call(this);
 
-},{}],34:[function(_dereq_,module,exports){
+},{}],36:[function(require,module,exports){
 (function() {
   var OldValue, utils;
 
-  utils = _dereq_('./utils');
+  utils = require('./utils');
 
   OldValue = (function() {
     function OldValue(name, string, regexp) {
@@ -2463,15 +2648,15 @@
 
 }).call(this);
 
-},{"./utils":39}],35:[function(_dereq_,module,exports){
+},{"./utils":42}],37:[function(require,module,exports){
 (function() {
   var Browsers, Prefixer, utils, vendor;
 
-  Browsers = _dereq_('./browsers');
+  Browsers = require('./browsers');
 
-  vendor = _dereq_('postcss/lib/vendor');
+  vendor = require('postcss/lib/vendor');
 
-  utils = _dereq_('./utils');
+  utils = require('./utils');
 
   Prefixer = (function() {
     Prefixer.hack = function(klass) {
@@ -2499,6 +2684,9 @@
     Prefixer.clone = function(node, overrides) {
       var cloned;
       cloned = node.clone(overrides);
+      if (node.type === 'decl') {
+        cloned.between = node.between;
+      }
       delete cloned._autoprefixerPrefix;
       delete cloned._autoprefixerValues;
       return cloned;
@@ -2520,7 +2708,7 @@
     };
 
     Prefixer.prototype.process = function(node) {
-      var parent, prefix, prefixes, _i, _j, _len, _len1, _ref;
+      var added, parent, prefix, prefixes, _i, _j, _len, _len1, _ref;
       if (!this.check(node)) {
         return;
       }
@@ -2534,11 +2722,14 @@
         }
         prefixes.push(prefix);
       }
+      added = [];
       for (_j = 0, _len1 = prefixes.length; _j < _len1; _j++) {
         prefix = prefixes[_j];
-        this.add(node, prefix, prefixes);
+        if (this.add(node, prefix, added.concat([prefix]))) {
+          added.push(prefix);
+        }
       }
-      return prefixes;
+      return added;
     };
 
     Prefixer.prototype.clone = function(node, overrides) {
@@ -2553,73 +2744,79 @@
 
 }).call(this);
 
-},{"./browsers":4,"./utils":39,"postcss/lib/vendor":59}],36:[function(_dereq_,module,exports){
+},{"./browsers":4,"./utils":42,"postcss/lib/vendor":94}],38:[function(require,module,exports){
 (function() {
-  var Browsers, Declaration, Keyframes, Prefixes, Processor, Selector, Value, declsCache, utils, vendor;
+  var Browsers, Declaration, Keyframes, Prefixes, Processor, Selector, Supports, Value, declsCache, utils, vendor;
 
-  utils = _dereq_('./utils');
+  utils = require('./utils');
 
-  vendor = _dereq_('postcss/lib/vendor');
+  vendor = require('postcss/lib/vendor');
 
-  Declaration = _dereq_('./declaration');
+  Declaration = require('./declaration');
 
-  Processor = _dereq_('./processor');
+  Processor = require('./processor');
 
-  Keyframes = _dereq_('./keyframes');
+  Keyframes = require('./keyframes');
 
-  Browsers = _dereq_('./browsers');
+  Supports = require('./supports');
 
-  Selector = _dereq_('./selector');
+  Browsers = require('./browsers');
 
-  Value = _dereq_('./value');
+  Selector = require('./selector');
 
-  Selector.hack(_dereq_('./hacks/fullscreen'));
+  Value = require('./value');
 
-  Selector.hack(_dereq_('./hacks/placeholder'));
+  Selector.hack(require('./hacks/fullscreen'));
 
-  Declaration.hack(_dereq_('./hacks/flex'));
+  Selector.hack(require('./hacks/placeholder'));
 
-  Declaration.hack(_dereq_('./hacks/order'));
+  Declaration.hack(require('./hacks/flex'));
 
-  Declaration.hack(_dereq_('./hacks/filter'));
+  Declaration.hack(require('./hacks/order'));
 
-  Declaration.hack(_dereq_('./hacks/flex-flow'));
+  Declaration.hack(require('./hacks/filter'));
 
-  Declaration.hack(_dereq_('./hacks/flex-grow'));
+  Declaration.hack(require('./hacks/flex-flow'));
 
-  Declaration.hack(_dereq_('./hacks/flex-wrap'));
+  Declaration.hack(require('./hacks/flex-grow'));
 
-  Declaration.hack(_dereq_('./hacks/align-self'));
+  Declaration.hack(require('./hacks/flex-wrap'));
 
-  Declaration.hack(_dereq_('./hacks/flex-basis'));
+  Declaration.hack(require('./hacks/align-self'));
 
-  Declaration.hack(_dereq_('./hacks/align-items'));
+  Declaration.hack(require('./hacks/flex-basis'));
 
-  Declaration.hack(_dereq_('./hacks/flex-shrink'));
+  Declaration.hack(require('./hacks/align-items'));
 
-  Declaration.hack(_dereq_('./hacks/break-inside'));
+  Declaration.hack(require('./hacks/flex-shrink'));
 
-  Declaration.hack(_dereq_('./hacks/border-image'));
+  Declaration.hack(require('./hacks/break-inside'));
 
-  Declaration.hack(_dereq_('./hacks/align-content'));
+  Declaration.hack(require('./hacks/border-image'));
 
-  Declaration.hack(_dereq_('./hacks/border-radius'));
+  Declaration.hack(require('./hacks/align-content'));
 
-  Declaration.hack(_dereq_('./hacks/transform-decl'));
+  Declaration.hack(require('./hacks/border-radius'));
 
-  Declaration.hack(_dereq_('./hacks/flex-direction'));
+  Declaration.hack(require('./hacks/transform-decl'));
 
-  Declaration.hack(_dereq_('./hacks/justify-content'));
+  Declaration.hack(require('./hacks/flex-direction'));
 
-  Value.hack(_dereq_('./hacks/gradient'));
+  Declaration.hack(require('./hacks/justify-content'));
 
-  Value.hack(_dereq_('./hacks/transition'));
+  Declaration.hack(require('./hacks/background-size'));
 
-  Value.hack(_dereq_('./hacks/display-flex'));
+  Value.hack(require('./hacks/gradient'));
 
-  Value.hack(_dereq_('./hacks/fill-available'));
+  Value.hack(require('./hacks/transition'));
 
-  Value.hack(_dereq_('./hacks/transform-value'));
+  Value.hack(require('./hacks/display-flex'));
+
+  Value.hack(require('./hacks/filter-value'));
+
+  Value.hack(require('./hacks/fill-available'));
+
+  Value.hack(require('./hacks/transform-value'));
 
   declsCache = {};
 
@@ -2634,6 +2831,19 @@
     }
 
     Prefixes.prototype.transitionProps = ['transition', 'transition-property'];
+
+    Prefixes.prototype.cleaner = function() {
+      var empty;
+      if (!this.cleanerCache) {
+        if (this.browsers.selected.length) {
+          empty = new Browsers(this.browsers.data, []);
+          this.cleanerCache = new Prefixes(this.data, empty, this.options);
+        } else {
+          return this;
+        }
+      }
+      return this.cleanerCache;
+    };
 
     Prefixes.prototype.select = function(list) {
       var add, all, data, name, notes, selected;
@@ -2715,7 +2925,8 @@
     Prefixes.prototype.preprocess = function(selected) {
       var add, name, old, olds, prefix, prefixed, prefixes, prop, props, remove, selector, value, values, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _len5, _len6, _m, _n, _o, _ref, _ref1, _ref2;
       add = {
-        selectors: []
+        selectors: [],
+        '@supports': new Supports(this)
       };
       _ref = selected.add;
       for (name in _ref) {
@@ -2889,15 +3100,15 @@
 
 }).call(this);
 
-},{"./browsers":4,"./declaration":5,"./hacks/align-content":6,"./hacks/align-items":7,"./hacks/align-self":8,"./hacks/border-image":9,"./hacks/border-radius":10,"./hacks/break-inside":11,"./hacks/display-flex":12,"./hacks/fill-available":13,"./hacks/filter":14,"./hacks/flex":22,"./hacks/flex-basis":15,"./hacks/flex-direction":16,"./hacks/flex-flow":17,"./hacks/flex-grow":18,"./hacks/flex-shrink":19,"./hacks/flex-wrap":21,"./hacks/fullscreen":23,"./hacks/gradient":24,"./hacks/justify-content":25,"./hacks/order":26,"./hacks/placeholder":27,"./hacks/transform-decl":28,"./hacks/transform-value":29,"./hacks/transition":30,"./keyframes":32,"./processor":37,"./selector":38,"./utils":39,"./value":40,"postcss/lib/vendor":59}],37:[function(_dereq_,module,exports){
+},{"./browsers":4,"./declaration":5,"./hacks/align-content":6,"./hacks/align-items":7,"./hacks/align-self":8,"./hacks/background-size":9,"./hacks/border-image":10,"./hacks/border-radius":11,"./hacks/break-inside":12,"./hacks/display-flex":13,"./hacks/fill-available":14,"./hacks/filter":16,"./hacks/filter-value":15,"./hacks/flex":24,"./hacks/flex-basis":17,"./hacks/flex-direction":18,"./hacks/flex-flow":19,"./hacks/flex-grow":20,"./hacks/flex-shrink":21,"./hacks/flex-wrap":23,"./hacks/fullscreen":25,"./hacks/gradient":26,"./hacks/justify-content":27,"./hacks/order":28,"./hacks/placeholder":29,"./hacks/transform-decl":30,"./hacks/transform-value":31,"./hacks/transition":32,"./keyframes":34,"./processor":39,"./selector":40,"./supports":41,"./utils":42,"./value":43,"postcss/lib/vendor":94}],39:[function(require,module,exports){
 (function() {
   var Processor, Value, utils, vendor;
 
-  vendor = _dereq_('postcss/lib/vendor');
+  vendor = require('postcss/lib/vendor');
 
-  Value = _dereq_('./value');
+  Value = require('./value');
 
-  utils = _dereq_('./utils');
+  utils = require('./utils');
 
   Processor = (function() {
     function Processor(prefixes) {
@@ -2905,36 +3116,58 @@
     }
 
     Processor.prototype.add = function(css) {
-      var prefixer, selector, _i, _len, _ref;
-      prefixer = this.prefixes.add['@keyframes'];
-      if (prefixer) {
-        css.eachAtRule(function(rule) {
-          return prefixer.process(rule);
-        });
-      }
-      _ref = this.prefixes.add.selectors;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        selector = _ref[_i];
-        css.eachRule(function(rule) {
-          return selector.process(rule);
-        });
-      }
+      var keyframes, supports;
+      keyframes = this.prefixes.add['@keyframes'];
+      supports = this.prefixes.add['@supports'];
+      css.eachAtRule((function(_this) {
+        return function(rule) {
+          if (rule.name === 'keyframes') {
+            if (!_this.disabled(rule)) {
+              return keyframes != null ? keyframes.process(rule) : void 0;
+            }
+          } else if (rule.name === 'supports') {
+            if (!_this.disabled(rule)) {
+              return supports.process(rule);
+            }
+          }
+        };
+      })(this));
+      css.eachRule((function(_this) {
+        return function(rule) {
+          var selector, _i, _len, _ref, _results;
+          if (_this.disabled(rule)) {
+            return;
+          }
+          _ref = _this.prefixes.add.selectors;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            selector = _ref[_i];
+            _results.push(selector.process(rule));
+          }
+          return _results;
+        };
+      })(this));
       css.eachDecl((function(_this) {
         return function(decl) {
           var prefix;
           prefix = _this.prefixes.add[decl.prop];
           if (prefix && prefix.prefixes) {
-            return prefix.process(decl);
+            if (!_this.disabled(decl)) {
+              return prefix.process(decl);
+            }
           }
         };
       })(this));
       return css.eachDecl((function(_this) {
         return function(decl) {
-          var unprefixed, value, _j, _len1, _ref1;
+          var unprefixed, value, _i, _len, _ref;
+          if (_this.disabled(decl)) {
+            return;
+          }
           unprefixed = _this.prefixes.unprefixed(decl.prop);
-          _ref1 = _this.prefixes.values('add', unprefixed);
-          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-            value = _ref1[_j];
+          _ref = _this.prefixes.values('add', unprefixed);
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            value = _ref[_i];
             value.process(decl);
           }
           return Value.save(_this.prefixes, decl);
@@ -2947,7 +3180,9 @@
       css.eachAtRule((function(_this) {
         return function(rule, i) {
           if (_this.prefixes.remove['@' + rule.name]) {
-            return rule.parent.remove(i);
+            if (!_this.disabled(rule)) {
+              return rule.parent.remove(i);
+            }
           }
         };
       })(this));
@@ -2957,7 +3192,9 @@
         css.eachRule((function(_this) {
           return function(rule, i) {
             if (checker.check(rule)) {
-              return rule.parent.remove(i);
+              if (!_this.disabled(rule)) {
+                return rule.parent.remove(i);
+              }
             }
           };
         })(this));
@@ -2965,13 +3202,19 @@
       return css.eachDecl((function(_this) {
         return function(decl, i) {
           var notHack, rule, unprefixed, _j, _len1, _ref1, _ref2;
+          if (_this.disabled(decl)) {
+            return;
+          }
           rule = decl.parent;
           unprefixed = _this.prefixes.unprefixed(decl.prop);
           if ((_ref1 = _this.prefixes.remove[decl.prop]) != null ? _ref1.remove : void 0) {
-            notHack = _this.prefixes.group(decl).down(function(i) {
-              return i.prop === unprefixed;
+            notHack = _this.prefixes.group(decl).down(function(other) {
+              return other.prop === unprefixed;
             });
             if (notHack) {
+              if (decl.before.indexOf("\n") > -1) {
+                _this.reduceSpaces(decl);
+              }
               rule.remove(i);
               return;
             }
@@ -2988,6 +3231,56 @@
       })(this));
     };
 
+    Processor.prototype.disabled = function(node) {
+      var status;
+      if (node._autoprefixerDisabled != null) {
+        return node._autoprefixerDisabled;
+      } else if (node.decls || node.rules) {
+        status = void 0;
+        node.each(function(i) {
+          if (i.type !== 'comment') {
+            return;
+          }
+          if (i.text === 'autoprefixer: off') {
+            status = false;
+            return false;
+          } else if (i.text === 'autoprefixer: on') {
+            status = true;
+            return false;
+          }
+        });
+        return node._autoprefixerDisabled = status != null ? !status : node.parent ? this.disabled(node.parent) : false;
+      } else {
+        return node._autoprefixerDisabled = this.disabled(node.parent);
+      }
+    };
+
+    Processor.prototype.reduceSpaces = function(decl) {
+      var diff, parts, prevMin, stop;
+      stop = false;
+      this.prefixes.group(decl).up(function(other) {
+        return stop = true;
+      });
+      if (stop) {
+        return;
+      }
+      parts = decl.before.split("\n");
+      prevMin = parts[parts.length - 1].length;
+      diff = false;
+      return this.prefixes.group(decl).down(function(other) {
+        var last;
+        parts = other.before.split("\n");
+        last = parts.length - 1;
+        if (parts[last].length > prevMin) {
+          if (diff === false) {
+            diff = parts[last].length - prevMin;
+          }
+          parts[last] = parts[last].slice(0, -diff);
+          return other.before = parts.join("\n");
+        }
+      });
+    };
+
     return Processor;
 
   })();
@@ -2996,19 +3289,19 @@
 
 }).call(this);
 
-},{"./utils":39,"./value":40,"postcss/lib/vendor":59}],38:[function(_dereq_,module,exports){
+},{"./utils":42,"./value":43,"postcss/lib/vendor":94}],40:[function(require,module,exports){
 (function() {
   var Browsers, OldSelector, Prefixer, Selector, utils,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  OldSelector = _dereq_('./old-selector');
+  OldSelector = require('./old-selector');
 
-  Prefixer = _dereq_('./prefixer');
+  Prefixer = require('./prefixer');
 
-  Browsers = _dereq_('./browsers');
+  Browsers = require('./browsers');
 
-  utils = _dereq_('./utils');
+  utils = require('./utils');
 
   Selector = (function(_super) {
     __extends(Selector, _super);
@@ -3115,7 +3408,124 @@
 
 }).call(this);
 
-},{"./browsers":4,"./old-selector":33,"./prefixer":35,"./utils":39}],39:[function(_dereq_,module,exports){
+},{"./browsers":4,"./old-selector":35,"./prefixer":37,"./utils":42}],41:[function(require,module,exports){
+(function() {
+  var Prefixes, Supports, Value, findCondition, findDecl, list, postcss, split, utils;
+
+  Prefixes = require('./prefixes');
+
+  Value = require('./value');
+
+  utils = require('./utils');
+
+  postcss = require('postcss');
+
+  list = require('postcss/lib/list');
+
+  split = /\(\s*([^\(\):]+)\s*:([^\)]+)/;
+
+  findDecl = /\(\s*([^\(\):]+)\s*:\s*([^\)]+)\s*\)/g;
+
+  findCondition = /(not\s*)?\(\s*([^\(\):]+)\s*:\s*([^\)]+)\s*\)\s*or\s*/gi;
+
+  Supports = (function() {
+    function Supports(all) {
+      this.all = all;
+    }
+
+    Supports.prototype.virtual = function(prop, value) {
+      var rule;
+      rule = postcss.parse('a{}').first;
+      rule.append({
+        prop: prop,
+        value: value,
+        before: ''
+      });
+      return rule;
+    };
+
+    Supports.prototype.prefixed = function(prop, value) {
+      var decl, prefixer, rule, _i, _j, _len, _len1, _ref, _ref1;
+      rule = this.virtual(prop, value);
+      prefixer = this.all.add[prop];
+      if (prefixer != null) {
+        if (typeof prefixer.process === "function") {
+          prefixer.process(rule.first);
+        }
+      }
+      _ref = rule.decls;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        decl = _ref[_i];
+        _ref1 = this.all.values('add', prop);
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          value = _ref1[_j];
+          value.process(decl);
+        }
+        Value.save(this.all, decl);
+      }
+      return rule.decls;
+    };
+
+    Supports.prototype.clean = function(params) {
+      return params.replace(findCondition, (function(_this) {
+        return function(all) {
+          var check, checker, prop, unprefixed, value, _, _i, _len, _ref, _ref1, _ref2;
+          if (all.slice(0, 3).toLowerCase() === 'not') {
+            return all;
+          }
+          _ref = all.match(split), _ = _ref[0], prop = _ref[1], value = _ref[2];
+          unprefixed = _this.all.unprefixed(prop);
+          if ((_ref1 = _this.all.cleaner().remove[prop]) != null ? _ref1.remove : void 0) {
+            check = new RegExp('(\\(|\\s)' + utils.escapeRegexp(unprefixed) + ':');
+            if (check.test(params)) {
+              return '';
+            }
+          }
+          _ref2 = _this.all.cleaner().values('remove', unprefixed);
+          for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+            checker = _ref2[_i];
+            if (checker.check(value)) {
+              return '';
+            }
+          }
+          return all;
+        };
+      })(this)).replace(/\(\s*\((.*)\)\s*\)/g, '($1)');
+    };
+
+    Supports.prototype.process = function(rule) {
+      rule.params = this.clean(rule.params);
+      return rule.params = rule.params.replace(findDecl, (function(_this) {
+        return function(all, prop, value) {
+          var i, stringed;
+          stringed = (function() {
+            var _i, _len, _ref, _results;
+            _ref = this.prefixed(prop, value);
+            _results = [];
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              i = _ref[_i];
+              _results.push("(" + i.prop + ": " + i.value + ")");
+            }
+            return _results;
+          }).call(_this);
+          if (stringed.length === 1) {
+            return stringed[0];
+          } else {
+            return '(' + stringed.join(' or ') + ')';
+          }
+        };
+      })(this));
+    };
+
+    return Supports;
+
+  })();
+
+  module.exports = Supports;
+
+}).call(this);
+
+},{"./prefixes":38,"./utils":42,"./value":43,"postcss":89,"postcss/lib/list":85}],42:[function(require,module,exports){
 (function() {
   module.exports = {
     error: function(text) {
@@ -3158,19 +3568,19 @@
 
 }).call(this);
 
-},{}],40:[function(_dereq_,module,exports){
+},{}],43:[function(require,module,exports){
 (function() {
   var OldValue, Prefixer, Value, utils, vendor,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  Prefixer = _dereq_('./prefixer');
+  Prefixer = require('./prefixer');
 
-  OldValue = _dereq_('./old-value');
+  OldValue = require('./old-value');
 
-  vendor = _dereq_('postcss/lib/vendor');
+  utils = require('./utils');
 
-  utils = _dereq_('./utils');
+  vendor = require('postcss/lib/vendor');
 
   Value = (function(_super) {
     __extends(Value, _super);
@@ -3238,9 +3648,9 @@
     };
 
     Value.prototype.add = function(decl, prefix) {
-      var value;
+      var value, _ref;
       decl._autoprefixerValues || (decl._autoprefixerValues = {});
-      value = decl._autoprefixerValues[prefix] || decl.value;
+      value = decl._autoprefixerValues[prefix] || ((_ref = decl._value) != null ? _ref.raw : void 0) || decl.value;
       value = this.replace(value, prefix);
       if (value) {
         return decl._autoprefixerValues[prefix] = value;
@@ -3259,9 +3669,1304 @@
 
 }).call(this);
 
-},{"./old-value":34,"./prefixer":35,"./utils":39,"postcss/lib/vendor":59}],41:[function(_dereq_,module,exports){
+},{"./old-value":36,"./prefixer":37,"./utils":42,"postcss/lib/vendor":94}],44:[function(require,module,exports){
 
-},{}],42:[function(_dereq_,module,exports){
+},{}],45:[function(require,module,exports){
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @license  MIT
+ */
+
+var base64 = require('base64-js')
+var ieee754 = require('ieee754')
+var isArray = require('is-array')
+
+exports.Buffer = Buffer
+exports.SlowBuffer = Buffer
+exports.INSPECT_MAX_BYTES = 50
+Buffer.poolSize = 8192 // not used by this implementation
+
+var kMaxLength = 0x3fffffff
+
+/**
+ * If `Buffer.TYPED_ARRAY_SUPPORT`:
+ *   === true    Use Uint8Array implementation (fastest)
+ *   === false   Use Object implementation (most compatible, even IE6)
+ *
+ * Browsers that support typed arrays are IE 10+, Firefox 4+, Chrome 7+, Safari 5.1+,
+ * Opera 11.6+, iOS 4.2+.
+ *
+ * Note:
+ *
+ * - Implementation must support adding new properties to `Uint8Array` instances.
+ *   Firefox 4-29 lacked support, fixed in Firefox 30+.
+ *   See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438.
+ *
+ *  - Chrome 9-10 is missing the `TypedArray.prototype.subarray` function.
+ *
+ *  - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
+ *    incorrect length in some situations.
+ *
+ * We detect these buggy browsers and set `Buffer.TYPED_ARRAY_SUPPORT` to `false` so they will
+ * get the Object implementation, which is slower but will work correctly.
+ */
+Buffer.TYPED_ARRAY_SUPPORT = (function () {
+  try {
+    var buf = new ArrayBuffer(0)
+    var arr = new Uint8Array(buf)
+    arr.foo = function () { return 42 }
+    return 42 === arr.foo() && // typed array instances can be augmented
+        typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
+        new Uint8Array(1).subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
+  } catch (e) {
+    return false
+  }
+})()
+
+/**
+ * Class: Buffer
+ * =============
+ *
+ * The Buffer constructor returns instances of `Uint8Array` that are augmented
+ * with function properties for all the node `Buffer` API functions. We use
+ * `Uint8Array` so that square bracket notation works as expected -- it returns
+ * a single octet.
+ *
+ * By augmenting the instances, we can avoid modifying the `Uint8Array`
+ * prototype.
+ */
+function Buffer (subject, encoding, noZero) {
+  if (!(this instanceof Buffer))
+    return new Buffer(subject, encoding, noZero)
+
+  var type = typeof subject
+
+  // Find the length
+  var length
+  if (type === 'number')
+    length = subject > 0 ? subject >>> 0 : 0
+  else if (type === 'string') {
+    if (encoding === 'base64')
+      subject = base64clean(subject)
+    length = Buffer.byteLength(subject, encoding)
+  } else if (type === 'object' && subject !== null) { // assume object is array-like
+    if (subject.type === 'Buffer' && isArray(subject.data))
+      subject = subject.data
+    length = +subject.length > 0 ? Math.floor(+subject.length) : 0
+  } else
+    throw new TypeError('must start with number, buffer, array or string')
+
+  if (this.length > kMaxLength)
+    throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
+      'size: 0x' + kMaxLength.toString(16) + ' bytes')
+
+  var buf
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    // Preferred: Return an augmented `Uint8Array` instance for best performance
+    buf = Buffer._augment(new Uint8Array(length))
+  } else {
+    // Fallback: Return THIS instance of Buffer (created by `new`)
+    buf = this
+    buf.length = length
+    buf._isBuffer = true
+  }
+
+  var i
+  if (Buffer.TYPED_ARRAY_SUPPORT && typeof subject.byteLength === 'number') {
+    // Speed optimization -- use set if we're copying from a typed array
+    buf._set(subject)
+  } else if (isArrayish(subject)) {
+    // Treat array-ish objects as a byte array
+    if (Buffer.isBuffer(subject)) {
+      for (i = 0; i < length; i++)
+        buf[i] = subject.readUInt8(i)
+    } else {
+      for (i = 0; i < length; i++)
+        buf[i] = ((subject[i] % 256) + 256) % 256
+    }
+  } else if (type === 'string') {
+    buf.write(subject, 0, encoding)
+  } else if (type === 'number' && !Buffer.TYPED_ARRAY_SUPPORT && !noZero) {
+    for (i = 0; i < length; i++) {
+      buf[i] = 0
+    }
+  }
+
+  return buf
+}
+
+Buffer.isBuffer = function (b) {
+  return !!(b != null && b._isBuffer)
+}
+
+Buffer.compare = function (a, b) {
+  if (!Buffer.isBuffer(a) || !Buffer.isBuffer(b))
+    throw new TypeError('Arguments must be Buffers')
+
+  var x = a.length
+  var y = b.length
+  for (var i = 0, len = Math.min(x, y); i < len && a[i] === b[i]; i++) {}
+  if (i !== len) {
+    x = a[i]
+    y = b[i]
+  }
+  if (x < y) return -1
+  if (y < x) return 1
+  return 0
+}
+
+Buffer.isEncoding = function (encoding) {
+  switch (String(encoding).toLowerCase()) {
+    case 'hex':
+    case 'utf8':
+    case 'utf-8':
+    case 'ascii':
+    case 'binary':
+    case 'base64':
+    case 'raw':
+    case 'ucs2':
+    case 'ucs-2':
+    case 'utf16le':
+    case 'utf-16le':
+      return true
+    default:
+      return false
+  }
+}
+
+Buffer.concat = function (list, totalLength) {
+  if (!isArray(list)) throw new TypeError('Usage: Buffer.concat(list[, length])')
+
+  if (list.length === 0) {
+    return new Buffer(0)
+  } else if (list.length === 1) {
+    return list[0]
+  }
+
+  var i
+  if (totalLength === undefined) {
+    totalLength = 0
+    for (i = 0; i < list.length; i++) {
+      totalLength += list[i].length
+    }
+  }
+
+  var buf = new Buffer(totalLength)
+  var pos = 0
+  for (i = 0; i < list.length; i++) {
+    var item = list[i]
+    item.copy(buf, pos)
+    pos += item.length
+  }
+  return buf
+}
+
+Buffer.byteLength = function (str, encoding) {
+  var ret
+  str = str + ''
+  switch (encoding || 'utf8') {
+    case 'ascii':
+    case 'binary':
+    case 'raw':
+      ret = str.length
+      break
+    case 'ucs2':
+    case 'ucs-2':
+    case 'utf16le':
+    case 'utf-16le':
+      ret = str.length * 2
+      break
+    case 'hex':
+      ret = str.length >>> 1
+      break
+    case 'utf8':
+    case 'utf-8':
+      ret = utf8ToBytes(str).length
+      break
+    case 'base64':
+      ret = base64ToBytes(str).length
+      break
+    default:
+      ret = str.length
+  }
+  return ret
+}
+
+// pre-set for values that may exist in the future
+Buffer.prototype.length = undefined
+Buffer.prototype.parent = undefined
+
+// toString(encoding, start=0, end=buffer.length)
+Buffer.prototype.toString = function (encoding, start, end) {
+  var loweredCase = false
+
+  start = start >>> 0
+  end = end === undefined || end === Infinity ? this.length : end >>> 0
+
+  if (!encoding) encoding = 'utf8'
+  if (start < 0) start = 0
+  if (end > this.length) end = this.length
+  if (end <= start) return ''
+
+  while (true) {
+    switch (encoding) {
+      case 'hex':
+        return hexSlice(this, start, end)
+
+      case 'utf8':
+      case 'utf-8':
+        return utf8Slice(this, start, end)
+
+      case 'ascii':
+        return asciiSlice(this, start, end)
+
+      case 'binary':
+        return binarySlice(this, start, end)
+
+      case 'base64':
+        return base64Slice(this, start, end)
+
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return utf16leSlice(this, start, end)
+
+      default:
+        if (loweredCase)
+          throw new TypeError('Unknown encoding: ' + encoding)
+        encoding = (encoding + '').toLowerCase()
+        loweredCase = true
+    }
+  }
+}
+
+Buffer.prototype.equals = function (b) {
+  if(!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer')
+  return Buffer.compare(this, b) === 0
+}
+
+Buffer.prototype.inspect = function () {
+  var str = ''
+  var max = exports.INSPECT_MAX_BYTES
+  if (this.length > 0) {
+    str = this.toString('hex', 0, max).match(/.{2}/g).join(' ')
+    if (this.length > max)
+      str += ' ... '
+  }
+  return '<Buffer ' + str + '>'
+}
+
+Buffer.prototype.compare = function (b) {
+  if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer')
+  return Buffer.compare(this, b)
+}
+
+// `get` will be removed in Node 0.13+
+Buffer.prototype.get = function (offset) {
+  console.log('.get() is deprecated. Access using array indexes instead.')
+  return this.readUInt8(offset)
+}
+
+// `set` will be removed in Node 0.13+
+Buffer.prototype.set = function (v, offset) {
+  console.log('.set() is deprecated. Access using array indexes instead.')
+  return this.writeUInt8(v, offset)
+}
+
+function hexWrite (buf, string, offset, length) {
+  offset = Number(offset) || 0
+  var remaining = buf.length - offset
+  if (!length) {
+    length = remaining
+  } else {
+    length = Number(length)
+    if (length > remaining) {
+      length = remaining
+    }
+  }
+
+  // must be an even number of digits
+  var strLen = string.length
+  if (strLen % 2 !== 0) throw new Error('Invalid hex string')
+
+  if (length > strLen / 2) {
+    length = strLen / 2
+  }
+  for (var i = 0; i < length; i++) {
+    var byte = parseInt(string.substr(i * 2, 2), 16)
+    if (isNaN(byte)) throw new Error('Invalid hex string')
+    buf[offset + i] = byte
+  }
+  return i
+}
+
+function utf8Write (buf, string, offset, length) {
+  var charsWritten = blitBuffer(utf8ToBytes(string), buf, offset, length)
+  return charsWritten
+}
+
+function asciiWrite (buf, string, offset, length) {
+  var charsWritten = blitBuffer(asciiToBytes(string), buf, offset, length)
+  return charsWritten
+}
+
+function binaryWrite (buf, string, offset, length) {
+  return asciiWrite(buf, string, offset, length)
+}
+
+function base64Write (buf, string, offset, length) {
+  var charsWritten = blitBuffer(base64ToBytes(string), buf, offset, length)
+  return charsWritten
+}
+
+function utf16leWrite (buf, string, offset, length) {
+  var charsWritten = blitBuffer(utf16leToBytes(string), buf, offset, length)
+  return charsWritten
+}
+
+Buffer.prototype.write = function (string, offset, length, encoding) {
+  // Support both (string, offset, length, encoding)
+  // and the legacy (string, encoding, offset, length)
+  if (isFinite(offset)) {
+    if (!isFinite(length)) {
+      encoding = length
+      length = undefined
+    }
+  } else {  // legacy
+    var swap = encoding
+    encoding = offset
+    offset = length
+    length = swap
+  }
+
+  offset = Number(offset) || 0
+  var remaining = this.length - offset
+  if (!length) {
+    length = remaining
+  } else {
+    length = Number(length)
+    if (length > remaining) {
+      length = remaining
+    }
+  }
+  encoding = String(encoding || 'utf8').toLowerCase()
+
+  var ret
+  switch (encoding) {
+    case 'hex':
+      ret = hexWrite(this, string, offset, length)
+      break
+    case 'utf8':
+    case 'utf-8':
+      ret = utf8Write(this, string, offset, length)
+      break
+    case 'ascii':
+      ret = asciiWrite(this, string, offset, length)
+      break
+    case 'binary':
+      ret = binaryWrite(this, string, offset, length)
+      break
+    case 'base64':
+      ret = base64Write(this, string, offset, length)
+      break
+    case 'ucs2':
+    case 'ucs-2':
+    case 'utf16le':
+    case 'utf-16le':
+      ret = utf16leWrite(this, string, offset, length)
+      break
+    default:
+      throw new TypeError('Unknown encoding: ' + encoding)
+  }
+  return ret
+}
+
+Buffer.prototype.toJSON = function () {
+  return {
+    type: 'Buffer',
+    data: Array.prototype.slice.call(this._arr || this, 0)
+  }
+}
+
+function base64Slice (buf, start, end) {
+  if (start === 0 && end === buf.length) {
+    return base64.fromByteArray(buf)
+  } else {
+    return base64.fromByteArray(buf.slice(start, end))
+  }
+}
+
+function utf8Slice (buf, start, end) {
+  var res = ''
+  var tmp = ''
+  end = Math.min(buf.length, end)
+
+  for (var i = start; i < end; i++) {
+    if (buf[i] <= 0x7F) {
+      res += decodeUtf8Char(tmp) + String.fromCharCode(buf[i])
+      tmp = ''
+    } else {
+      tmp += '%' + buf[i].toString(16)
+    }
+  }
+
+  return res + decodeUtf8Char(tmp)
+}
+
+function asciiSlice (buf, start, end) {
+  var ret = ''
+  end = Math.min(buf.length, end)
+
+  for (var i = start; i < end; i++) {
+    ret += String.fromCharCode(buf[i])
+  }
+  return ret
+}
+
+function binarySlice (buf, start, end) {
+  return asciiSlice(buf, start, end)
+}
+
+function hexSlice (buf, start, end) {
+  var len = buf.length
+
+  if (!start || start < 0) start = 0
+  if (!end || end < 0 || end > len) end = len
+
+  var out = ''
+  for (var i = start; i < end; i++) {
+    out += toHex(buf[i])
+  }
+  return out
+}
+
+function utf16leSlice (buf, start, end) {
+  var bytes = buf.slice(start, end)
+  var res = ''
+  for (var i = 0; i < bytes.length; i += 2) {
+    res += String.fromCharCode(bytes[i] + bytes[i + 1] * 256)
+  }
+  return res
+}
+
+Buffer.prototype.slice = function (start, end) {
+  var len = this.length
+  start = ~~start
+  end = end === undefined ? len : ~~end
+
+  if (start < 0) {
+    start += len;
+    if (start < 0)
+      start = 0
+  } else if (start > len) {
+    start = len
+  }
+
+  if (end < 0) {
+    end += len
+    if (end < 0)
+      end = 0
+  } else if (end > len) {
+    end = len
+  }
+
+  if (end < start)
+    end = start
+
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    return Buffer._augment(this.subarray(start, end))
+  } else {
+    var sliceLen = end - start
+    var newBuf = new Buffer(sliceLen, undefined, true)
+    for (var i = 0; i < sliceLen; i++) {
+      newBuf[i] = this[i + start]
+    }
+    return newBuf
+  }
+}
+
+/*
+ * Need to make sure that buffer isn't trying to write out of bounds.
+ */
+function checkOffset (offset, ext, length) {
+  if ((offset % 1) !== 0 || offset < 0)
+    throw new RangeError('offset is not uint')
+  if (offset + ext > length)
+    throw new RangeError('Trying to access beyond buffer length')
+}
+
+Buffer.prototype.readUInt8 = function (offset, noAssert) {
+  if (!noAssert)
+    checkOffset(offset, 1, this.length)
+  return this[offset]
+}
+
+Buffer.prototype.readUInt16LE = function (offset, noAssert) {
+  if (!noAssert)
+    checkOffset(offset, 2, this.length)
+  return this[offset] | (this[offset + 1] << 8)
+}
+
+Buffer.prototype.readUInt16BE = function (offset, noAssert) {
+  if (!noAssert)
+    checkOffset(offset, 2, this.length)
+  return (this[offset] << 8) | this[offset + 1]
+}
+
+Buffer.prototype.readUInt32LE = function (offset, noAssert) {
+  if (!noAssert)
+    checkOffset(offset, 4, this.length)
+
+  return ((this[offset]) |
+      (this[offset + 1] << 8) |
+      (this[offset + 2] << 16)) +
+      (this[offset + 3] * 0x1000000)
+}
+
+Buffer.prototype.readUInt32BE = function (offset, noAssert) {
+  if (!noAssert)
+    checkOffset(offset, 4, this.length)
+
+  return (this[offset] * 0x1000000) +
+      ((this[offset + 1] << 16) |
+      (this[offset + 2] << 8) |
+      this[offset + 3])
+}
+
+Buffer.prototype.readInt8 = function (offset, noAssert) {
+  if (!noAssert)
+    checkOffset(offset, 1, this.length)
+  if (!(this[offset] & 0x80))
+    return (this[offset])
+  return ((0xff - this[offset] + 1) * -1)
+}
+
+Buffer.prototype.readInt16LE = function (offset, noAssert) {
+  if (!noAssert)
+    checkOffset(offset, 2, this.length)
+  var val = this[offset] | (this[offset + 1] << 8)
+  return (val & 0x8000) ? val | 0xFFFF0000 : val
+}
+
+Buffer.prototype.readInt16BE = function (offset, noAssert) {
+  if (!noAssert)
+    checkOffset(offset, 2, this.length)
+  var val = this[offset + 1] | (this[offset] << 8)
+  return (val & 0x8000) ? val | 0xFFFF0000 : val
+}
+
+Buffer.prototype.readInt32LE = function (offset, noAssert) {
+  if (!noAssert)
+    checkOffset(offset, 4, this.length)
+
+  return (this[offset]) |
+      (this[offset + 1] << 8) |
+      (this[offset + 2] << 16) |
+      (this[offset + 3] << 24)
+}
+
+Buffer.prototype.readInt32BE = function (offset, noAssert) {
+  if (!noAssert)
+    checkOffset(offset, 4, this.length)
+
+  return (this[offset] << 24) |
+      (this[offset + 1] << 16) |
+      (this[offset + 2] << 8) |
+      (this[offset + 3])
+}
+
+Buffer.prototype.readFloatLE = function (offset, noAssert) {
+  if (!noAssert)
+    checkOffset(offset, 4, this.length)
+  return ieee754.read(this, offset, true, 23, 4)
+}
+
+Buffer.prototype.readFloatBE = function (offset, noAssert) {
+  if (!noAssert)
+    checkOffset(offset, 4, this.length)
+  return ieee754.read(this, offset, false, 23, 4)
+}
+
+Buffer.prototype.readDoubleLE = function (offset, noAssert) {
+  if (!noAssert)
+    checkOffset(offset, 8, this.length)
+  return ieee754.read(this, offset, true, 52, 8)
+}
+
+Buffer.prototype.readDoubleBE = function (offset, noAssert) {
+  if (!noAssert)
+    checkOffset(offset, 8, this.length)
+  return ieee754.read(this, offset, false, 52, 8)
+}
+
+function checkInt (buf, value, offset, ext, max, min) {
+  if (!Buffer.isBuffer(buf)) throw new TypeError('buffer must be a Buffer instance')
+  if (value > max || value < min) throw new TypeError('value is out of bounds')
+  if (offset + ext > buf.length) throw new TypeError('index out of range')
+}
+
+Buffer.prototype.writeUInt8 = function (value, offset, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert)
+    checkInt(this, value, offset, 1, 0xff, 0)
+  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
+  this[offset] = value
+  return offset + 1
+}
+
+function objectWriteUInt16 (buf, value, offset, littleEndian) {
+  if (value < 0) value = 0xffff + value + 1
+  for (var i = 0, j = Math.min(buf.length - offset, 2); i < j; i++) {
+    buf[offset + i] = (value & (0xff << (8 * (littleEndian ? i : 1 - i)))) >>>
+      (littleEndian ? i : 1 - i) * 8
+  }
+}
+
+Buffer.prototype.writeUInt16LE = function (value, offset, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert)
+    checkInt(this, value, offset, 2, 0xffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = value
+    this[offset + 1] = (value >>> 8)
+  } else objectWriteUInt16(this, value, offset, true)
+  return offset + 2
+}
+
+Buffer.prototype.writeUInt16BE = function (value, offset, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert)
+    checkInt(this, value, offset, 2, 0xffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 8)
+    this[offset + 1] = value
+  } else objectWriteUInt16(this, value, offset, false)
+  return offset + 2
+}
+
+function objectWriteUInt32 (buf, value, offset, littleEndian) {
+  if (value < 0) value = 0xffffffff + value + 1
+  for (var i = 0, j = Math.min(buf.length - offset, 4); i < j; i++) {
+    buf[offset + i] = (value >>> (littleEndian ? i : 3 - i) * 8) & 0xff
+  }
+}
+
+Buffer.prototype.writeUInt32LE = function (value, offset, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert)
+    checkInt(this, value, offset, 4, 0xffffffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset + 3] = (value >>> 24)
+    this[offset + 2] = (value >>> 16)
+    this[offset + 1] = (value >>> 8)
+    this[offset] = value
+  } else objectWriteUInt32(this, value, offset, true)
+  return offset + 4
+}
+
+Buffer.prototype.writeUInt32BE = function (value, offset, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert)
+    checkInt(this, value, offset, 4, 0xffffffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 24)
+    this[offset + 1] = (value >>> 16)
+    this[offset + 2] = (value >>> 8)
+    this[offset + 3] = value
+  } else objectWriteUInt32(this, value, offset, false)
+  return offset + 4
+}
+
+Buffer.prototype.writeInt8 = function (value, offset, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert)
+    checkInt(this, value, offset, 1, 0x7f, -0x80)
+  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
+  if (value < 0) value = 0xff + value + 1
+  this[offset] = value
+  return offset + 1
+}
+
+Buffer.prototype.writeInt16LE = function (value, offset, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert)
+    checkInt(this, value, offset, 2, 0x7fff, -0x8000)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = value
+    this[offset + 1] = (value >>> 8)
+  } else objectWriteUInt16(this, value, offset, true)
+  return offset + 2
+}
+
+Buffer.prototype.writeInt16BE = function (value, offset, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert)
+    checkInt(this, value, offset, 2, 0x7fff, -0x8000)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 8)
+    this[offset + 1] = value
+  } else objectWriteUInt16(this, value, offset, false)
+  return offset + 2
+}
+
+Buffer.prototype.writeInt32LE = function (value, offset, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert)
+    checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = value
+    this[offset + 1] = (value >>> 8)
+    this[offset + 2] = (value >>> 16)
+    this[offset + 3] = (value >>> 24)
+  } else objectWriteUInt32(this, value, offset, true)
+  return offset + 4
+}
+
+Buffer.prototype.writeInt32BE = function (value, offset, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert)
+    checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
+  if (value < 0) value = 0xffffffff + value + 1
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 24)
+    this[offset + 1] = (value >>> 16)
+    this[offset + 2] = (value >>> 8)
+    this[offset + 3] = value
+  } else objectWriteUInt32(this, value, offset, false)
+  return offset + 4
+}
+
+function checkIEEE754 (buf, value, offset, ext, max, min) {
+  if (value > max || value < min) throw new TypeError('value is out of bounds')
+  if (offset + ext > buf.length) throw new TypeError('index out of range')
+}
+
+function writeFloat (buf, value, offset, littleEndian, noAssert) {
+  if (!noAssert)
+    checkIEEE754(buf, value, offset, 4, 3.4028234663852886e+38, -3.4028234663852886e+38)
+  ieee754.write(buf, value, offset, littleEndian, 23, 4)
+  return offset + 4
+}
+
+Buffer.prototype.writeFloatLE = function (value, offset, noAssert) {
+  return writeFloat(this, value, offset, true, noAssert)
+}
+
+Buffer.prototype.writeFloatBE = function (value, offset, noAssert) {
+  return writeFloat(this, value, offset, false, noAssert)
+}
+
+function writeDouble (buf, value, offset, littleEndian, noAssert) {
+  if (!noAssert)
+    checkIEEE754(buf, value, offset, 8, 1.7976931348623157E+308, -1.7976931348623157E+308)
+  ieee754.write(buf, value, offset, littleEndian, 52, 8)
+  return offset + 8
+}
+
+Buffer.prototype.writeDoubleLE = function (value, offset, noAssert) {
+  return writeDouble(this, value, offset, true, noAssert)
+}
+
+Buffer.prototype.writeDoubleBE = function (value, offset, noAssert) {
+  return writeDouble(this, value, offset, false, noAssert)
+}
+
+// copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)
+Buffer.prototype.copy = function (target, target_start, start, end) {
+  var source = this
+
+  if (!start) start = 0
+  if (!end && end !== 0) end = this.length
+  if (!target_start) target_start = 0
+
+  // Copy 0 bytes; we're done
+  if (end === start) return
+  if (target.length === 0 || source.length === 0) return
+
+  // Fatal error conditions
+  if (end < start) throw new TypeError('sourceEnd < sourceStart')
+  if (target_start < 0 || target_start >= target.length)
+    throw new TypeError('targetStart out of bounds')
+  if (start < 0 || start >= source.length) throw new TypeError('sourceStart out of bounds')
+  if (end < 0 || end > source.length) throw new TypeError('sourceEnd out of bounds')
+
+  // Are we oob?
+  if (end > this.length)
+    end = this.length
+  if (target.length - target_start < end - start)
+    end = target.length - target_start + start
+
+  var len = end - start
+
+  if (len < 100 || !Buffer.TYPED_ARRAY_SUPPORT) {
+    for (var i = 0; i < len; i++) {
+      target[i + target_start] = this[i + start]
+    }
+  } else {
+    target._set(this.subarray(start, start + len), target_start)
+  }
+}
+
+// fill(value, start=0, end=buffer.length)
+Buffer.prototype.fill = function (value, start, end) {
+  if (!value) value = 0
+  if (!start) start = 0
+  if (!end) end = this.length
+
+  if (end < start) throw new TypeError('end < start')
+
+  // Fill 0 bytes; we're done
+  if (end === start) return
+  if (this.length === 0) return
+
+  if (start < 0 || start >= this.length) throw new TypeError('start out of bounds')
+  if (end < 0 || end > this.length) throw new TypeError('end out of bounds')
+
+  var i
+  if (typeof value === 'number') {
+    for (i = start; i < end; i++) {
+      this[i] = value
+    }
+  } else {
+    var bytes = utf8ToBytes(value.toString())
+    var len = bytes.length
+    for (i = start; i < end; i++) {
+      this[i] = bytes[i % len]
+    }
+  }
+
+  return this
+}
+
+/**
+ * Creates a new `ArrayBuffer` with the *copied* memory of the buffer instance.
+ * Added in Node 0.12. Only available in browsers that support ArrayBuffer.
+ */
+Buffer.prototype.toArrayBuffer = function () {
+  if (typeof Uint8Array !== 'undefined') {
+    if (Buffer.TYPED_ARRAY_SUPPORT) {
+      return (new Buffer(this)).buffer
+    } else {
+      var buf = new Uint8Array(this.length)
+      for (var i = 0, len = buf.length; i < len; i += 1) {
+        buf[i] = this[i]
+      }
+      return buf.buffer
+    }
+  } else {
+    throw new TypeError('Buffer.toArrayBuffer not supported in this browser')
+  }
+}
+
+// HELPER FUNCTIONS
+// ================
+
+var BP = Buffer.prototype
+
+/**
+ * Augment a Uint8Array *instance* (not the Uint8Array class!) with Buffer methods
+ */
+Buffer._augment = function (arr) {
+  arr._isBuffer = true
+
+  // save reference to original Uint8Array get/set methods before overwriting
+  arr._get = arr.get
+  arr._set = arr.set
+
+  // deprecated, will be removed in node 0.13+
+  arr.get = BP.get
+  arr.set = BP.set
+
+  arr.write = BP.write
+  arr.toString = BP.toString
+  arr.toLocaleString = BP.toString
+  arr.toJSON = BP.toJSON
+  arr.equals = BP.equals
+  arr.compare = BP.compare
+  arr.copy = BP.copy
+  arr.slice = BP.slice
+  arr.readUInt8 = BP.readUInt8
+  arr.readUInt16LE = BP.readUInt16LE
+  arr.readUInt16BE = BP.readUInt16BE
+  arr.readUInt32LE = BP.readUInt32LE
+  arr.readUInt32BE = BP.readUInt32BE
+  arr.readInt8 = BP.readInt8
+  arr.readInt16LE = BP.readInt16LE
+  arr.readInt16BE = BP.readInt16BE
+  arr.readInt32LE = BP.readInt32LE
+  arr.readInt32BE = BP.readInt32BE
+  arr.readFloatLE = BP.readFloatLE
+  arr.readFloatBE = BP.readFloatBE
+  arr.readDoubleLE = BP.readDoubleLE
+  arr.readDoubleBE = BP.readDoubleBE
+  arr.writeUInt8 = BP.writeUInt8
+  arr.writeUInt16LE = BP.writeUInt16LE
+  arr.writeUInt16BE = BP.writeUInt16BE
+  arr.writeUInt32LE = BP.writeUInt32LE
+  arr.writeUInt32BE = BP.writeUInt32BE
+  arr.writeInt8 = BP.writeInt8
+  arr.writeInt16LE = BP.writeInt16LE
+  arr.writeInt16BE = BP.writeInt16BE
+  arr.writeInt32LE = BP.writeInt32LE
+  arr.writeInt32BE = BP.writeInt32BE
+  arr.writeFloatLE = BP.writeFloatLE
+  arr.writeFloatBE = BP.writeFloatBE
+  arr.writeDoubleLE = BP.writeDoubleLE
+  arr.writeDoubleBE = BP.writeDoubleBE
+  arr.fill = BP.fill
+  arr.inspect = BP.inspect
+  arr.toArrayBuffer = BP.toArrayBuffer
+
+  return arr
+}
+
+var INVALID_BASE64_RE = /[^+\/0-9A-z]/g
+
+function base64clean (str) {
+  // Node strips out invalid characters like \n and \t from the string, base64-js does not
+  str = stringtrim(str).replace(INVALID_BASE64_RE, '')
+  // Node allows for non-padded base64 strings (missing trailing ===), base64-js does not
+  while (str.length % 4 !== 0) {
+    str = str + '='
+  }
+  return str
+}
+
+function stringtrim (str) {
+  if (str.trim) return str.trim()
+  return str.replace(/^\s+|\s+$/g, '')
+}
+
+function isArrayish (subject) {
+  return isArray(subject) || Buffer.isBuffer(subject) ||
+      subject && typeof subject === 'object' &&
+      typeof subject.length === 'number'
+}
+
+function toHex (n) {
+  if (n < 16) return '0' + n.toString(16)
+  return n.toString(16)
+}
+
+function utf8ToBytes (str) {
+  var byteArray = []
+  for (var i = 0; i < str.length; i++) {
+    var b = str.charCodeAt(i)
+    if (b <= 0x7F) {
+      byteArray.push(b)
+    } else {
+      var start = i
+      if (b >= 0xD800 && b <= 0xDFFF) i++
+      var h = encodeURIComponent(str.slice(start, i+1)).substr(1).split('%')
+      for (var j = 0; j < h.length; j++) {
+        byteArray.push(parseInt(h[j], 16))
+      }
+    }
+  }
+  return byteArray
+}
+
+function asciiToBytes (str) {
+  var byteArray = []
+  for (var i = 0; i < str.length; i++) {
+    // Node's code seems to be doing this and not & 0x7F..
+    byteArray.push(str.charCodeAt(i) & 0xFF)
+  }
+  return byteArray
+}
+
+function utf16leToBytes (str) {
+  var c, hi, lo
+  var byteArray = []
+  for (var i = 0; i < str.length; i++) {
+    c = str.charCodeAt(i)
+    hi = c >> 8
+    lo = c % 256
+    byteArray.push(lo)
+    byteArray.push(hi)
+  }
+
+  return byteArray
+}
+
+function base64ToBytes (str) {
+  return base64.toByteArray(str)
+}
+
+function blitBuffer (src, dst, offset, length) {
+  for (var i = 0; i < length; i++) {
+    if ((i + offset >= dst.length) || (i >= src.length))
+      break
+    dst[i + offset] = src[i]
+  }
+  return i
+}
+
+function decodeUtf8Char (str) {
+  try {
+    return decodeURIComponent(str)
+  } catch (err) {
+    return String.fromCharCode(0xFFFD) // UTF 8 invalid char
+  }
+}
+
+},{"base64-js":46,"ieee754":47,"is-array":48}],46:[function(require,module,exports){
+var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+
+;(function (exports) {
+	'use strict';
+
+  var Arr = (typeof Uint8Array !== 'undefined')
+    ? Uint8Array
+    : Array
+
+	var PLUS   = '+'.charCodeAt(0)
+	var SLASH  = '/'.charCodeAt(0)
+	var NUMBER = '0'.charCodeAt(0)
+	var LOWER  = 'a'.charCodeAt(0)
+	var UPPER  = 'A'.charCodeAt(0)
+
+	function decode (elt) {
+		var code = elt.charCodeAt(0)
+		if (code === PLUS)
+			return 62 // '+'
+		if (code === SLASH)
+			return 63 // '/'
+		if (code < NUMBER)
+			return -1 //no match
+		if (code < NUMBER + 10)
+			return code - NUMBER + 26 + 26
+		if (code < UPPER + 26)
+			return code - UPPER
+		if (code < LOWER + 26)
+			return code - LOWER + 26
+	}
+
+	function b64ToByteArray (b64) {
+		var i, j, l, tmp, placeHolders, arr
+
+		if (b64.length % 4 > 0) {
+			throw new Error('Invalid string. Length must be a multiple of 4')
+		}
+
+		// the number of equal signs (place holders)
+		// if there are two placeholders, than the two characters before it
+		// represent one byte
+		// if there is only one, then the three characters before it represent 2 bytes
+		// this is just a cheap hack to not do indexOf twice
+		var len = b64.length
+		placeHolders = '=' === b64.charAt(len - 2) ? 2 : '=' === b64.charAt(len - 1) ? 1 : 0
+
+		// base64 is 4/3 + up to two characters of the original data
+		arr = new Arr(b64.length * 3 / 4 - placeHolders)
+
+		// if there are placeholders, only get up to the last complete 4 chars
+		l = placeHolders > 0 ? b64.length - 4 : b64.length
+
+		var L = 0
+
+		function push (v) {
+			arr[L++] = v
+		}
+
+		for (i = 0, j = 0; i < l; i += 4, j += 3) {
+			tmp = (decode(b64.charAt(i)) << 18) | (decode(b64.charAt(i + 1)) << 12) | (decode(b64.charAt(i + 2)) << 6) | decode(b64.charAt(i + 3))
+			push((tmp & 0xFF0000) >> 16)
+			push((tmp & 0xFF00) >> 8)
+			push(tmp & 0xFF)
+		}
+
+		if (placeHolders === 2) {
+			tmp = (decode(b64.charAt(i)) << 2) | (decode(b64.charAt(i + 1)) >> 4)
+			push(tmp & 0xFF)
+		} else if (placeHolders === 1) {
+			tmp = (decode(b64.charAt(i)) << 10) | (decode(b64.charAt(i + 1)) << 4) | (decode(b64.charAt(i + 2)) >> 2)
+			push((tmp >> 8) & 0xFF)
+			push(tmp & 0xFF)
+		}
+
+		return arr
+	}
+
+	function uint8ToBase64 (uint8) {
+		var i,
+			extraBytes = uint8.length % 3, // if we have 1 byte left, pad 2 bytes
+			output = "",
+			temp, length
+
+		function encode (num) {
+			return lookup.charAt(num)
+		}
+
+		function tripletToBase64 (num) {
+			return encode(num >> 18 & 0x3F) + encode(num >> 12 & 0x3F) + encode(num >> 6 & 0x3F) + encode(num & 0x3F)
+		}
+
+		// go through the array every three bytes, we'll deal with trailing stuff later
+		for (i = 0, length = uint8.length - extraBytes; i < length; i += 3) {
+			temp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
+			output += tripletToBase64(temp)
+		}
+
+		// pad the end with zeros, but make sure to not forget the extra bytes
+		switch (extraBytes) {
+			case 1:
+				temp = uint8[uint8.length - 1]
+				output += encode(temp >> 2)
+				output += encode((temp << 4) & 0x3F)
+				output += '=='
+				break
+			case 2:
+				temp = (uint8[uint8.length - 2] << 8) + (uint8[uint8.length - 1])
+				output += encode(temp >> 10)
+				output += encode((temp >> 4) & 0x3F)
+				output += encode((temp << 2) & 0x3F)
+				output += '='
+				break
+		}
+
+		return output
+	}
+
+	exports.toByteArray = b64ToByteArray
+	exports.fromByteArray = uint8ToBase64
+}(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
+
+},{}],47:[function(require,module,exports){
+exports.read = function(buffer, offset, isLE, mLen, nBytes) {
+  var e, m,
+      eLen = nBytes * 8 - mLen - 1,
+      eMax = (1 << eLen) - 1,
+      eBias = eMax >> 1,
+      nBits = -7,
+      i = isLE ? (nBytes - 1) : 0,
+      d = isLE ? -1 : 1,
+      s = buffer[offset + i];
+
+  i += d;
+
+  e = s & ((1 << (-nBits)) - 1);
+  s >>= (-nBits);
+  nBits += eLen;
+  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8);
+
+  m = e & ((1 << (-nBits)) - 1);
+  e >>= (-nBits);
+  nBits += mLen;
+  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8);
+
+  if (e === 0) {
+    e = 1 - eBias;
+  } else if (e === eMax) {
+    return m ? NaN : ((s ? -1 : 1) * Infinity);
+  } else {
+    m = m + Math.pow(2, mLen);
+    e = e - eBias;
+  }
+  return (s ? -1 : 1) * m * Math.pow(2, e - mLen);
+};
+
+exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
+  var e, m, c,
+      eLen = nBytes * 8 - mLen - 1,
+      eMax = (1 << eLen) - 1,
+      eBias = eMax >> 1,
+      rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0),
+      i = isLE ? 0 : (nBytes - 1),
+      d = isLE ? 1 : -1,
+      s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0;
+
+  value = Math.abs(value);
+
+  if (isNaN(value) || value === Infinity) {
+    m = isNaN(value) ? 1 : 0;
+    e = eMax;
+  } else {
+    e = Math.floor(Math.log(value) / Math.LN2);
+    if (value * (c = Math.pow(2, -e)) < 1) {
+      e--;
+      c *= 2;
+    }
+    if (e + eBias >= 1) {
+      value += rt / c;
+    } else {
+      value += rt * Math.pow(2, 1 - eBias);
+    }
+    if (value * c >= 2) {
+      e++;
+      c /= 2;
+    }
+
+    if (e + eBias >= eMax) {
+      m = 0;
+      e = eMax;
+    } else if (e + eBias >= 1) {
+      m = (value * c - 1) * Math.pow(2, mLen);
+      e = e + eBias;
+    } else {
+      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen);
+      e = 0;
+    }
+  }
+
+  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8);
+
+  e = (e << mLen) | m;
+  eLen += mLen;
+  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8);
+
+  buffer[offset + i - d] |= s * 128;
+};
+
+},{}],48:[function(require,module,exports){
+
+/**
+ * isArray
+ */
+
+var isArray = Array.isArray;
+
+/**
+ * toString
+ */
+
+var str = Object.prototype.toString;
+
+/**
+ * Whether or not the given `val`
+ * is an array.
+ *
+ * example:
+ *
+ *        isArray([]);
+ *        // > true
+ *        isArray(arguments);
+ *        // > false
+ *        isArray('');
+ *        // > false
+ *
+ * @param {mixed} val
+ * @return {bool}
+ */
+
+module.exports = isArray || function (val) {
+  return !! val && '[object Array]' == str.call(val);
+};
+
+},{}],49:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -3488,8 +5193,8 @@ var substr = 'ab'.substr(-1) === 'b'
     }
 ;
 
-}).call(this,_dereq_("+xKvab"))
-},{"+xKvab":43}],43:[function(_dereq_,module,exports){
+}).call(this,require('_process'))
+},{"_process":50}],50:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -3554,1997 +5259,8212 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],44:[function(_dereq_,module,exports){
-(function() {
-  var AtRule, Container, name, _fn, _i, _len, _ref,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  Container = _dereq_('./container');
-
-  AtRule = (function(_super) {
-    __extends(AtRule, _super);
-
-    function AtRule() {
-      this.type = 'atrule';
-      AtRule.__super__.constructor.apply(this, arguments);
+},{}],51:[function(require,module,exports){
+module.exports={"eras":{"e-33":"33 versions back","e-32":"32 versions back","e-31":"31 versions back","e-30":"30 versions back","e-29":"29 versions back","e-28":"28 versions back","e-27":"27 versions back","e-26":"26 versions back","e-25":"25 versions back","e-24":"24 versions back","e-23":"23 versions back","e-22":"22 versions back","e-21":"21 versions back","e-20":"20 versions back","e-19":"19 versions back","e-18":"18 versions back","e-17":"17 versions back","e-16":"16 versions back","e-15":"15 versions back","e-14":"14 versions back","e-13":"13 versions back","e-12":"12 versions back","e-11":"11 versions back","e-10":"10 versions back","e-9":"9 versions back","e-8":"8 versions back","e-7":"7 versions back","e-6":"6 versions back","e-5":"5 versions back","e-4":"4 versions back","e-3":"3 versions back","e-2":"2 versions back","e-1":"Previous version","e0":"Current","e1":"Near future","e2":"Farther future","e3":"3 versions ahead"},"agents":{"ie":{"browser":"IE","abbr":"IE","prefix":"ms","type":"desktop","usage_global":{"5.5":0.009298,"6":0.172409,"7":0.107756,"8":3.72116,"9":2.45683,"10":2.39936,"11":7.234},"versions":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"5.5","6","7","8","9","10","11",null,null,null]},"firefox":{"browser":"Firefox","abbr":"FF","prefix":"moz","type":"desktop","usage_global":{"2":0.006936,"3":0.048552,"3.5":0.020808,"3.6":0.124848,"4":0.03468,"5":0.020808,"6":0.020808,"7":0.020808,"8":0.041616,"9":0.027744,"10":0.041616,"11":0.041616,"12":0.097104,"13":0.041616,"14":0.041616,"15":0.055488,"16":0.083232,"17":0.062424,"18":0.048552,"19":0.048552,"20":0.055488,"21":0.291312,"22":0.083232,"23":0.06936,"24":0.187272,"25":0.090168,"26":0.10404,"27":0.124848,"28":0.124848,"29":0.221952,"30":0.686664,"31":10.0364,"32":0.360672,"33":0.006936,"34":0.013872,"35":0},"versions":[null,"2","3","3.5","3.6","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35"]},"chrome":{"browser":"Chrome","abbr":"Chr.","prefix":"webkit","type":"desktop","usage_global":{"4":0.020808,"5":0.013872,"6":0.020808,"7":0.013872,"8":0.013872,"9":0.013872,"10":0.027744,"11":0.110976,"12":0.041616,"13":0.03468,"14":0.027744,"15":0.03468,"16":0.027744,"17":0.020808,"18":0.041616,"19":0.027744,"20":0.020808,"21":0.430032,"22":0.097104,"23":0.041616,"24":0.06936,"25":0.048552,"26":0.117912,"27":0.5202,"28":0.110976,"29":0.131784,"30":0.194208,"31":0.568752,"32":0.31212,"33":0.790704,"34":0.672792,"35":1.87272,"36":26.7105,"37":0.929424,"38":0.152592,"39":0.020808,"40":0},"versions":["4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40"]},"safari":{"browser":"Safari","abbr":"Saf.","prefix":"webkit","type":"desktop","usage_global":{"3.1":0,"3.2":0.008692,"4":0.076296,"5":0.1734,"5.1":0.596496,"6":0.263568,"6.1":0.513264,"7":1.74094,"8":0.027744},"versions":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"3.1","3.2","4","5","5.1","6","6.1","7","8",null,null]},"opera":{"browser":"Opera","abbr":"Op.","prefix":"webkit","type":"desktop","usage_global":{"9.5-9.6":0.007052,"10.0-10.1":0.020808,"10.5":0.008392,"10.6":0.007296,"11":0.014996,"11.1":0.008219,"11.5":0.013872,"11.6":0.013872,"12":0.027744,"12.1":0.284376,"15":0.006936,"16":0.006936,"17":0.006936,"18":0.020808,"19":0.013872,"20":0.03468,"21":0.020808,"22":0.03468,"23":0.513264,"24":0.013872,"25":0,"26":0},"versions":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,"9.5-9.6","10.0-10.1","10.5","10.6","11","11.1","11.5","11.6","12","12.1","15","16","17","18","19","20","21","22","23","24","25","26",null],"prefix_exceptions":{"9.5-9.6":"o","10.0-10.1":"o","10.5":"o","10.6":"o","11":"o","11.1":"o","11.5":"o","11.6":"o","12":"o","12.1":"o"}},"ios_saf":{"browser":"iOS Safari","abbr":"iOS","prefix":"webkit","type":"mobile","usage_global":{"3.2":0,"4.0-4.1":0,"4.2-4.3":0,"5.0-5.1":0.0685548,"6.0-6.1":0.345572,"7.0-7.1":6.5197,"8":0},"versions":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"3.2","4.0-4.1","4.2-4.3","5.0-5.1","6.0-6.1","7.0-7.1","8",null,null]},"op_mini":{"browser":"Opera Mini","abbr":"O.Mini","prefix":"o","type":"mobile","usage_global":{"5.0-7.0":3.35731},"versions":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"5.0-7.0",null,null,null]},"android":{"browser":"Android Browser","abbr":"And.","prefix":"webkit","type":"mobile","usage_global":{"2.1":0.0068412,"2.2":0.0478884,"2.3":0.930403,"3":0,"4":0.725167,"4.1":1.81292,"4.2-4.3":1.89501,"4.4":1.42981,"4.4.3":0},"versions":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"2.1","2.2","2.3","3","4","4.1","4.2-4.3","4.4","4.4.3",null,null]},"op_mob":{"browser":"Opera Mobile","abbr":"O.Mob","prefix":"o","type":"mobile","usage_global":{"10":0,"11.5":0,"12":0.00908434,"12.1":0.0499639,"22":0},"versions":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"10",null,null,"11.5","12","12.1","22",null,null,null],"prefix_exceptions":{"22":"webkit"}},"bb":{"browser":"Blackberry Browser","abbr":"BB","prefix":"webkit","type":"mobile","usage_global":{"7":0.09958,"10":0},"versions":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"7","10",null,null,null]},"and_chr":{"browser":"Chrome for Android","abbr":"Chr/And.","prefix":"webkit","type":"mobile","usage_global":{"37":6.94609},"versions":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"37",null,null,null]},"and_ff":{"browser":"Firefox for Android","abbr":"FF/And.","prefix":"moz","type":"mobile","usage_global":{"32":0.131752},"versions":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"32",null,null,null]},"ie_mob":{"browser":"IE Mobile","abbr":"IE.Mob","prefix":"ms","type":"mobile","usage_global":{"10":0.437355},"versions":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"10",null,null,null]}},"statuses":{"rec":"Recommendation","pr":"Proposed Recommendation","cr":"Candidate Recommendation","wd":"Working Draft","other":"Other","unoff":"Unofficial / Note"},"cats":{"CSS":["CSS","CSS2","CSS3"],"HTML5":["Canvas","HTML5"],"JS API":["JS API"],"Other":["Other","DOM","PNG"],"SVG":["SVG"]},"updated":1410498413,"data":{"png-alpha":{"title":"PNG alpha transparency","description":"Semi-transparent areas in PNG files","spec":"http://www.w3.org/TR/PNG/","status":"rec","links":[{"url":"http://en.wikipedia.org/wiki/Portable_Network_Graphics","title":"Wikipedia"},{"url":"http://dillerdesign.com/experiment/DD_belatedPNG/","title":"Workaround for IE6"}],"categories":["PNG"],"stats":{"ie":{"5.5":"n","6":"p","7":"y","8":"y","9":"y","10":"y","11":"y"},"firefox":{"2":"y","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"IE6 does support full transparency in 8-bit PNGs, which can sometimes be an alternative to 24-bit PNGs.","notes_by_num":{},"usage_perc_y":92.91,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"apng":{"title":"Animated PNG (APNG)","description":"Like animated GIFs, but allowing 24-bit colors and alpha transparency","spec":"https://wiki.mozilla.org/APNG_Specification","status":"unoff","links":[{"url":"http://en.wikipedia.org/wiki/APNG","title":"Wikipedia"},{"url":"https://github.com/davidmz/apng-canvas","title":"Polyfill using canvas"},{"url":"https://chrome.google.com/webstore/detail/ehkepjiconegkhpodgoaeamnpckdbblp","title":"Chrome extension providing support"}],"categories":["PNG"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n","36":"n","37":"n","38":"n","39":"n","40":"n"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"y"},"opera":{"9":"n","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"Where support for APNG is missing, only the first frame is displayed","notes_by_num":{},"usage_perc_y":14,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"video":{"title":"Video element","description":"Method of playing videos on webpages (without requiring a plug-in)","spec":"http://www.w3.org/TR/html5/embedded-content-0.html#video","status":"cr","links":[{"url":"http://dev.opera.com/articles/view/everything-you-need-to-know-about-html5-video-and-audio/","title":"Detailed article on video/audio elements"},{"url":"http://webmproject.org","title":"WebM format information"},{"url":"http://camendesign.co.uk/code/video_for_everybody","title":"Video for Everybody"},{"url":"http://diveinto.org/html5/video.html","title":"Video on the Web - includes info on Android support"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/video.js#video","title":"has.js test"},{"url":"http://docs.webplatform.org/wiki/html/elements/video","title":"WebPlatform Docs"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"y","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"a","2.2":"a","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Different browsers have support for different video formats, see sub-features for details. \r\n\r\nThe Android browser (before 2.3) requires [specific handling](http://www.broken-links.com/2010/07/08/making-html5-video-work-on-android-phones/) to run the video element.","notes_by_num":{},"usage_perc_y":85.57,"usage_perc_a":0.05,"ucprefix":false,"parent":"","keywords":"<video>","ie_id":"","chrome_id":""},"audio":{"title":"Audio element","description":"Method of playing sound on webpages (without requiring a plug-in)","spec":"http://www.w3.org/TR/html5/embedded-content-0.html#the-audio-element","status":"cr","links":[{"url":"http://html5doctor.com/native-audio-in-the-browser/","title":"HTML5 Doctor article"},{"url":"http://dev.opera.com/articles/view/everything-you-need-to-know-about-html5-video-and-audio/","title":"Detailed article on video/audio elements"},{"url":"http://www.jplayer.org/latest/demos/","title":"Demos of audio player that uses the audio element"},{"url":"http://24ways.org/2010/the-state-of-html5-audio","title":"Detailed article on support"},{"url":"http://textopia.org/androidsoundformats.html","title":"File format test page"},{"url":"http://www.phoboslab.org/log/2011/03/the-state-of-html5-audio","title":"The State of HTML5 Audio"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/audio.js#audio","title":"has.js test"},{"url":"http://docs.webplatform.org/wiki/html/elements/audio","title":"WebPlatform Docs"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"y","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"a","10.0-10.1":"a","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":85.57,"usage_perc_a":0.03,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"contenteditable":{"title":"contenteditable attribute (basic support)","description":"Method of making any HTML element editable","spec":"http://www.w3.org/TR/html/editing.html#contenteditable","status":"cr","links":[{"url":"http://html5demos.com/contenteditable","title":"Demo page"},{"url":"http://blog.whatwg.org/the-road-to-html-5-contenteditable","title":"WHATWG blog post"},{"url":"http://accessgarage.wordpress.com/2009/05/08/how-to-hack-your-app-to-make-contenteditable-work/","title":"Blog post on usage problems"},{"url":"http://docs.webplatform.org/wiki/html/attributes/contentEditable","title":"WebPlatform Docs"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y"},"firefox":{"2":"n","3":"a","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"This support only refers to very basic editing capability, implementations vary significantly on how certain elements can be edited.","notes_by_num":{},"usage_perc_y":88.69,"usage_perc_a":0.05,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"dragndrop":{"title":"Drag and Drop","description":"Method of easily dragging and dropping elements on a page, requiring minimal JavaScript.","spec":"http://www.w3.org/TR/html5/editing.html#dnd","status":"wd","links":[{"url":"http://html5doctor.com/native-drag-and-drop/","title":"HTML5 Doctor article"},{"url":"http://nettutsplus.s3.amazonaws.com/64_html5dragdrop/demo/index.html","title":"Shopping cart demo"},{"url":"http://html5demos.com/drag","title":"Demo with link blocks"},{"url":"http://docs.webplatform.org/wiki/dom/DragEvent","title":"WebPlatform Docs"},{"url":"https://github.com/MihaiValentin/setDragImage-IE","title":"Polyfill for setDragImage in IE"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"a #1","6":"a #1","7":"a #1","8":"a #1","9":"a #1","10":"a #2","11":"a #2"},"firefox":{"2":"p","3":"p","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"p","9.5-9.6":"p","10.0-10.1":"p","10.5":"p","10.6":"p","11":"p","11.1":"p","11.5":"p","11.6":"p","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"p","11":"p","11.1":"p","11.5":"p","12":"p","12.1":"y","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"n"},"ie_mob":{"10":"y"}},"notes":"`dataTransfer.items` only supported by Chrome.\r\n\r\nFirefox supports any kind of DOM elements for `.setDragImage`. Chrome must have either an `HTMLImageElement` or any kind of DOM elements attached to the DOM and within the viewport of the browser for `.setDragImage`.","notes_by_num":{"1":"Partial support refers to no support for the `dataTransfer.files` or `.types` objects and limited supported formats for `dataTransfer.setData`/`getData`.","2":"Partial support refers to not supporting `.setDragImage`"},"usage_perc_y":52.51,"usage_perc_a":16.1,"ucprefix":false,"parent":"","keywords":"draganddrop","ie_id":"","chrome_id":""},"queryselector":{"title":"querySelector/querySelectorAll","description":"Method of accessing DOM elements using CSS selectors","spec":"http://www.w3.org/TR/selectors-api/","status":"rec","links":[{"url":"https://developer.mozilla.org/en/DOM/element.querySelector","title":"MDN article on querySelector"},{"url":"https://developer.mozilla.org/En/DOM/Element.querySelectorAll","title":"MDN article on querySelectorAll"},{"url":"http://cjihrig.com/blog/javascripts-selectors-api/","title":"Blog post"},{"url":"http://docs.webplatform.org/wiki/css/selectors_api/querySelector","title":"WebPlatform Docs"}],"categories":["DOM"],"stats":{"ie":{"5.5":"n","6":"p","7":"p","8":"y","9":"y","10":"y","11":"y"},"firefox":{"2":"p","3":"p","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"p","9.5-9.6":"p","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Only works for the CSS selectors available. Thus the IE8 implementation is limited to the CSS 2.1 selectors","notes_by_num":{},"usage_perc_y":92.73,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"query,selectors,selectors api","ie_id":"","chrome_id":""},"getelementsbyclassname":{"title":"getElementsByClassName","description":"Method of accessing DOM elements by class name","spec":"http://www.w3.org/TR/dom/#dom-document-getelementsbyclassname","status":"wd","links":[{"url":"http://www.quirksmode.org/dom/tests/basics.html#getElementsByClassName","title":"Test page"},{"url":"http://docs.webplatform.org/wiki/dom/HTMLElement/getElementsByClassName","title":"WebPlatform Docs"}],"categories":["DOM","HTML5"],"stats":{"ie":{"5.5":"n","6":"p","7":"p","8":"p","9":"y","10":"y","11":"y"},"firefox":{"2":"p","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":89.07,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"byclassname","ie_id":"","chrome_id":""},"forms":{"title":"HTML5 form features","description":"Expanded form options, including things like date pickers, sliders, validation, placeholders and multiple file uploads. Previously known as \"Web forms 2.0\".","spec":"http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html","status":"wd","links":[{"url":"http://www.miketaylr.com/code/input-type-attr.html","title":"HTML5 inputs and attribute support page"},{"url":"https://github.com/westonruter/webforms2","title":"Cross-browser JS implementation (based on original spec)"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"p","7":"p","8":"p","9":"p","10":"a","11":"a"},"firefox":{"2":"p","3":"p","3.5":"p","3.6":"p","4":"a","5":"a","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"a","29":"a","30":"a","31":"a","32":"a","33":"a","34":"a","35":"a"},"chrome":{"4":"a","5":"a","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"a","29":"a","30":"a","31":"a","32":"a","33":"a","34":"a","35":"a","36":"a","37":"a","38":"a","39":"a","40":"a"},"safari":{"3.1":"p","3.2":"p","4":"a","5":"a","5.1":"a","6":"a","6.1":"a","7":"a","8":"a"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a"},"ios_saf":{"3.2":"n","4.0-4.1":"a","4.2-4.3":"a","5.0-5.1":"a","6.0-6.1":"a","7.0-7.1":"a","8":"a"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"a","4.4.3":"a"},"bb":{"7":"n","10":"a"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"a"},"and_chr":{"37":"a"},"and_ff":{"32":"a"},"ie_mob":{"10":"a"}},"notes":"","notes_by_num":{},"usage_perc_y":0.47,"usage_perc_a":77.07,"ucprefix":false,"parent":"","keywords":"input,datepicker","ie_id":"","chrome_id":""},"html5semantic":{"title":"New semantic elements","description":"HTML5 offers some new elements, primarily for semantic purposes. The elements include: section, article, aside, header, footer, nav, figure, figcaption, time, mark, main.","spec":"http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#sections","status":"wd","links":[{"url":"http://blog.whatwg.org/supporting-new-elements-in-ie","title":"Workaround for IE"},{"url":"http://blog.whatwg.org/styling-ie-noscript","title":"Alternate workaround"},{"url":"http://oli.jp/2009/html5-structure3/","title":"Article on structural elements"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/dom.js#dom-html5-elements","title":"has.js test"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"p","7":"p","8":"p","9":"y #1","10":"y #1","11":"y #1"},"firefox":{"2":"n","3":"a #1","3.5":"a #1","3.6":"a #1","4":"y #1","5":"y #1","6":"y #1","7":"y #1","8":"y #1","9":"y #1","10":"y #1","11":"y #1","12":"y #1","13":"y #1","14":"y #1","15":"y #1","16":"y #1","17":"y #1","18":"y #1","19":"y #1","20":"y #1","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"a #1","5":"a #1","6":"y #1","7":"y #1","8":"y #1","9":"y #1","10":"y #1","11":"y #1","12":"y #1","13":"y #1","14":"y #1","15":"y #1","16":"y #1","17":"y #1","18":"y #1","19":"y #1","20":"y #1","21":"y #1","22":"y #1","23":"y #1","24":"y #1","25":"y #1","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"a #1","3.2":"a #1","4":"a #1","5":"y #1","5.1":"y #1","6":"y #1","6.1":"y","7":"y","8":"y"},"opera":{"9":"a #1","9.5-9.6":"a #1","10.0-10.1":"a #1","10.5":"a #1","10.6":"a #1","11":"a #1","11.1":"y #1","11.5":"y #1","11.6":"y #1","12":"y #1","12.1":"y #1","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"a #1","4.0-4.1":"y #1","4.2-4.3":"y #1","5.0-5.1":"y #1","6.0-6.1":"y #1","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"a #1"},"android":{"2.1":"a #1","2.2":"y #1","2.3":"y #1","3":"y #1","4":"y #1","4.1":"y #1","4.2-4.3":"y #1","4.4":"y","4.4.3":"y"},"bb":{"7":"y #1","10":"y #1"},"op_mob":{"10":"a #1","11":"y #1","11.1":"y #1","11.5":"y #1","12":"y #1","12.1":"y #1","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y #1"}},"notes":"Partial support refers to missing the default styling. This is easily taken care of by using display:block for all new elements (except time and mark, these should be display:inline anyway). IE11 and older versions of other browsers do not support the <main> element.","notes_by_num":{"1":"Does not include support for the <main> element "},"usage_perc_y":85.33,"usage_perc_a":3.74,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"offline-apps":{"title":"Offline web applications","description":"Method of defining web page files to be cached using a cache manifest file, allowing them to work offline on subsequent visits to the page","spec":"http://www.whatwg.org/specs/web-apps/current-work/multipage/offline.html","status":"wd","links":[{"url":"http://www.sitepoint.com/offline-web-application-tutorial/","title":"Sitepoint tutorial"},{"url":"http://diveinto.org/html5/offline.html","title":"Dive Into HTML5 article"},{"url":"http://hacks.mozilla.org/2010/01/offline-web-applications/","title":"Mozilla Hacks article/demo"},{"url":"http://docs.webplatform.org/wiki/apis/appcache/ApplicationCache","title":"WebPlatform Docs"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"p","7":"p","8":"p","9":"n","10":"y","11":"y"},"firefox":{"2":"p","3":"a","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"p","3.2":"p","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"p","10.5":"p","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":83.16,"usage_perc_a":0.05,"ucprefix":false,"parent":"","keywords":"appcache,app cache,application cache,online","ie_id":"applicationcache","chrome_id":"6192449487634432"},"webworkers":{"title":"Web Workers","description":"Method of running scripts in the background, isolated from the web page","spec":"http://www.w3.org/TR/workers/","status":"cr","links":[{"url":"https://developer.mozilla.org/En/Using_web_workers","title":"MDN article"},{"url":"http://nerget.com/rayjs-mt/rayjs.html","title":"Web Worker demo"},{"url":"http://code.google.com/p/ie-web-worker/","title":"Polyfill for IE (single threaded)"},{"url":"http://net.tutsplus.com/tutorials/javascript-ajax/getting-started-with-web-workers/","title":"Tutorial"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"p","7":"p","8":"p","9":"p","10":"y","11":"y"},"firefox":{"2":"p","3":"p","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"p","3.2":"p","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"p","10.5":"p","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"y","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"p","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":77.75,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"fontface":{"title":"@font-face Web fonts","description":"Method of displaying fonts downloaded from websites","spec":"http://www.w3.org/TR/css3-webfonts/","status":"cr","links":[{"url":"http://webfonts.info","title":"News and information site"},{"url":"http://en.wikipedia.org/wiki/Web_typography","title":"Wikipedia"},{"url":"http://www.css3files.com/font/","title":"Information page"},{"url":"http://docs.webplatform.org/wiki/css/atrules/@font-face","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"a","6":"a","7":"a","8":"a","9":"y","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"a","4.0-4.1":"a","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"a","2.3":"a","3":"a","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"a","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Partial support before IE9 refers to only supporting EOT fonts. Safari for iOS 4.1 and below only supports SVG fonts.","notes_by_num":{},"usage_perc_y":84.57,"usage_perc_a":5.09,"ucprefix":false,"parent":"","keywords":"font face","ie_id":"","chrome_id":""},"eot":{"title":"EOT - Embedded OpenType fonts","description":"Type of font that can be derived from a regular font, allowing small files and legal use of high-quality fonts. Usage is restricted by the file being tied to the website","spec":"http://www.w3.org/Submission/EOT/","status":"unoff","links":[{"url":"http://en.wikipedia.org/wiki/Embedded_OpenType","title":"Wikipedia"},{"url":"http://www.microsoft.com/typography/web/embedding/default.aspx","title":"Example pages"}],"categories":["Other"],"stats":{"ie":{"5.5":"n","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n","36":"n","37":"n","38":"n","39":"n","40":"n"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"Proposal by Microsoft, being considered for W3C standardization.","notes_by_num":{},"usage_perc_y":16.09,"usage_perc_a":0,"ucprefix":false,"parent":"fontface","keywords":"","ie_id":"","chrome_id":""},"woff":{"title":"WOFF - Web Open Font Format","description":"Compressed TrueType/OpenType font that contains information about the font's source.","spec":"http://www.w3.org/TR/WOFF/","status":"rec","links":[{"url":"http://hacks.mozilla.org/2009/10/woff/","title":"Mozilla hacks blog post"}],"categories":["Other"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"y","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Reported to be supported in some modified versions of the Android 4.0 browser.","notes_by_num":{},"usage_perc_y":79.89,"usage_perc_a":0,"ucprefix":false,"parent":"fontface","keywords":"","ie_id":"","chrome_id":""},"multibackgrounds":{"title":"CSS3 Multiple backgrounds","description":"Method of using multiple images as a background","spec":"http://www.w3.org/TR/css3-background/","status":"cr","links":[{"url":"http://www.css3.info/preview/multiple-backgrounds/","title":"Demo & information page"},{"url":"http://www.css3files.com/background/","title":"Information page"},{"url":"http://docs.webplatform.org/wiki/css/properties/background-image","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"y","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":88.97,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"border-image":{"title":"CSS3 Border images","description":"Method of using images for borders","spec":"http://www.w3.org/TR/css3-background/#the-border-image","status":"cr","links":[{"url":"http://www.css3files.com/border/","title":"Information page"},{"url":"http://docs.webplatform.org/wiki/css/properties/border-image","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"y"},"firefox":{"2":"n","3":"n","3.5":"a x","3.6":"a x","4":"a x","5":"a x","6":"a x","7":"a x","8":"a x","9":"a x","10":"a x","11":"a x","12":"a x","13":"a x","14":"a x","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"a x","5":"a x","6":"a x","7":"a x","8":"a x","9":"a x","10":"a x","11":"a x","12":"a x","13":"a x","14":"a x","15":"y x","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"a x","3.2":"a x","4":"a x","5":"a x","5.1":"a x","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"a","10.6":"a","11":"a x","11.1":"a x","11.5":"a x","11.6":"a x","12":"a x","12.1":"a x","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"a x","4.0-4.1":"a x","4.2-4.3":"a x","5.0-5.1":"a x","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"a x","2.2":"a x","2.3":"a x","3":"a x","4":"a x","4.1":"a x","4.2-4.3":"a x","4.4":"y","4.4.3":"y"},"bb":{"7":"a x","10":"y"},"op_mob":{"10":"n","11":"a x","11.1":"a x","11.5":"a x","12":"a x","12.1":"a x","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"Note that both the border-style and border-width must be specified for border-images to work according to spec, though older implementations may not have this requirement. Partial support refers to supporting the shorthand syntax, but not the individual properties (border-image-source, border-image-slice, etc). ","notes_by_num":{},"usage_perc_y":72.55,"usage_perc_a":7.79,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"background-img-opts":{"title":"CSS3 Background-image options","description":"New properties to affect background images, including background-clip, background-origin and background-size","spec":"http://www.w3.org/TR/css3-background/#backgrounds","status":"cr","links":[{"url":"http://www.standardista.com/css3/css3-background-properties","title":"Detailed compatibility tables and demos"},{"url":"http://www.css3files.com/background/","title":"Information page"},{"url":"https://github.com/louisremi/background-size-polyfill","title":"Polyfill for IE7-8"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"y","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"a x","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"a","3.2":"a","4":"a","5":"y","5.1":"y","6":"a","6.1":"a","7":"a","8":"a"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"a x","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"a","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"a"},"android":{"2.1":"a x","2.2":"y x","2.3":"y x","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Partial support in Opera Mini refers to not supporting background sizing or background attachments. However Opera Mini 7.5 supports background sizing (including cover and contain values). Partial support in Safari 6 refers to not supporting background sizing offset from edges syntax.","notes_by_num":{},"usage_perc_y":82.85,"usage_perc_a":6.14,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"css-table":{"title":"CSS Table display","description":"Method of displaying elements as tables, rows, and cells","spec":"http://www.w3.org/TR/CSS21/tables.html","status":"rec","links":[{"url":"http://www.onenaught.com/posts/201/use-css-displaytable-for-layout","title":"Blog post on usage"}],"categories":["CSS2"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"y","9":"y","10":"y","11":"y"},"firefox":{"2":"y","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":92.8,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"display:table, display: table,table-cell,table-row,table-layout","ie_id":"","chrome_id":""},"css-gencontent":{"title":"CSS Generated content for pseudo-elements","description":"Method of displaying text or images before or after the given element's contents using the ::before and ::after pseudo-elements","spec":"http://www.w3.org/TR/CSS21/generate.html","status":"rec","links":[{"url":"http://www.westciv.com/style_master/academy/css_tutorial/advanced/generated_content.html","title":"Guide on usage"},{"url":"http://dev.opera.com/articles/view/css-generated-content-techniques/","title":"Dev.Opera article"},{"url":"http://docs.webplatform.org/wiki/css/generated_and_replaced_content","title":"WebPlatform Docs"}],"categories":["CSS2","CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"a","9":"y","10":"y","11":"y"},"firefox":{"2":"y","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"IE8 only supports the single-colon CSS 2.1 syntax (i.e. :pseudo-class). It does not support the double-colon CSS3 syntax (i.e. ::pseudo-element)\r\n\r\nFor content to appear in pseudo-elements, the `content` property must be set (but may be an empty string).","notes_by_num":{},"usage_perc_y":89.08,"usage_perc_a":3.72,"ucprefix":false,"parent":"","keywords":"before,after","ie_id":"","chrome_id":""},"css-fixed":{"title":"CSS position:fixed","description":"Method of keeping an element in a fixed location regardless of scroll position","spec":"http://www.w3.org/TR/CSS21/visuren.html#fixed-positioning","status":"rec","links":[{"url":"http://www.css-101.org/fixed-positioning/05.php","title":"Workaround for IE6"},{"url":"http://bradfrostweb.com/blog/mobile/fixed-position/","title":"Article on mobile support"},{"url":"http://docs.webplatform.org/wiki/css/properties/position","title":"WebPlatform Docs"}],"categories":["CSS"],"stats":{"ie":{"5.5":"n","6":"p","7":"y","8":"y","9":"y","10":"y","11":"y"},"firefox":{"2":"y","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"a","6.0-6.1":"a","7.0-7.1":"a","8":"a"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"a","2.2":"a","2.3":"a","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Only works in Android 2.2+ by using the following meta tag: <meta name=\"viewport\" content=\"width=device-width, user-scalable=no\">. Partial support in iOS Safari refers to [buggy behavior](http://remysharp.com/2012/05/24/issues-with-position-fixed-scrolling-on-ios/).","notes_by_num":{},"usage_perc_y":81.64,"usage_perc_a":7.92,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"hashchange":{"title":"Hashchange event","description":"Event triggered in JavaScript when the URL's hash has changed (for example: page.html#foo to page.html#bar) ","spec":"http://www.w3.org/TR/html5/history.html#event-hashchange","status":"cr","links":[{"url":"https://developer.mozilla.org/en/DOM/window.onhashchange","title":"MDN article"},{"url":"http://msdn.microsoft.com/en-us/library/cc288209(VS.85).aspx","title":"MSDN article"},{"url":"http://www.quirksmode.org/dom/events/tests/hashchange.html","title":"Simple demo"},{"url":"http://github.com/3nr1c/jUri.js","title":"Polyfill"},{"url":"http://docs.webplatform.org/wiki/dom/Element/hashchange","title":"WebPlatform Docs"}],"categories":["HTML5","JS API"],"stats":{"ie":{"5.5":"p","6":"p","7":"p","8":"y","9":"y","10":"y","11":"y"},"firefox":{"2":"p","3":"p","3.5":"p","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"p","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"p","3.2":"p","4":"p","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"p","9.5-9.6":"p","10.0-10.1":"p","10.5":"p","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"p","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":89.21,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"onhashchange,HashChangeEvent","ie_id":"","chrome_id":""},"css-sel2":{"title":"CSS 2.1 selectors","description":"Basic CSS selectors including: `*` (universal selector), `>` (child selector), `:first-child`, `:link`, `:visited`, `:active`, `:hover`, `:focus`, `:lang()`, `+` (adjacent sibling selector), `[attr]`, `[attr=\"val\"]`, `[attr~=\"val\"]`, `[attr|=\"bar\"]`, `.foo` (class selector), `#foo` (id selector)","spec":"http://www.w3.org/TR/CSS21/selector.html","status":"rec","links":[{"url":"http://www.quirksmode.org/css/contents.html","title":"Detailed support information"},{"url":"http://www.yourhtmlsource.com/stylesheets/advancedselectors.html","title":"Examples of advanced selectors"},{"url":"http://selectivizr.com","title":"Selectivizr: Polyfill for IE6-8"},{"url":"http://docs.webplatform.org/wiki/css/selectors","title":"WebPlatform Docs"}],"categories":["CSS2"],"stats":{"ie":{"5.5":"n","6":"p","7":"y","8":"y","9":"y","10":"y","11":"y"},"firefox":{"2":"y","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":92.91,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"css-sel3":{"title":"CSS3 selectors","description":"Advanced element selection using selectors including: `[foo^=\"bar\"]`, `[foo$=\"bar\"]`, `[foo*=\"bar\"]`, `:root`, `:nth-child()`,  `:nth-last-child()`, `nth-of-type`, `nth-last-of-type()`, `:last-child`, `:first-of-type`, `:last-of-type`, `:only-child`, `:only-of-type`, `:empty`, `:target`, `:enabled`, `:disabled`, `:checked`, `:not()`, `~` (general sibling)","spec":"http://www.w3.org/TR/css3-selectors/","status":"rec","links":[{"url":"http://www.quirksmode.org/css/selectors/","title":"Detailed support information"},{"url":"http://www.css3.info/selectors-test/","title":"Automated CSS3 selector test"},{"url":"http://selectivizr.com","title":"Selectivizr: Polyfill for IE6-8"},{"url":"http://docs.webplatform.org/wiki/css/selectors","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"p","7":"a","8":"a","9":"y","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"IE7 and IE8 support only these CSS3 selectors: General siblings (`element1~element2`) and Attribute selectors `[attr^=val]`, `[attr$=val]`, and `[attr*=val]`","notes_by_num":{},"usage_perc_y":89.02,"usage_perc_a":3.83,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"css-textshadow":{"title":"CSS3 Text-shadow","description":"Method of applying one or more shadow or blur effects to text","spec":"http://www.w3.org/TR/css-text-decor-3/#text-shadow-property","status":"wd","links":[{"url":"http://hacks.mozilla.org/2009/06/text-shadow/","title":"Mozilla hacks article"},{"url":"http://ie.microsoft.com/testdrive/Graphics/hands-on-css3/hands-on_text-shadow.htm","title":"Live editor"},{"url":"http://www.css3files.com/shadow/#textshadow","title":"Information page"},{"url":"http://docs.webplatform.org/wiki/css/properties/text-shadow","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y #1","11":"y #1"},"firefox":{"2":"n","3":"n","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"a","3.2":"a","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"a"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"a","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y #1"}},"notes":"Opera Mini ignores the blur-radius set, so no blur effect is visible. Text-shadow behavior can be somewhat emulated in older IE versions using the non-standard \"dropshadow\" or \"glow\" filters. ","notes_by_num":{"1":"IE 10+ supports a fourth length value for the shadow's \"spread\". This is not (yet) part of the specification. "},"usage_perc_y":83.1,"usage_perc_a":3.47,"ucprefix":false,"parent":"","keywords":"text shadow","ie_id":"","chrome_id":""},"css-boxshadow":{"title":"CSS3 Box-shadow","description":"Method of displaying an inner or outer shadow effect to elements","spec":"http://www.w3.org/TR/css3-background/#box-shadow","status":"cr","links":[{"url":"https://developer.mozilla.org/En/CSS/-moz-box-shadow","title":"MDN article"},{"url":"http://westciv.com/tools/boxshadows/index.html","title":"Live editor"},{"url":"http://tests.themasta.com/blogstuff/boxshadowdemo.html","title":"Demo of various effects"},{"url":"http://www.css3files.com/shadow/","title":"Information page"},{"url":"http://docs.webplatform.org/wiki/css/properties/box-shadow","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"y","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"y x","3.6":"y x","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y x","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"a x","3.2":"a x","4":"a x","5":"y x","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"a x","4.0-4.1":"y x","4.2-4.3":"y x","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"a x","2.2":"a x","2.3":"a x","3":"a x","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y x","10":"y"},"op_mob":{"10":"n","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Can be partially emulated in older IE versions using the non-standard \"shadow\" filter. Partial support in Safari, iOS Safari and Android Browser refers to missing \"inset\" and blur radius value support.","notes_by_num":{},"usage_perc_y":84.56,"usage_perc_a":1.07,"ucprefix":false,"parent":"","keywords":"box-shadows,boxshadows,box shadow,shaow","ie_id":"","chrome_id":""},"css3-colors":{"title":"CSS3 Colors","description":"Method of describing colors using Hue, Saturation and Lightness (hsl()) rather than just RGB, as well as allowing alpha-transparency with rgba() and hsla().","spec":"http://www.w3.org/TR/css3-color/","status":"rec","links":[{"url":"http://dev.opera.com/articles/view/color-in-opera-10-hsl-rgb-and-alpha-transparency/","title":"Dev.Opera article"},{"url":"http://www.css3files.com/color/","title":"Information page"},{"url":"http://docs.webplatform.org/wiki/css/color#RGBA_Notation","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"y","10":"y","11":"y"},"firefox":{"2":"a","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"a","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":89.06,"usage_perc_a":0.01,"ucprefix":false,"parent":"","keywords":"rgb,hsl,rgba,hsla","ie_id":"","chrome_id":""},"css3-boxsizing":{"title":"CSS3 Box-sizing","description":"Method of specifying whether or not an element's borders and padding should be included in size units","spec":"http://www.w3.org/TR/css3-ui/#box-sizing","status":"wd","links":[{"url":"https://developer.mozilla.org/En/CSS/Box-sizing","title":"MDN article"},{"url":"http://www.456bereastreet.com/archive/201104/controlling_width_with_css3_box-sizing/","title":"Blog post"},{"url":"https://github.com/Schepp/box-sizing-polyfill","title":"Polyfill for IE"},{"url":"http://css-tricks.com/box-sizing/","title":"CSS Tricks"},{"url":"http://docs.webplatform.org/wiki/css/properties/box-sizing","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"p","6":"p","7":"p","8":"a","9":"a","10":"a","11":"a"},"firefox":{"2":"y x","3":"y x","3.5":"y x","3.6":"y x","4":"y x","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"a x","5":"a x","6":"a x","7":"a x","8":"a x","9":"a x","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"a","29":"a","30":"a","31":"a","32":"a","33":"a","34":"a","35":"a","36":"a","37":"a","38":"a","39":"a","40":"a"},"safari":{"3.1":"a x","3.2":"a x","4":"a x","5":"a x","5.1":"a","6":"a","6.1":"a","7":"a","8":"a"},"opera":{"9":"n","9.5-9.6":"a","10.0-10.1":"a","10.5":"a","10.6":"a","11":"a","11.1":"a","11.5":"a","11.6":"a","12":"a","12.1":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a"},"ios_saf":{"3.2":"a x","4.0-4.1":"a x","4.2-4.3":"a x","5.0-5.1":"a","6.0-6.1":"a","7.0-7.1":"a","8":"a"},"op_mini":{"5.0-7.0":"a"},"android":{"2.1":"a x","2.2":"a x","2.3":"a x","3":"a x","4":"a","4.1":"a","4.2-4.3":"a","4.4":"a","4.4.3":"a"},"bb":{"7":"a x","10":"a"},"op_mob":{"10":"a","11":"a","11.1":"a","11.5":"a","12":"a","12.1":"a","22":"a"},"and_chr":{"37":"a"},"and_ff":{"32":"y"},"ie_mob":{"10":"a"}},"notes":"Partial support refers to supporting only the `content-box` and `border-box` values, not `padding-box` (which was added to the spec later).","notes_by_num":{},"usage_perc_y":13.52,"usage_perc_a":79.28,"ucprefix":false,"parent":"","keywords":"border-box,content-box,padding-box","ie_id":"","chrome_id":""},"css-mediaqueries":{"title":"CSS3 Media Queries","description":"Method of applying styles based on media information. Includes things like page and device dimensions","spec":"http://www.w3.org/TR/css3-mediaqueries/","status":"rec","links":[{"url":"http://ie.microsoft.com/testdrive/HTML5/85CSS3_MediaQueries/","title":"IE demo page with information"},{"url":"http://webdesignerwall.com/tutorials/responsive-design-with-css3-media-queries","title":"Media Queries tutorial"},{"url":"https://github.com/scottjehl/Respond","title":"Polyfill for IE"},{"url":"http://docs.webplatform.org/wiki/css/atrules/@media","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"p","6":"p","7":"p","8":"p","9":"y","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"a","3.2":"a","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Incomplete support by older webkit browsers refers to only acknowledging different media rules on page reload","notes_by_num":{},"usage_perc_y":89.01,"usage_perc_a":0.01,"ucprefix":false,"parent":"","keywords":"@media","ie_id":"","chrome_id":""},"multicolumn":{"title":"CSS3 Multiple column layout","description":"Method of flowing information in multiple columns","spec":"http://www.w3.org/TR/css3-multicol/","status":"cr","links":[{"url":"http://dev.opera.com/articles/view/css3-multi-column-layout/","title":"Dev.Opera article"},{"url":"http://webdesign.tutsplus.com/tutorials/htmlcss-tutorials/an-introduction-to-the-css3-multiple-column-layout-module/","title":"Introduction page"},{"url":"http://docs.webplatform.org/wiki/css/properties/column-width","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"a x","3":"a x","3.5":"a x","3.6":"a x","4":"a x","5":"a x","6":"a x","7":"a x","8":"a x","9":"a x","10":"a x","11":"a x","12":"a x","13":"a x","14":"a x","15":"a x","16":"a x","17":"a x","18":"a x","19":"a x","20":"a x","21":"a x","22":"a x","23":"a x","24":"a x","25":"a x","26":"a x","27":"a x","28":"a x","29":"a x","30":"a x","31":"a x","32":"a x","33":"a x","34":"a x","35":"a x"},"chrome":{"4":"a x","5":"a x","6":"a x","7":"a x","8":"a x","9":"a x","10":"a x","11":"a x","12":"a x","13":"a x","14":"a x","15":"a x","16":"a x","17":"a x","18":"a x","19":"a x","20":"a x","21":"a x","22":"a x","23":"a x","24":"a x","25":"a x","26":"a x","27":"a x","28":"a x","29":"a x","30":"a x","31":"a x","32":"a x","33":"a x","34":"a x","35":"a x","36":"a x","37":"a x","38":"a x","39":"a x","40":"a x"},"safari":{"3.1":"a x","3.2":"a x","4":"a x","5":"a x","5.1":"a x","6":"a x","6.1":"a x","7":"a x","8":"a x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"a x","16":"a x","17":"a x","18":"a x","19":"a x","20":"a x","21":"a x","22":"a x","23":"a x","24":"a x","25":"a x","26":"a x"},"ios_saf":{"3.2":"a x","4.0-4.1":"a x","4.2-4.3":"a x","5.0-5.1":"a x","6.0-6.1":"a x","7.0-7.1":"a x","8":"a x"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"a x","2.2":"a x","2.3":"a x","3":"a x","4":"a x","4.1":"a x","4.2-4.3":"a x","4.4":"a x","4.4.3":"a x"},"bb":{"7":"a x","10":"a x"},"op_mob":{"10":"n","11":"n","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"a x"},"and_chr":{"37":"a x"},"and_ff":{"32":"a x"},"ie_mob":{"10":"y"}},"notes":"Partial support refers to not supporting the break-before, break-after, break-inside properties. Webkit browsers do have equivalent support for the non-standard -webkit-column-break-* properties.","notes_by_num":{},"usage_perc_y":13.84,"usage_perc_a":72.72,"ucprefix":false,"parent":"","keywords":"column-count","ie_id":"multicolumnfullsupport","chrome_id":"6526151266664448"},"border-radius":{"title":"CSS3 Border-radius (rounded corners)","description":"Method of making the border corners round","spec":"http://www.w3.org/TR/css3-background/#the-border-radius","status":"cr","links":[{"url":"http://border-radius.com","title":"Border-radius CSS Generator"},{"url":"http://muddledramblings.com/table-of-css3-border-radius-compliance","title":"Detailed compliance table"},{"url":"http://www.css3files.com/border/#borderradius","title":"Information page"},{"url":"http://css3pie.com/","title":"Polyfill which includes border-radius"},{"url":"http://docs.webplatform.org/wiki/css/properties/border-radius","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"y","10":"y","11":"y"},"firefox":{"2":"a x","3":"y x","3.5":"y x","3.6":"y x","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y x","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y x","3.2":"y x","4":"y x","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y x","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"y x","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":85.68,"usage_perc_a":0.01,"ucprefix":false,"parent":"","keywords":"roundedcorners, border radius,-moz-border-radius","ie_id":"","chrome_id":""},"transforms2d":{"title":"CSS3 Transforms","description":"Method of transforming an element including rotating, scaling, etc.","spec":"http://www.w3.org/TR/css3-2d-transforms/","status":"wd","links":[{"url":"http://www.westciv.com/tools/transforms/","title":"Live editor"},{"url":"https://developer.mozilla.org/en/CSS/-moz-transform","title":"MDN article"},{"url":"http://www.webresourcesdepot.com/cross-browser-css-transforms-csssandpaper/","title":"Workaround script for IE"},{"url":"http://www.css3files.com/transform/","title":"Information page"},{"url":"http://www.useragentman.com/IETransformsTranslator/","title":"Converter for IE"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/css.js#css-transform","title":"has.js test"},{"url":"http://docs.webplatform.org/wiki/css/transforms/transform","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"p","7":"p","8":"p","9":"y x","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"y x","3.6":"y x","4":"y x","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y x","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y x","3.2":"y x","4":"y x","5":"y x","5.1":"y x","6":"y x","6.1":"y x","7":"y x","8":"y x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"y x","10.6":"y x","11":"y x","11.1":"y x","11.5":"y x","11.6":"y x","12":"y x","12.1":"y","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y x","4.0-4.1":"y x","4.2-4.3":"y x","5.0-5.1":"y x","6.0-6.1":"y x","7.0-7.1":"y x","8":"y x"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"y x","2.2":"y x","2.3":"y x","3":"y x","4":"y x","4.1":"y x","4.2-4.3":"y x","4.4":"y x","4.4.3":"y x"},"bb":{"7":"y x","10":"y x"},"op_mob":{"10":"n","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y x"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"The scale transform can be emulated in IE < 9 using Microsoft's \"zoom\" extension, others are (not easily) possible using the MS Matrix filter","notes_by_num":{},"usage_perc_y":85.63,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"transformation,translate,rotation,rotate,scale,css-transforms","ie_id":"transforms","chrome_id":"6437640580628480"},"use-strict":{"title":"ECMAScript 5 Strict Mode","description":"Method of placing code in a \"strict\" operating context.","spec":"http://ecma-international.org/ecma-262/5.1/#sec-14.1","status":"other","links":[{"url":"http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/","title":"Information page"},{"url":"http://javascriptweblog.wordpress.com/2011/05/03/javascript-strict-mode/","title":"Article with test suite"}],"categories":["Other"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"a","5.1":"a","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Partial support in older Safari refers to strict mode still accepting a lot of JS that should be considered invalid.","notes_by_num":{},"usage_perc_y":80.86,"usage_perc_a":0.77,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"transforms3d":{"title":"CSS3 3D Transforms","description":"Method of transforming an element in the third dimension","spec":"http://www.w3.org/TR/css3-3d-transforms/","status":"wd","links":[{"url":"http://css3.bradshawenterprises.com/flip/","title":"Multi-browser demo"},{"url":"http://hacks.mozilla.org/2011/10/css-3d-transformations-in-firefox-nightly/","title":"Mozilla hacks article"},{"url":"http://thewebrocks.com/demos/3D-css-tester/","title":"3D CSS Tester"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/css.js#css-transform","title":"has.js test"},{"url":"http://docs.webplatform.org/wiki/css/transforms/transform","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"a","11":"a"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"y x","5":"y x","5.1":"y x","6":"y x","6.1":"y x","7":"y x","8":"y x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y x","4.0-4.1":"y x","4.2-4.3":"y x","5.0-5.1":"y x","6.0-6.1":"y x","7.0-7.1":"y x","8":"y x"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"y x","4":"y x","4.1":"y x","4.2-4.3":"y x","4.4":"y x","4.4.3":"y x"},"bb":{"7":"y x","10":"y x"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y x"},"and_chr":{"37":"y x"},"and_ff":{"32":"y"},"ie_mob":{"10":"a"}},"notes":"Partial support in IE refers to not supporting [the transform-style: preserve-3d property](http://msdn.microsoft.com/en-us/library/ie/hh673529%28v=vs.85%29.aspx#the_ms_transform_style_property). This prevents nesting 3D transformed elements.","notes_by_num":{},"usage_perc_y":71.13,"usage_perc_a":10.07,"ucprefix":false,"parent":"","keywords":"css 3d,3dtransforms,translate3d,transform3d","ie_id":"transforms,csstransformspreserve3d","chrome_id":"6437640580628480"},"sharedworkers":{"title":"Shared Web Workers","description":"Method of allowing multiple scripts to communicate with a single web worker.","spec":"http://www.w3.org/TR/workers/#shared-workers-introduction","status":"cr","links":[{"url":"http://www.sitepoint.com/javascript-shared-web-workers-html5/","title":"Sitepoint article"},{"url":"http://greenido.wordpress.com/2011/11/03/web-workers-part-3-out-of-3-shared-wrokers/","title":"Blog post"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"y","5.1":"y","6":"y","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"u","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":48.41,"usage_perc_a":0,"ucprefix":false,"parent":"webworkers","keywords":"shared worker","ie_id":"","chrome_id":""},"css-hyphens":{"title":"CSS Hyphenation","description":"Method of controlling when words at the end of lines should be hyphenated using the \"hyphens\" property.","spec":"http://www.w3.org/TR/css3-text/#hyphenation","status":"wd","links":[{"url":"https://developer.mozilla.org/en/CSS/hyphens","title":"MDN article"},{"url":"http://blog.fontdeck.com/post/9037028497/hyphens","title":"Blog post"},{"url":"http://docs.webplatform.org/wiki/css/properties/hyphens","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y x","11":"y x"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n","36":"n","37":"n","38":"n","39":"n","40":"n"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"y x","6":"y x","6.1":"y x","7":"y x","8":"y x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"y x","5.0-5.1":"y x","6.0-6.1":"y x","7.0-7.1":"y x","8":"y x"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"y x"},"ie_mob":{"10":"n"}},"notes":"Chrome 29- and Android 4.0 Browser support \"-webkit-hyphens: none\", but not the \"auto\" property. Chrome 30+ doesn't support it either.","notes_by_num":{},"usage_perc_y":32.97,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"hyphen,shy","ie_id":"","chrome_id":""},"css-transitions":{"title":"CSS3 Transitions","description":"Simple method of animating certain properties of an element","spec":"http://www.w3.org/TR/css3-transitions/","status":"wd","links":[{"url":"http://www.webdesignerdepot.com/2010/01/css-transitions-101/","title":"Article on usage"},{"url":"http://www.css3files.com/transition/","title":"Information page"},{"url":"http://www.the-art-of-web.com/css/timing-function/","title":"Examples on timing functions"},{"url":"http://www.opera.com/docs/specs/presto2.12/css/transitions/","title":"Animation of property types support in Opera"},{"url":"http://docs.webplatform.org/wiki/css/properties/transition","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"y x","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y x","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y x","3.2":"y x","4":"y x","5":"y x","5.1":"y x","6":"y x","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"y x","10.6":"y x","11":"y x","11.1":"y x","11.5":"y x","11.6":"y x","12":"y x","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y x","4.0-4.1":"y x","4.2-4.3":"y x","5.0-5.1":"y x","6.0-6.1":"y x","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"y x","2.2":"y x","2.3":"y x","3":"y x","4":"y x","4.1":"y x","4.2-4.3":"y x","4.4":"y","4.4.3":"y"},"bb":{"7":"y x","10":"y x"},"op_mob":{"10":"y x","11":"y x","11.1":"y x","11.5":"y x","12":"y x","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":83.03,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"css transition","ie_id":"","chrome_id":""},"font-feature":{"title":"Font feature settings","description":"Method of applying advanced typographic and language-specific font features to supported OpenType fonts.","spec":"http://w3.org/TR/css3-fonts/#font-rend-props","status":"wd","links":[{"url":"http://ie.microsoft.com/testdrive/Graphics/opentype/","title":"Demo pages (IE/Firefox only)"},{"url":"http://hacks.mozilla.org/2010/11/firefox-4-font-feature-support/","title":"Mozilla hacks article"},{"url":"http://html5accessibility.com/","title":"Detailed tables on accessability support"},{"url":"http://docs.webplatform.org/wiki/css/properties/font-feature-settings","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"a x","5":"a x","6":"a x","7":"a x","8":"a x","9":"a x","10":"a x","11":"a x","12":"a x","13":"a x","14":"a x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"a x","17":"a x","18":"a x","19":"a x","20":"a x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x","36":"y x","37":"y x","38":"y x","39":"y x","40":"y x"},"safari":{"3.1":"n","3.2":"n","4":"a","5":"a","5.1":"a","6":"a","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x"},"ios_saf":{"3.2":"a","4.0-4.1":"a","4.2-4.3":"a","5.0-5.1":"a","6.0-6.1":"a","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y x","4.4.3":"y x"},"bb":{"7":"n","10":"y x"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y x"},"and_chr":{"37":"y x"},"and_ff":{"32":"y x"},"ie_mob":{"10":"n"}},"notes":"Partial support in older Firefox versions refers to using an older syntax. Partial support in older Chrome versions refers to lacking support in Mac OS X. ","notes_by_num":{},"usage_perc_y":65.36,"usage_perc_a":2.09,"ucprefix":false,"parent":"","keywords":"font-feature,font-feature-settings,kern,kerning,font-variant-alternates,ligatures,font-variant-ligatures","ie_id":"","chrome_id":""},"css-animation":{"title":"CSS3 Animation","description":"Complex method of animating certain properties of an element","spec":"http://www.w3.org/TR/css3-animations/","status":"wd","links":[{"url":"http://robertnyman.com/2010/05/06/css3-animations/","title":"Blog post on usage"},{"url":"http://www.css3files.com/animation/","title":"Information page"},{"url":"http://docs.webplatform.org/wiki/css/properties/animations","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y x","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x","36":"y x","37":"y x","38":"y x","39":"y x","40":"y x"},"safari":{"3.1":"n","3.2":"n","4":"y x","5":"y x","5.1":"y x","6":"y x","6.1":"y x","7":"y x","8":"y x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"y x","12.1":"y","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x"},"ios_saf":{"3.2":"y x","4.0-4.1":"y x","4.2-4.3":"y x","5.0-5.1":"y x","6.0-6.1":"y x","7.0-7.1":"y x","8":"y x"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"a x","2.2":"a x","2.3":"a x","3":"a x","4":"y x","4.1":"y x","4.2-4.3":"y x","4.4":"y x","4.4.3":"y x"},"bb":{"7":"y x","10":"y x"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"y","22":"y x"},"and_chr":{"37":"y x"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Partial support in Android browser refers to buggy behavior in different scenarios.","notes_by_num":{},"usage_perc_y":81.93,"usage_perc_a":0.99,"ucprefix":false,"parent":"","keywords":"animations,css-animations,keyframe,keyframes","ie_id":"","chrome_id":""},"css-gradients":{"title":"CSS Gradients","description":"Method of defining a linear or radial color gradient as a CSS image.","spec":"http://www.w3.org/TR/css3-images/","status":"cr","links":[{"url":"http://www.colorzilla.com/gradient-editor/","title":"Cross-browser editor"},{"url":"http://www.css3files.com/gradient/","title":"Information page"},{"url":"http://css3pie.com/","title":"Tool to emulate support in IE"},{"url":"http://docs.webplatform.org/wiki/css/functions/linear-gradient","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"y x","4":"y x","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"a x","5":"a x","6":"a x","7":"a x","8":"a x","9":"a x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"a x","5":"a x","5.1":"y x","6":"y x","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"a x","11.5":"a x","11.6":"y x","12":"y x","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"a x","4.0-4.1":"a x","4.2-4.3":"a x","5.0-5.1":"y x","6.0-6.1":"y x","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"a x","2.2":"a x","2.3":"a x","3":"a x","4":"y x","4.1":"y x","4.2-4.3":"y x","4.4":"y","4.4.3":"y"},"bb":{"7":"a x","10":"y x"},"op_mob":{"10":"n","11":"n","11.1":"a x","11.5":"a x","12":"y x","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Syntax used by browsers with prefixed support may be incompatible with that for proper support. \r\n\r\nPartial support in Opera 11.10 and 11.50 also refers to only having support for linear gradients.\r\n\r\nSupport can be somewhat emulated in older IE versions using the non-standard \"gradient\" filter. \r\n\r\nFirefox 10+, Opera 11.6+, Chrome 26+ and IE10+ also support the new \"to (side)\" syntax.","notes_by_num":{},"usage_perc_y":81.66,"usage_perc_a":1.45,"ucprefix":false,"parent":"","keywords":"linear,linear-gradient,gradiant","ie_id":"gradients","chrome_id":"5785905063264256"},"css-canvas":{"title":"CSS Canvas Drawings","description":"Method of using HTML5 Canvas as a background image","spec":"http://webkit.org/blog/176/css-canvas-drawing/","status":"unoff","links":[{"url":"http://webkit.org/blog/176/css-canvas-drawing/","title":"Webkit blog post"}],"categories":["CSS"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"u","34":"u","35":"u"},"chrome":{"4":"y x","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x","36":"y x","37":"y x","38":"y x","39":"y x","40":"y x"},"safari":{"3.1":"n","3.2":"n","4":"y x","5":"y x","5.1":"y x","6":"y x","6.1":"y x","7":"y x","8":"y x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x"},"ios_saf":{"3.2":"y x","4.0-4.1":"y x","4.2-4.3":"y x","5.0-5.1":"y x","6.0-6.1":"y x","7.0-7.1":"y x","8":"y x"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"y x","2.2":"y x","2.3":"y x","3":"y x","4":"y x","4.1":"y x","4.2-4.3":"y x","4.4":"y x","4.4.3":"y x"},"bb":{"7":"y x","10":"y x"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y x"},"and_chr":{"37":"y x"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"Proposal by Webkit, being considered for W3C standardization. A similar effect can be achieved in Firefox 4+ using the -moz-element() background property","notes_by_num":{},"usage_perc_y":59.2,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"css-reflections":{"title":"CSS Reflections","description":"Method of displaying a reflection of an element","spec":"http://webkit.org/blog/182/css-reflections/","status":"unoff","links":[{"url":"http://webkit.org/blog/182/css-reflections/","title":"Webkit blog post"}],"categories":["CSS"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n"},"chrome":{"4":"y x","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x","36":"y x","37":"y x","38":"y x","39":"y x","40":"y x"},"safari":{"3.1":"n","3.2":"n","4":"y x","5":"y x","5.1":"y x","6":"y x","6.1":"y x","7":"y x","8":"y x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x"},"ios_saf":{"3.2":"y x","4.0-4.1":"y x","4.2-4.3":"y x","5.0-5.1":"y x","6.0-6.1":"y x","7.0-7.1":"y x","8":"y x"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"y x","2.2":"y x","2.3":"y x","3":"y x","4":"y x","4.1":"y x","4.2-4.3":"y x","4.4":"y x","4.4.3":"y x"},"bb":{"7":"y x","10":"y x"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y x"},"and_chr":{"37":"y x"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"Similar effect can be achieved in Firefox 4+ using the -moz-element() background property","notes_by_num":{},"usage_perc_y":59.2,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"box-reflect","ie_id":"","chrome_id":"5627300510957568"},"css-masks":{"title":"CSS Masks","description":"Method of displaying part of an element, using a selected image as a mask","spec":"http://www.w3.org/TR/css-masking/","status":"wd","links":[{"url":"http://docs.webplatform.org/wiki/css/properties/mask","title":"WebPlatform Docs"},{"url":"http://www.html5rocks.com/en/tutorials/masking/adobe/","title":"HTML5 Rocks article"},{"url":"http://thenittygritty.co/css-masking","title":"Detailed blog post"}],"categories":["CSS"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"a","3.6":"a","4":"a","5":"a","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"a","29":"a","30":"a","31":"a","32":"a","33":"a","34":"a","35":"a"},"chrome":{"4":"a x","5":"a x","6":"a x","7":"a x","8":"a x","9":"a x","10":"a x","11":"a x","12":"a x","13":"a x","14":"a x","15":"a x","16":"a x","17":"a x","18":"a x","19":"a x","20":"a x","21":"a x","22":"a x","23":"a x","24":"a x","25":"a x","26":"a x","27":"a x","28":"a x","29":"a x","30":"a x","31":"a x","32":"a x","33":"a x","34":"a x","35":"a x","36":"a x","37":"a x","38":"a x","39":"a x","40":"a x"},"safari":{"3.1":"n","3.2":"n","4":"a x","5":"a x","5.1":"a x","6":"a x","6.1":"a x","7":"a x","8":"a x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"a x","16":"a x","17":"a x","18":"a x","19":"a x","20":"a x","21":"a x","22":"a x","23":"a x","24":"a x","25":"a x","26":"a x"},"ios_saf":{"3.2":"a x","4.0-4.1":"a x","4.2-4.3":"a x","5.0-5.1":"a x","6.0-6.1":"a x","7.0-7.1":"a x","8":"a x"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"a x","2.2":"a x","2.3":"a x","3":"a x","4":"a x","4.1":"a x","4.2-4.3":"a x","4.4":"a x","4.4.3":"a x"},"bb":{"7":"a x","10":"a x"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"a x"},"and_chr":{"37":"a x"},"and_ff":{"32":"a"},"ie_mob":{"10":"n"}},"notes":"Partial support in WebKit/Blink browsers refers to supporting the mask-image and mask-box-image properties, but lacks support for othe parts of the spec. Partial support in Firefox refers to only support for inline SVG mask elements i.e. mask: url(#foo).","notes_by_num":{},"usage_perc_y":0,"usage_perc_a":72.66,"ucprefix":false,"parent":"","keywords":"","ie_id":"masks","chrome_id":"5381559662149632"},"svg":{"title":"SVG (basic support)","description":"Method of displaying basic Vector Graphics features using the embed or object elements. Refers to the SVG 1.1 spec.","spec":"http://www.w3.org/TR/SVG/","status":"rec","links":[{"url":"http://en.wikipedia.org/wiki/Scalable_Vector_Graphics","title":"Wikipedia"},{"url":"http://www.alistapart.com/articles/using-svg-for-flexible-scalable-and-fun-backgrounds-part-i","title":"A List Apart article"},{"url":"http://svg-wow.org/","title":"SVG showcase site"},{"url":"http://code.google.com/p/svgweb/","title":"SVG Web: Flash-based polyfill"},{"url":"http://svg-edit.googlecode.com","title":"Web-based SVG editor"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/graphics.js#svg","title":"has.js test"}],"categories":["SVG"],"stats":{"ie":{"5.5":"n","6":"p","7":"p","8":"p","9":"y","10":"y","11":"y"},"firefox":{"2":"a","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"a","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"a","4":"a","4.1":"a","4.2-4.3":"a","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Partial support in Android 4 refers to not supporting masking.","notes_by_num":{},"usage_perc_y":83.66,"usage_perc_a":4.44,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"svg-css":{"title":"SVG in CSS backgrounds","description":"Method of using SVG images as CSS backgrounds","spec":"http://www.w3.org/TR/css3-background/#background-image","status":"cr","links":[{"url":"http://designfestival.com/a-farewell-to-css3-gradients/","title":"Tutorial for advanced effects"}],"categories":["CSS3","SVG"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"y","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"a","5":"a","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"a","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"a","4":"a","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"a","4.0-4.1":"a","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"a"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"a","11":"a","11.1":"a","11.5":"a","12":"a","12.1":"a","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Partial support in older Firefox and Opera Mini/Mobile refers to SVG images being blurry when scaled. Partial support in iOS Safari and older Safari versions refers to failing to support tiling or the background-position property.","notes_by_num":{},"usage_perc_y":83.14,"usage_perc_a":4.75,"ucprefix":false,"parent":"","keywords":"svg-in-css,svgincss,css-svg","ie_id":"","chrome_id":""},"svg-smil":{"title":"SVG SMIL animation","description":"Method of using animation elements to animate SVG images","spec":"http://www.w3.org/TR/SVG/animate.html","status":"rec","links":[{"url":"http://svg-wow.org/blog/category/animation/","title":"Examples on SVG WOW"},{"url":"https://developer.mozilla.org/en/SVG/SVG_animation_with_SMIL","title":"MDN article"},{"url":"http://leunen.me/fakesmile/","title":"JS library to support SMIL in SVG"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/graphics.js#svg-smil","title":"has.js test"},{"url":"https://github.com/madsgraphics/SVGEventListener","title":"Polyfill for SMIL animate events on SVG"}],"categories":["SVG"],"stats":{"ie":{"5.5":"n","6":"p","7":"p","8":"p","9":"p","10":"p","11":"p"},"firefox":{"2":"p","3":"p","3.5":"p","3.6":"p","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"a","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"p","3.2":"p","4":"a","5":"a","5.1":"a","6":"a","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"a","4.0-4.1":"a","4.2-4.3":"a","5.0-5.1":"a","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"p"}},"notes":"Partial support in Safari refers to not working in HTML files.","notes_by_num":{},"usage_perc_y":70.8,"usage_perc_a":1.2,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"svg-fonts":{"title":"SVG fonts","description":"Method of using fonts defined as SVG shapes","spec":"http://www.w3.org/TR/SVG/fonts.html","status":"rec","links":[{"url":"http://jeremie.patonnier.net/post/2011/02/07/Why-are-SVG-Fonts-so-different","title":"Blog post"},{"url":"http://opentype.info/blog/2010/04/13/the-ipad-and-svg-fonts-in-mobile-safari/","title":"Blog post on usage for iPad"}],"categories":["SVG"],"stats":{"ie":{"5.5":"n","6":"p","7":"p","8":"p","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"a #1","39":"a #1","40":"a #1"},"safari":{"3.1":"n","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n #2"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{"1":"Chrome 38 and newer support SVG fonts only on Windows Vista and XP. The feature is considered deprecated.","2":"Supported in Opera Mini in SVG images only, not in HTML."},"usage_perc_y":58.52,"usage_perc_a":0.17,"ucprefix":false,"parent":"fontface","keywords":"","ie_id":"","chrome_id":"5930075908210688"},"svg-filters":{"title":"SVG filters","description":"Method of using photoshop-like effects on SVG objects including blurring and color manipulation.","spec":"http://www.w3.org/TR/SVG/filters.html","status":"rec","links":[{"url":"http://electricbeach.org/?p=950","title":"Experiments with filter effects"},{"url":"http://svg-wow.org/blog/category/filters/","title":"SVG filter demos"},{"url":"http://docs.webplatform.org/wiki/svg/elements/filter","title":"WebPlatform Docs"}],"categories":["SVG"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"a","6":"a","7":"a","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":80.11,"usage_perc_a":0.05,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"svg-html":{"title":"SVG effects for HTML","description":"Method of using SVG transforms, filters, etc on HTML elements using either CSS or the foreignObject element","spec":"http://www.w3.org/TR/SVG11/extend.html#ForeignObjectElement","status":"wd","links":[{"url":"https://developer.mozilla.org/en/SVG/Tutorial/Other_content_in_SVG","title":"MDN Tutorial"},{"url":"https://developer.mozilla.org/En/Applying_SVG_effects_to_HTML_content","title":"MDN Reference page"},{"url":"https://dvcs.w3.org/hg/FXTF/raw-file/tip/filters/index.html","title":"Filter Effects draft"}],"categories":["SVG"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"a","10":"a","11":"a"},"firefox":{"2":"n","3":"a","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"a","5":"a","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"a","29":"a","30":"a","31":"a","32":"a","33":"a","34":"a","35":"a","36":"a","37":"a","38":"a","39":"a","40":"a"},"safari":{"3.1":"n","3.2":"n","4":"a","5":"a","5.1":"a","6":"a","6.1":"a","7":"a","8":"a"},"opera":{"9":"a","9.5-9.6":"a","10.0-10.1":"a","10.5":"a","10.6":"a","11":"a","11.1":"a","11.5":"a","11.6":"a","12":"a","12.1":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a"},"ios_saf":{"3.2":"a","4.0-4.1":"a","4.2-4.3":"a","5.0-5.1":"a","6.0-6.1":"a","7.0-7.1":"a","8":"a"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"a","4.4.3":"a"},"bb":{"7":"n","10":"y"},"op_mob":{"10":"a","11":"a","11.1":"a","11.5":"a","12":"a","12.1":"a","22":"a"},"and_chr":{"37":"a"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"Partial support refers to lack of filter support or buggy result from effects. A [CSS Filter Effects](https://dvcs.w3.org/hg/FXTF/raw-file/tip/filters/index.html) specification is in the works that would replace this method.","notes_by_num":{},"usage_perc_y":13.46,"usage_perc_a":66.29,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"svg-html5":{"title":"Inline SVG in HTML5","description":"Method of using SVG tags directly in HTML documents. Requires HTML5 parser.","spec":"http://www.w3.org/TR/html5/embedded-content-0.html#svg-0","status":"cr","links":[{"url":"http://hacks.mozilla.org/2010/05/firefox-4-the-html5-parser-inline-svg-speed-and-more/","title":"Mozilla Hacks blog post"},{"url":"http://samples.msdn.microsoft.com/ietestcenter/html5/svghtml_harness.htm?url=SVG_HTML_Elements_001","title":"Test suite"}],"categories":["HTML5","SVG"],"stats":{"ie":{"5.5":"n","6":"p","7":"p","8":"p","9":"y","10":"y","11":"y"},"firefox":{"2":"p","3":"p","3.5":"p","3.6":"p","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"p","5":"p","6":"p","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"p","3.2":"p","4":"p","5":"p","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"p","9.5-9.6":"p","10.0-10.1":"p","10.5":"p","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"p","4.0-4.1":"p","4.2-4.3":"p","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"p","11":"p","11.1":"p","11.5":"p","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":84.14,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"canvas":{"title":"Canvas (basic support)","description":"Method of generating fast, dynamic graphics using JavaScript","spec":"http://www.w3.org/TR/html5/embedded-content-0.html#the-canvas-element","status":"cr","links":[{"url":"https://developer.mozilla.org/en/Canvas_tutorial","title":"Tutorial by Mozilla"},{"url":"http://www.canvasdemos.com/","title":"Showcase site"},{"url":"http://glimr.rubyforge.org/cake/canvas.html","title":"Animation kit "},{"url":"http://www.diveinto.org/html5/canvas.html","title":"Another tutorial"},{"url":"http://explorercanvas.googlecode.com/","title":"Implementation for Internet Explorer"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/graphics.js#canvas","title":"has.js test"}],"categories":["Canvas","HTML5"],"stats":{"ie":{"5.5":"n","6":"p","7":"p","8":"p","9":"y","10":"y","11":"y"},"firefox":{"2":"y","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"a"},"android":{"2.1":"a","2.2":"a","2.3":"a","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Opera Mini supports the canvas element, but is unable to play animations or run other more complex applications. Android 2.x supports canvas except the toDataURL() function. See http://code.google.com/p/android/issues/detail?id=7901 Some (slow) workarounds are described here: http://stackoverflow.com/q/10488033/841830","notes_by_num":{},"usage_perc_y":84.74,"usage_perc_a":4.34,"ucprefix":false,"parent":"","keywords":"","ie_id":"canvas","chrome_id":"5100084685438976"},"canvas-text":{"title":"Text API for Canvas","description":"Method of displaying text on Canvas elements","spec":"http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#text-0","status":"wd","links":[{"url":"https://developer.mozilla.org/en/Drawing_text_using_a_canvas#Additional_examples","title":"Examples by Mozilla"},{"url":"http://code.google.com/p/canvas-text/","title":"Support library"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/graphics.js#canvas-text","title":"has.js test"},{"url":"http://docs.webplatform.org/wiki/apis/canvas/CanvasRenderingContext2D/fillText","title":"WebPlatform Docs"}],"categories":["Canvas","HTML5"],"stats":{"ie":{"5.5":"n","6":"p","7":"p","8":"p","9":"y","10":"y","11":"y"},"firefox":{"2":"p","3":"p","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"p","3.2":"p","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"p","9.5-9.6":"p","10.0-10.1":"p","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"p","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":85.63,"usage_perc_a":0,"ucprefix":false,"parent":"canvas","keywords":"","ie_id":"","chrome_id":""},"namevalue-storage":{"title":"Web Storage - name/value pairs","description":"Method of storing data locally like cookies, but for larger amounts of data (sessionStorage and localStorage, used to fall under HTML5).","spec":"http://www.w3.org/TR/webstorage/#storage","status":"rec","links":[{"url":"https://developer.mozilla.org/En/DOM/Storage","title":"Gecko reference"},{"url":"http://code.google.com/p/sessionstorage/","title":"Support library"},{"url":"http://html5demos.com/storage","title":"Simple demo"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/features.js#native-localstorage;native-sessionstorage","title":"has.js test"},{"url":"http://docs.webplatform.org/wiki/apis/web-storage/Storage/localStorage","title":"WebPlatform Docs"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"p","7":"p","8":"y","9":"y","10":"y","11":"y"},"firefox":{"2":"a","3":"a","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":89.35,"usage_perc_a":0.06,"ucprefix":false,"parent":"","keywords":"webstorage,local storage","ie_id":"webstorage","chrome_id":"5345825534246912"},"sql-storage":{"title":"Web SQL Database","description":"Method of storing data client-side, allows Sqlite database queries for access and manipulation","spec":"http://www.w3.org/TR/webdatabase/","status":"unoff","links":[{"url":"http://html5doctor.com/introducing-web-sql-databases/","title":"HTML5 Doctor article"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/features.js#native-sql-db","title":"has.js test"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"The Web SQL Database specification is no longer being maintained and support may be dropped in future versions.","notes_by_num":{},"usage_perc_y":59.64,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"db-storage,websql","ie_id":"websqldatabase","chrome_id":"6330987952734208"},"indexeddb":{"title":"IndexedDB","description":"Method of storing data client-side, allows indexed database queries. Previously known as WebSimpleDB API.","spec":"http://www.w3.org/TR/IndexedDB/","status":"cr","links":[{"url":"http://hacks.mozilla.org/2010/06/comparing-indexeddb-and-webdatabase/","title":"Mozilla Hacks article"},{"url":"https://github.com/axemclion/IndexedDBShim","title":"Polyfill for browsers supporting WebSQL"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/features.js#native-indexeddb","title":"has.js test"},{"url":"http://docs.webplatform.org/wiki/apis/indexedDB","title":"WebPlatform Docs"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"a","11":"a"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"a x","5":"a x","6":"a x","7":"a x","8":"a x","9":"a x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"p","5":"p","6":"p","7":"p","8":"p","9":"p","10":"n","11":"a x","12":"a x","13":"a x","14":"a x","15":"a x","16":"a x","17":"a x","18":"a x","19":"a x","20":"a x","21":"a x","22":"a x","23":"y x","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"p","3.2":"p","4":"p","5":"p","5.1":"p","6":"p","6.1":"p","7":"p","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"p","10.6":"p","11":"p","11.1":"p","11.5":"p","11.6":"p","12":"p","12.1":"p","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"p","4.0-4.1":"p","4.2-4.3":"p","5.0-5.1":"p","6.0-6.1":"p","7.0-7.1":"p","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"p","2.2":"p","2.3":"p","3":"p","4":"p","4.1":"p","4.2-4.3":"p","4.4":"y","4.4.3":"y"},"bb":{"7":"p","10":"a x"},"op_mob":{"10":"n","11":"p","11.1":"p","11.5":"p","12":"p","12.1":"p","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Partial support in IE 10 & 11 refers to a number of subfeatures [not being supported](http://codepen.io/cemerick/pen/Itymi). Partial support in BB10 refers to an [outdated specification](http://www.w3.org/TR/2011/WD-IndexedDB-20110419/) being implemented. Code targeting the [current state of the specification](http://www.w3.org/TR/IndexedDB/) might not work.","notes_by_num":{},"usage_perc_y":55.93,"usage_perc_a":10.72,"ucprefix":false,"parent":"","keywords":"indexdb","ie_id":"indexeddb","chrome_id":"6507459568992256"},"eventsource":{"title":"Server-sent DOM events","description":"Method of continuously sending data from a server to the browser, rather than repeatedly requesting it (EventSource interface, used to fall under HTML5)","spec":"http://www.w3.org/TR/eventsource/","status":"cr","links":[{"url":"http://www.html5rocks.com/tutorials/eventsource/basics/","title":"HTML5 Rocks tutorial"},{"url":"http://samshull.blogspot.com/2010/10/ajax-push-in-ios-safari-and-chrome-with.html","title":"Blog post with demo"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/features.js#native-eventsource","title":"has.js test"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"a","9.5-9.6":"a","10.0-10.1":"a","10.5":"a","10.6":"a","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"a","11":"a","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":67.35,"usage_perc_a":0.05,"ucprefix":false,"parent":"","keywords":"serversent,s-sent-events","ie_id":"serversenteventseventsource","chrome_id":"5311740673785856"},"x-doc-messaging":{"title":"Cross-document messaging","description":"Method of sending information from a page on one domain to a page on a different one (using postMessage)","spec":"http://www.whatwg.org/specs/web-apps/current-work/multipage/comms.html#crossDocumentMessages","status":"wd","links":[{"url":"https://developer.mozilla.org/en/DOM/window.postMessage","title":"MDN article"},{"url":"http://html5demos.com/postmessage2","title":"Simple demo"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/features.js#native-crosswindowmessaging","title":"has.js test"},{"url":"http://docs.webplatform.org/wiki/apis/web-messaging/MessagePort/postMessage","title":"WebPlatform Docs"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"a","9":"a","10":"a","11":"a"},"firefox":{"2":"n","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"a"}},"notes":"Partial support in IE8-9 refers to only working in frames/iframes (not other tabs/windows). Also in IE 9 and below an object cannot be sent using postMessage. Partial support in IE10 refers to [limitations in certain conditions](http://stackoverflow.com/questions/16226924/is-cross-origin-postmessage-broken-in-ie10)","notes_by_num":{},"usage_perc_y":76.53,"usage_perc_a":16.25,"ucprefix":false,"parent":"","keywords":"","ie_id":"postmessage","chrome_id":"4786174115708928"},"datauri":{"title":"Data URIs","description":"Method of embedding images and other files in webpages as a string of text","spec":"http://www.ietf.org/rfc/rfc2397.txt","status":"other","links":[{"url":"http://css-tricks.com/5970-data-uris/","title":"Information page"},{"url":"http://en.wikipedia.org/wiki/data_URI_scheme","title":"Wikipedia"},{"url":"http://www.websiteoptimization.com/speed/tweak/inline-images/","title":"Data URL converter"},{"url":"http://klevjers.com/papers/phishing.pdf","title":"Information on security issues"}],"categories":["Other"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"a","9":"a","10":"a","11":"a"},"firefox":{"2":"y","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"a"}},"notes":"Support in Internet Explorer 8 is limited to images and linked resources like CSS files, not HTML files. Max URI length in IE8 is 32KB. In IE9+ JavaScript files are supported too and the maximum size limit set to 4GB.","notes_by_num":{},"usage_perc_y":76.56,"usage_perc_a":16.25,"ucprefix":false,"parent":"","keywords":"data url,datauris,data uri,dataurl,dataurls,base64","ie_id":"","chrome_id":""},"mathml":{"title":"MathML","description":"Special tags that allow mathematical formulas and notations to be written on web pages.","spec":"http://www.w3.org/TR/MathML/","status":"rec","links":[{"url":"http://en.wikipedia.org/wiki/MathML","title":"Wikipedia"},{"url":"http://www.mozilla.org/projects/mathml/demo/","title":"MathML demos"},{"url":"http://www.mathjax.org","title":"Cross-browser support script"},{"url":"https://developer.mozilla.org/en/MathML/Element","title":"MDN element reference"}],"categories":["Other"],"stats":{"ie":{"5.5":"n","6":"p","7":"p","8":"p","9":"n","10":"n","11":"n"},"firefox":{"2":"y","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"p","5":"p","6":"p","7":"p","8":"p","9":"p","10":"p","11":"p","12":"p","13":"p","14":"p","15":"p","16":"p","17":"p","18":"p","19":"p","20":"p","21":"p","22":"p","23":"p","24":"y","25":"p","26":"p","27":"p","28":"p","29":"p","30":"p","31":"p","32":"p","33":"p","34":"p","35":"p","36":"p","37":"p","38":"p","39":"p","40":"p"},"safari":{"3.1":"p","3.2":"p","4":"p","5":"p","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"a","10.0-10.1":"a","10.5":"a","10.6":"a","11":"a","11.1":"a","11.5":"a","11.6":"a","12":"a","12.1":"a","15":"p","16":"p","17":"p","18":"p","19":"p","20":"p","21":"p","22":"p","23":"p","24":"p","25":"p","26":"p"},"ios_saf":{"3.2":"p","4.0-4.1":"p","4.2-4.3":"p","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"p"},"android":{"2.1":"p","2.2":"p","2.3":"p","3":"p","4":"p","4.1":"p","4.2-4.3":"p","4.4":"p","4.4.3":"p"},"bb":{"7":"p","10":"y"},"op_mob":{"10":"p","11":"p","11.1":"p","11.5":"p","12":"p","12.1":"p","22":"p"},"and_chr":{"37":"p"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"Opera's support is limited to a CSS profile of MathML. Support was added in Chrome 24, but removed afterwards due to instability.","notes_by_num":{},"usage_perc_y":23.66,"usage_perc_a":0.41,"ucprefix":false,"parent":"","keywords":"","ie_id":"mathml","chrome_id":"5240822173794304"},"css-featurequeries":{"title":"CSS Feature Queries","description":"CSS Feature Queries allow authors to condition rules based on whether particular property declarations are supported in CSS using the @supports at rule.","spec":"http://www.w3.org/TR/css3-conditional/#at-supports","status":"cr","links":[{"url":"https://developer.mozilla.org/en-US/docs/Web/CSS/@supports","title":"MDN Article"},{"url":"http://mcc.id.au/blog/2012/08/supports","title":"@supports in Firefox"},{"url":"http://dabblet.com/gist/3895764","title":"Test case"},{"url":"http://docs.webplatform.org/wiki/css/atrules/@supports","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"See also the [CSS.supports() DOM API](#feat=css-supports-api)","notes_by_num":{},"usage_perc_y":54.04,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"supports,conditional","ie_id":"conditionalrules","chrome_id":"4993981813358592"},"xhtml":{"title":"XHTML served as application/xhtml+xml","description":"A strict form of HTML, and allows embedding of other XML languages","spec":"http://www.w3.org/TR/xhtml1/","status":"rec","links":[{"url":"http://en.wikipedia.org/wiki/XHTML","title":"Wikipedia"},{"url":"http://www.xmlplease.com/xhtml/xhtml5polyglot/","title":"Information on XHTML5"},{"url":"http://docs.webplatform.org/wiki/concepts/internet_and_web/the_web_standards_model#What_is_XHTML.3F","title":"WebPlatform Docs"}],"categories":["Other"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"y","10":"y","11":"y"},"firefox":{"2":"y","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"The XHTML syntax is very close to HTML, and thus is almost always ([incorrectly](https://developer.mozilla.org/en-US/docs/XHTML#MIME_type_versus_DOCTYPE)) served as text/html on the web.","notes_by_num":{},"usage_perc_y":89.08,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"xhtml+xml","ie_id":"","chrome_id":""},"xhtmlsmil":{"title":"XHTML+SMIL animation","description":"Method of using SMIL animation in web pages","spec":"http://www.w3.org/TR/XHTMLplusSMIL/","status":"unoff","links":[{"url":"http://en.wikipedia.org/wiki/XHTML%2BSMIL","title":"Wikipedia"},{"url":"http://leunen.me/fakesmile/","title":"JS library to support XHTML+SMIL"}],"categories":["Other"],"stats":{"ie":{"5.5":"n","6":"a","7":"a","8":"a","9":"n","10":"n","11":"n"},"firefox":{"2":"p","3":"p","3.5":"p","3.6":"p","4":"p","5":"p","6":"p","7":"p","8":"p","9":"p","10":"p","11":"p","12":"p","13":"p","14":"p","15":"p","16":"p","17":"p","18":"p","19":"p","20":"p","21":"p","22":"p","23":"p","24":"p","25":"p","26":"p","27":"p","28":"p","29":"p","30":"p","31":"p","32":"p","33":"p","34":"p","35":"p"},"chrome":{"4":"p","5":"p","6":"p","7":"p","8":"p","9":"p","10":"p","11":"p","12":"p","13":"p","14":"p","15":"p","16":"p","17":"p","18":"p","19":"p","20":"p","21":"p","22":"p","23":"p","24":"p","25":"p","26":"p","27":"p","28":"p","29":"p","30":"p","31":"p","32":"p","33":"p","34":"p","35":"p","36":"p","37":"p","38":"p","39":"p","40":"p"},"safari":{"3.1":"p","3.2":"p","4":"p","5":"p","5.1":"p","6":"p","6.1":"p","7":"p","8":"p"},"opera":{"9":"p","9.5-9.6":"p","10.0-10.1":"p","10.5":"p","10.6":"p","11":"p","11.1":"p","11.5":"p","11.6":"p","12":"p","12.1":"p","15":"p","16":"p","17":"p","18":"p","19":"p","20":"p","21":"p","22":"p","23":"p","24":"p","25":"p","26":"p"},"ios_saf":{"3.2":"p","4.0-4.1":"p","4.2-4.3":"p","5.0-5.1":"p","6.0-6.1":"p","7.0-7.1":"p","8":"p"},"op_mini":{"5.0-7.0":"p"},"android":{"2.1":"p","2.2":"p","2.3":"p","3":"p","4":"p","4.1":"p","4.2-4.3":"p","4.4":"p","4.4.3":"p"},"bb":{"7":"p","10":"p"},"op_mob":{"10":"p","11":"p","11.1":"p","11.5":"p","12":"p","12.1":"p","22":"p"},"and_chr":{"37":"p"},"and_ff":{"32":"p"},"ie_mob":{"10":"n"}},"notes":"Internet Explorer supports the W3C proposal HTML+TIME, which is largely the same as XHTML+SMIL","notes_by_num":{},"usage_perc_y":0,"usage_perc_a":4,"ucprefix":false,"parent":"xhtml","keywords":"","ie_id":"","chrome_id":""},"wai-aria":{"title":"WAI-ARIA Accessibility features","description":"Method of providing ways for people with disabilities to use dynamic web content and web applications.","spec":"http://www.w3.org/TR/wai-aria/","status":"rec","links":[{"url":"http://www.w3.org/WAI/intro/aria","title":"Information page"},{"url":"http://www.paciellogroup.com/blog/2011/10/browser-assistive-technology-tests-redux/","title":"Links to various test results"},{"url":"http://en.wikipedia.org/wiki/WAI-ARIA","title":"Wikipedia"},{"url":"http://www.alistapart.com/articles/the-accessibility-of-wai-aria/","title":"ALA Article"},{"url":"http://zufelt.ca/blog/are-you-confused-html5-and-wai-aria-yet","title":"HTML5/WAI-ARIA information"}],"categories":["Other"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"y","9":"y","10":"y","11":"y"},"firefox":{"2":"a","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"a","5":"a","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"a","29":"a","30":"a","31":"a","32":"a","33":"a","34":"a","35":"a","36":"a","37":"a","38":"a","39":"a","40":"a"},"safari":{"3.1":"n","3.2":"n","4":"a","5":"a","5.1":"a","6":"a","6.1":"a","7":"a","8":"a"},"opera":{"9":"n","9.5-9.6":"a","10.0-10.1":"a","10.5":"a","10.6":"a","11":"a","11.1":"a","11.5":"a","11.6":"a","12":"a","12.1":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a"},"ios_saf":{"3.2":"a","4.0-4.1":"a","4.2-4.3":"a","5.0-5.1":"a","6.0-6.1":"a","7.0-7.1":"a","8":"a"},"op_mini":{"5.0-7.0":"a"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"a","4.4.3":"a"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"a","11":"a","11.1":"a","11.5":"a","12":"a","12.1":"a","22":"a"},"and_chr":{"37":"a"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":29.76,"usage_perc_a":57.51,"ucprefix":false,"parent":"","keywords":"wai,aria","ie_id":"","chrome_id":""},"geolocation":{"title":"Geolocation","description":"Method of informing a website of the user's geographical location","spec":"http://www.w3.org/TR/geolocation-API/","status":"cr","links":[{"url":"http://html5demos.com/geo","title":"Simple demo"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/features.js#native-geolocation","title":"has.js test"},{"url":"http://docs.webplatform.org/wiki/apis/geolocation","title":"WebPlatform Docs"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"p","7":"p","8":"p","9":"y","10":"y","11":"y"},"firefox":{"2":"p","3":"p","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"a","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"p","3.2":"p","4":"p","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"p","10.5":"p","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"n","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"p","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":85.51,"usage_perc_a":0.02,"ucprefix":false,"parent":"","keywords":"","ie_id":"geolocation","chrome_id":"6348855016685568"},"flexbox":{"title":"Flexible Box Layout Module","description":"Method of positioning elements in horizontal or vertical stacks.","spec":"http://www.w3.org/TR/css3-flexbox/","status":"cr","links":[{"url":"http://bennettfeely.com/flexplorer/","title":"Flexbox CSS generator"},{"url":"http://www.adobe.com/devnet/html5/articles/working-with-flexbox-the-new-spec.html","title":"Article on using the latest spec"},{"url":"http://dev.opera.com/articles/view/advanced-cross-browser-flexbox/","title":"Tutorial on cross-browser support"},{"url":"http://philipwalton.github.io/solved-by-flexbox/","title":"Examples on how to solve common layout problems with flexbox"},{"url":"http://css-tricks.com/snippets/css/a-guide-to-flexbox/","title":"A Complete Guide to Flexbox"},{"url":"http://the-echoplex.net/flexyboxes/","title":"Flexbox playground and code generator"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"a x #2","11":"y"},"firefox":{"2":"a x #1","3":"a x #1","3.5":"a x #1","3.6":"a x #1","4":"a x #1","5":"a x #1","6":"a x #1","7":"a x #1","8":"a x #1","9":"a x #1","10":"a x #1","11":"a x #1","12":"a x #1","13":"a x #1","14":"a x #1","15":"a x #1","16":"a x #1","17":"a x #1","18":"a x #1","19":"a x #1","20":"a x #1","21":"a x #1","22":"a #3","23":"a #3","24":"a #3","25":"a #3","26":"a #3","27":"a #3","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"a x #1","5":"a x #1","6":"a x #1","7":"a x #1","8":"a x #1","9":"a x #1","10":"a x #1","11":"a x #1","12":"a x #1","13":"a x #1","14":"a x #1","15":"a x #1","16":"a x #1","17":"a x #1","18":"a x #1","19":"a x #1","20":"a x #1","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"a x #1","3.2":"a x #1","4":"a x #1","5":"a x #1","5.1":"a x #1","6":"a x #1","6.1":"y x","7":"y x","8":"y x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"y","15":"y x","16":"y x","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"a x #1","4.0-4.1":"a x #1","4.2-4.3":"a x #1","5.0-5.1":"a x #1","6.0-6.1":"a x #1","7.0-7.1":"y x","8":"y x"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"a x #1","2.2":"a x #1","2.3":"a x #1","3":"a x #1","4":"a x #1","4.1":"a x #1","4.2-4.3":"a x #1","4.4":"y","4.4.3":"y"},"bb":{"7":"a x #1","10":"y x"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"a x #2"}},"notes":"Most partial support refers to supporting an [older version](http://www.w3.org/TR/2009/WD-css3-flexbox-20090723/) of the specification or an [older syntax](http://www.w3.org/TR/2012/WD-css3-flexbox-20120322/).","notes_by_num":{"1":"Only supports the [old flexbox](http://www.w3.org/TR/2009/WD-css3-flexbox-20090723) specification","2":"Only supports the [2012 syntax](http://www.w3.org/TR/2012/WD-css3-flexbox-20120322/)","3":"Does not support flex-wrap or flex-flow properties"},"usage_perc_y":70.79,"usage_perc_a":12.34,"ucprefix":false,"parent":"","keywords":"flex-box,flex-direction,flex-wrap,flex-flow,flex-grow,flex-basis","ie_id":"flexbox","chrome_id":"4837301406400512"},"webgl":{"title":"WebGL - 3D Canvas graphics","description":"Method of generating dynamic 3D graphics using JavaScript, accelerated through hardware","spec":"https://www.khronos.org/registry/webgl/specs/1.0/","status":"other","links":[{"url":"http://khronos.org/webgl/wiki/Getting_a_WebGL_Implementation","title":"Instructions on enabling WebGL"},{"url":"http://www.khronos.org/webgl/wiki/Tutorial","title":"Tutorial"},{"url":"http://hacks.mozilla.org/2009/12/webgl-draft-released-today/","title":"Firefox blog post"},{"url":"http://webkit.org/blog/603/webgl-now-available-in-webkit-nightlies/","title":"Webkit blog post"},{"url":"https://github.com/iewebgl/iewebgl","title":"Polyfill for IE"}],"categories":["Canvas"],"stats":{"ie":{"5.5":"n","6":"p","7":"p","8":"p","9":"p","10":"p","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"a","5":"a","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"a","29":"a","30":"a","31":"a","32":"a","33":"a","34":"a","35":"a"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"a","6":"a","6.1":"a","7":"a","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"a","12.1":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"a","12.1":"a","22":"y"},"and_chr":{"37":"a"},"and_ff":{"32":"a"},"ie_mob":{"10":"p"}},"notes":"Support listed as \"partial\" refers to the fact that not all users with these browsers have WebGL access. This is due to the additional requirement for users to have [up to date video drivers](http://www.khronos.org/webgl/wiki/BlacklistsAndWhitelists). This problem was [solved in Chrome on Windows](http://blog.chromium.org/2012/02/gpu-accelerating-2d-canvas-and-enabling.html) as of version 18.\r\n\r\nNote that WebGL is part of the [Khronos Group](http://www.khronos.org/webgl/), not the W3C.","notes_by_num":{},"usage_perc_y":41.14,"usage_perc_a":24.78,"ucprefix":false,"parent":"canvas","keywords":"web gl","ie_id":"webglcanvas3d,webglinstancingextension","chrome_id":"6049512976023552"},"fileapi":{"title":"File API","description":"Method of manipulating file objects in web applications client-side, as well as programmatically selecting them and accessing their data.","spec":"http://www.w3.org/TR/FileAPI/","status":"wd","links":[{"url":"https://developer.mozilla.org/en/Using_files_from_web_applications","title":"MDN article"},{"url":"http://docs.webplatform.org/wiki/apis/file","title":"WebPlatform Docs"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a","12":"a","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"a","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"a","4":"a","4.1":"a","4.2-4.3":"a","4.4":"y","4.4.3":"y"},"bb":{"7":"a","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"Partial support in older Safari and other WebKit browsers refers to lacking FileReader support. ","notes_by_num":{},"usage_perc_y":75.97,"usage_perc_a":5.37,"ucprefix":false,"parent":"","keywords":"FileReader","ie_id":"","chrome_id":""},"shadowdom":{"title":"Shadow DOM","description":"Method of establishing and maintaining functional boundaries between DOM trees and how these trees interact with each other within a document, thus enabling better functional encapsulation within the DOM.","spec":"http://www.w3.org/TR/shadow-dom/","status":"wd","links":[{"url":"http://html5-demos.appspot.com/static/shadowdom-visualizer/index.html","title":"Shadow DOM Visualizer"},{"url":"http://www.html5rocks.com/tutorials/webcomponents/shadowdom/","title":"HTML5Rocks - Shadow DOM 101 article"}],"categories":["DOM","HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n d #1","30":"n d #1","31":"n d #1","32":"n d #1","33":"n d #1","34":"n d #1","35":"n d #1"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y x","4.4.3":"y x"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{"1":"Supported in Firefox behind the `dom.webcomponents.enabled` flag."},"usage_perc_y":42.2,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"web components","ie_id":"shadowdomunprefixed","chrome_id":"4507242028072960"},"websockets":{"title":"Web Sockets","description":"Bidirectional communication technology for web apps","spec":"http://www.w3.org/TR/websockets/","status":"cr","links":[{"url":"http://websocket.org/aboutwebsocket.html","title":"WebSockets information"},{"url":"http://updates.html5rocks.com/2011/08/What-s-different-in-the-new-WebSocket-protocol","title":"Details on newer protocol"},{"url":"http://en.wikipedia.org/wiki/WebSocket","title":"Wikipedia"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/features.js#native-websockets","title":"has.js test"},{"url":"http://docs.webplatform.org/wiki/apis/websocket","title":"WebPlatform Docs"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"a","5":"a","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"a","5":"a","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"a","5.1":"a","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"a","11.1":"a","11.5":"a","11.6":"a","12":"a","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"a","5.0-5.1":"a","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"a","11.1":"a","11.5":"a","12":"a","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Partial support refers to the websockets implementation using an older version of the protocol and/or the implementation being disabled by default (due to security issues with the older protocol).","notes_by_num":{},"usage_perc_y":76.22,"usage_perc_a":1.29,"ucprefix":true,"parent":"","keywords":"","ie_id":"websocket","chrome_id":"6555138000945152"},"script-async":{"title":"async attribute for external scripts","description":"The boolean async attribute on script elements allows the external JavaScript file to run when it's available, without delaying page load first.","spec":"http://www.w3.org/TR/html5/scripting-1.html#attr-script-async","status":"cr","links":[{"url":"https://developer.mozilla.org/en/HTML/Element/script#Attributes","title":"MDN article"},{"url":"http://ie.microsoft.com/testdrive/Performance/AsyncScripts/Default.html","title":"Demo"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/script.js#script-async","title":"has.js test"}],"categories":["DOM","HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"a","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Using script.async = false; to maintain execution order for dynamically-added scripts isn't supported in Safari 5.0","notes_by_num":{},"usage_perc_y":81.41,"usage_perc_a":0.17,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"cors":{"title":"Cross-Origin Resource Sharing","description":"Method of performing XMLHttpRequests across domains","spec":"http://www.w3.org/TR/cors/","status":"rec","links":[{"url":"http://hacks.mozilla.org/2009/07/cross-site-xmlhttprequest-with-cors/","title":"Mozilla Hacks blog post"},{"url":"http://msdn.microsoft.com/en-us/library/cc288060(VS.85).aspx","title":"Alternative implementation by IE8"},{"url":"http://dev.opera.com/articles/view/dom-access-control-using-cross-origin-resource-sharing/","title":"DOM access using CORS"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/features.js#native-cors-xhr","title":"has.js test"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"a","9":"a","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Supported somewhat in IE8 and IE9 using the XDomainRequest object (but has [limitations]( http://blogs.msdn.com/b/ieinternals/archive/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds.aspx))","notes_by_num":{},"usage_perc_y":83.1,"usage_perc_a":6.18,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"calc":{"title":"calc() as CSS unit value","description":"Method of allowing calculated values for length units, i.e. `width: calc(100% - 3em)`","spec":"http://www.w3.org/TR/css3-values/#calc","status":"cr","links":[{"url":"http://hacks.mozilla.org/2010/06/css3-calc/","title":"Mozilla Hacks article"},{"url":"https://developer.mozilla.org/en/CSS/-moz-calc","title":"MDN article"},{"url":"http://docs.webplatform.org/wiki/css/functions/calc","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"a","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"y x","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"y x","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"y x","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"y x"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Support can be somewhat emulated in older versions of IE using the non-standard `expression()` syntax. Partial support in IE9 refers to the browser crashing when used as a `background-position` value.","notes_by_num":{},"usage_perc_y":75.69,"usage_perc_a":2.46,"ucprefix":false,"parent":"","keywords":"","ie_id":"csscalc","chrome_id":"5765241438732288"},"ruby":{"title":"Ruby annotation","description":"Method of adding pronunciation or other annotations using ruby elements (primarily used in East Asian typography)","spec":"http://www.w3.org/TR/html-markup/ruby.html","status":"wd","links":[{"url":"http://html5doctor.com/ruby-rt-rp-element/","title":"HTML5 Doctor article"},{"url":"http://docs.webplatform.org/wiki/html/elements/ruby","title":"WebPlatform Docs"},{"url":"https://addons.mozilla.org/firefox/addon/1935/","title":"Add-on \"XHTML Ruby Support\" for Firefox"},{"url":"https://addons.mozilla.org/firefox/addon/6812/","title":"Addon \"HTML Ruby\" for Firefox support"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"a","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a"},"firefox":{"2":"p","3":"p","3.5":"p","3.6":"p","4":"p","5":"p","6":"p","7":"p","8":"p","9":"p","10":"p","11":"p","12":"p","13":"p","14":"p","15":"p","16":"p","17":"p","18":"p","19":"p","20":"p","21":"p","22":"p","23":"p","24":"p","25":"p","26":"p","27":"p","28":"p","29":"p","30":"p","31":"p","32":"p","33":"p","34":"p","35":"p"},"chrome":{"4":"p","5":"a","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"a","29":"a","30":"a","31":"a","32":"a","33":"a","34":"a","35":"a","36":"a","37":"a","38":"a","39":"a","40":"a"},"safari":{"3.1":"p","3.2":"p","4":"p","5":"a","5.1":"a","6":"a","6.1":"a","7":"a","8":"a"},"opera":{"9":"p","9.5-9.6":"p","10.0-10.1":"p","10.5":"p","10.6":"p","11":"p","11.1":"p","11.5":"p","11.6":"p","12":"p","12.1":"p","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a"},"ios_saf":{"3.2":"p","4.0-4.1":"p","4.2-4.3":"p","5.0-5.1":"a","6.0-6.1":"a","7.0-7.1":"a","8":"a"},"op_mini":{"5.0-7.0":"p"},"android":{"2.1":"p","2.2":"p","2.3":"p","3":"a","4":"a","4.1":"a","4.2-4.3":"a","4.4":"a","4.4.3":"a"},"bb":{"7":"p","10":"a"},"op_mob":{"10":"p","11":"p","11.1":"p","11.5":"p","12":"p","12.1":"p","22":"a"},"and_chr":{"37":"a"},"and_ff":{"32":"p"},"ie_mob":{"10":"a"}},"notes":"Browsers without native support can still simulate support using CSS. Partial support refers to only supporting basic ruby, may still be missing writing-mode, Complex ruby and CSS3 Ruby","notes_by_num":{},"usage_perc_y":0,"usage_perc_a":74.55,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"css-opacity":{"title":"CSS3 Opacity","description":"Method of setting the transparency level of an element","spec":"http://www.w3.org/TR/css3-color/","status":"rec","links":[{"url":"http://www.css3files.com/color/#opacity","title":"Information page"},{"url":"http://docs.webplatform.org/wiki/css/properties/opacity","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"a","6":"a","7":"a","8":"a","9":"y","10":"y","11":"y"},"firefox":{"2":"y","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Transparency for elements in IE8 and older can be achieved using the proprietary \"filter\" property and does not work well with PNG images using alpha transparency.","notes_by_num":{},"usage_perc_y":89.08,"usage_perc_a":4.01,"ucprefix":false,"parent":"","keywords":"transparent,transparency,alpha","ie_id":"","chrome_id":""},"form-validation":{"title":"Form validation","description":"Method of setting required fields and field types without requiring JavaScript","spec":"http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#client-side-form-validation","status":"wd","links":[{"url":"http://docs.webplatform.org/wiki/html/attributes/required","title":"WebPlatform Docs"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"a","5.1":"a","6":"a","6.1":"a","7":"a","8":"a"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"y"},"bb":{"7":"n","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"a"}},"notes":"Partial support in Safari refers to lack of notice when form with required fields is attempted to be submitted. Partial support in IE10 mobile refers to lack of warning when blocking submission.","notes_by_num":{},"usage_perc_y":65.24,"usage_perc_a":3.75,"ucprefix":false,"parent":"forms","keywords":"","ie_id":"","chrome_id":"6091813840486400"},"history":{"title":"Session history management","description":"Method of manipulating the user's browser's session history in JavaScript using history.pushState, history.replaceState and the popstate event","spec":"http://www.w3.org/TR/html5/browsers.html#history-1","status":"cr","links":[{"url":"http://www.adequatelygood.com/2010/7/Saner-HTML5-History-Management","title":"Introduction to history management"},{"url":"https://developer.mozilla.org/en/DOM/Manipulating_the_browser_history","title":"MDN article"},{"url":"http://html5demos.com/history","title":"Demo page"},{"url":"https://github.com/browserstate/history.js","title":"History.js polyfill "},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/features.js#native-history-state","title":"has.js test"},{"url":"http://docs.webplatform.org/wiki/dom/History","title":"WebPlatform Docs"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"a","5.1":"a","6":"a","6.1":"a","7":"a","8":"a"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"a","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"y","2.3":"y","3":"n","4":"n","4.1":"n","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Older iOS versions and Android 4.0.4 claim support, but implementation is too buggy to be useful. Partial support in other Safari browsers refers to other buggy behavior.","notes_by_num":{},"usage_perc_y":77.03,"usage_perc_a":3.32,"ucprefix":false,"parent":"","keywords":"onpushstate,onreplacestate","ie_id":"","chrome_id":""},"json":{"title":"JSON parsing","description":"Method of converting JavaScript objects to JSON strings and JSON back to objects using JSON.stringify() and JSON.parse()","spec":"http://es5.github.com/#x15.12","status":"other","links":[{"url":"https://developer.mozilla.org/En/Using_native_JSON","title":"MDN article"},{"url":"http://www.json.org/js.html","title":"JSON in JS (includes script w/support)"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/json.js#json","title":"has.js test"},{"url":"http://docs.webplatform.org/wiki/apis/json","title":"WebPlatform Docs"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"y","9":"y","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Requires document to be in IE8+ [standards mode](http://msdn.microsoft.com/en-us/library/cc288325(VS.85).aspx) to work in IE8.","notes_by_num":{},"usage_perc_y":92.7,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"classlist":{"title":"classList (DOMTokenList )","description":"Method of easily manipulating classes on elements, using the DOMTokenList object.","spec":"http://www.w3.org/TR/dom/#dom-element-classlist","status":"wd","links":[{"url":"http://hacks.mozilla.org/2010/01/classlist-in-firefox-3-6/","title":"Mozilla Hacks article"},{"url":"https://github.com/eligrey/classList.js","title":"Polyfill script"},{"url":"http://docs.webplatform.org/wiki/dom/Element/classList","title":"WebPlatform Docs"},{"url":"http://www.sitepoint.com/exploring-classlist-api/","title":"SitePoint article"},{"url":"http://aurelio.audero.it/demo/classlist-api-demo.html","title":"Demo using classList"}],"categories":["DOM","HTML5"],"stats":{"ie":{"5.5":"p","6":"p","7":"p","8":"p","9":"p","10":"y","11":"y"},"firefox":{"2":"p","3":"p","3.5":"p","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"p","5":"p","6":"p","7":"p","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"p","3.2":"p","4":"p","5":"p","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"p","9.5-9.6":"p","10.0-10.1":"p","10.5":"p","10.6":"p","11":"p","11.1":"p","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"p","4.0-4.1":"p","4.2-4.3":"p","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"p"},"android":{"2.1":"p","2.2":"p","2.3":"p","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"p","11":"p","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":81.8,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"text-overflow":{"title":"CSS3 Text-overflow","description":"Append ellipsis when text overflows its containing element","spec":"http://www.w3.org/TR/css3-ui/#text-overflow0","status":"wd","links":[{"url":"https://github.com/rmorse/AutoEllipsis","title":"jQuery polyfill for Firefox"},{"url":"https://developer.mozilla.org/En/CSS/Text-overflow","title":"MDN article"},{"url":"http://www.css3files.com/text/","title":"Information page"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/css.js#css-text-overflow","title":"has.js test"},{"url":"http://docs.webplatform.org/wiki/css/properties/text-overflow","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y"},"firefox":{"2":"p","3":"p","3.5":"p","3.6":"p","4":"p","5":"p","6":"p","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y x","9.5-9.6":"y x","10.0-10.1":"y x","10.5":"y x","10.6":"y x","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y x"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y x","11":"y x","11.1":"y x","11.5":"y x","12":"y x","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":92.81,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"textoverflow,ellipsis","ie_id":"","chrome_id":""},"webm":{"title":"WebM video format","description":"Multimedia format designed to provide a royalty-free, high-quality open video compression format for use with HTML5 video. WebM supports the video codec VP8 and VP9.","spec":"http://www.webmproject.org/","status":"other","links":[{"url":"https://tools.google.com/dlpage/webmmf","title":"Codec for IE9 support"},{"url":"http://www.broken-links.com/2010/09/01/playing-webm-in-safari-with-plugins/","title":"Info on supporting WebM in Safari"},{"url":"http://webmproject.org","title":"Official website"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/video.js#video-webm","title":"has.js test"},{"url":"http://perian.org/","title":"Perian :Mac OSX Webm Codec install"}],"categories":["Other"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"p","10":"p","11":"p"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"a","5":"a","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"p","4":"p","5":"p","5.1":"p","6":"p","6.1":"p","7":"p","8":"p"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"a","11":"a","11.1":"a","11.5":"a","11.6":"a","12":"a","12.1":"a","15":"a","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"a","3":"a","4":"a","4.1":"a","4.2-4.3":"a","4.4":"a","4.4.3":"a"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"a"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"p"}},"notes":"Will work in IE9+ and Safari/MacOSX provided the user has the WebM codecs installed. Partial support indicates that at least one codec is supported but not all.","notes_by_num":{},"usage_perc_y":52.35,"usage_perc_a":10.02,"ucprefix":false,"parent":"video","keywords":"matroska","ie_id":"","chrome_id":"6362186595172352"},"mpeg4":{"title":"MPEG-4/H.264 video format","description":"Commonly used video compression format (not royalty-free)","spec":"http://ip.hhi.de/imagecom_G1/assets/pdfs/csvt_overview_0305.pdf","status":"other","links":[{"url":"http://en.wikipedia.org/wiki/H.264/MPEG-4_AVC","title":"Wikipedia article"},{"url":"http://www.interoperabilitybridges.com/html5-extension-for-wmp-plugin","title":"Firefox extension allowing support in Win7"}],"categories":["Other"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"y","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"a","29":"a","30":"a","31":"a","32":"a","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"a","2.2":"a","2.3":"a","3":"a","4":"a","4.1":"a","4.2-4.3":"a","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"a"},"ie_mob":{"10":"y"}},"notes":"The Android 2.3 browser currently requires [specific handling](http://www.broken-links.com/2010/07/08/making-html5-video-work-on-android-phones/) to play videos\r\n\r\nFirefox supports H.264 on Windows 7 and later since version 21. Firefox supports H.264 on Linux since version 26 if the appropriate gstreamer plug-ins are installed.\r\n\r\nPartial support for Firefox refers to the lack of support in OSX & some Linux platforms, for Android Firefox it refers to the inability of hardware acceleration.","notes_by_num":{},"usage_perc_y":65.72,"usage_perc_a":17.93,"ucprefix":false,"parent":"video","keywords":"avc,mp4,mpv,mov,aac","ie_id":"","chrome_id":""},"ogv":{"title":"Ogg/Theora video format","description":"Free lossy video compression format.","spec":"http://theora.org/doc/","status":"other","links":[{"url":"http://en.wikipedia.org/wiki/Theora","title":"Wikipedia article"}],"categories":["Other"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"p","10":"p","11":"p"},"firefox":{"2":"n","3":"n","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"y"},"ie_mob":{"10":"p"}},"notes":"","notes_by_num":{},"usage_perc_y":48.82,"usage_perc_a":0,"ucprefix":false,"parent":"video","keywords":"xiph","ie_id":"","chrome_id":""},"wordwrap":{"title":"CSS3 Overflow-wrap","description":"Allows lines to be broken within words if an otherwise unbreakable string is too long to fit.","spec":"http://www.w3.org/TR/css3-text/#overflow-wrap","status":"wd","links":[{"url":"https://developer.mozilla.org/En/CSS/Word-wrap","title":"MDN article"},{"url":"http://www.css3files.com/text/#wordwrap","title":"Information page"},{"url":"http://docs.webplatform.org/wiki/css/properties/word-wrap","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"a","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a"},"firefox":{"2":"n","3":"n","3.5":"a","3.6":"a","4":"a","5":"a","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"a","29":"a","30":"a","31":"a","32":"a","33":"a","34":"a","35":"a"},"chrome":{"4":"a","5":"a","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"a","3.2":"a","4":"a","5":"a","5.1":"a","6":"a","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"a","10.6":"a","11":"a","11.1":"a","11.5":"a","11.6":"a","12":"a","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"a","4.0-4.1":"a","4.2-4.3":"a","5.0-5.1":"a","6.0-6.1":"a","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"a"},"android":{"2.1":"a","2.2":"a","2.3":"a","3":"a","4":"a","4.1":"a","4.2-4.3":"a","4.4":"y","4.4.3":"y"},"bb":{"7":"a","10":"y"},"op_mob":{"10":"a","11":"a","11.1":"a","11.5":"a","12":"a","12.1":"a","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"a"},"ie_mob":{"10":"a"}},"notes":"Partial support refers to requiring the legacy name \"word-wrap\" (rather than overflow-wrap) to work.","notes_by_num":{},"usage_perc_y":51.4,"usage_perc_a":41.6,"ucprefix":false,"parent":"","keywords":"wordwrap,word-wrap","ie_id":"","chrome_id":""},"progressmeter":{"title":"Progress & Meter","description":"Method of indicating a progress state (progress element) or the current level of a gauge (meter element).\r\n","spec":"http://www.whatwg.org/specs/web-apps/current-work/multipage/the-button-element.html#the-progress-element","status":"wd","links":[{"url":"http://dev.opera.com/articles/new-form-features-in-html5/#newoutput","title":"Dev.Opera article"},{"url":"http://html5doctor.com/measure-up-with-the-meter-tag/","title":"HTML5 Doctor on meter element "},{"url":"http://peter.sh/examples/?/html/meter-progress.html","title":"Examples of progress and meter elements"},{"url":"http://docs.webplatform.org/wiki/html/elements/progress","title":"WebPlatform Docs"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"a","11":"a"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"a","8":"a"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"a"}},"notes":"Partial support in Firefox 6-15, IE10 & iOS7 Safari refers to supporting the progress element, but not the meter element. iOS7 Safari also does not support \"indeterminate\" progress elements.","notes_by_num":{},"usage_perc_y":59.18,"usage_perc_a":17.02,"ucprefix":false,"parent":"forms","keywords":"","ie_id":"","chrome_id":""},"object-fit":{"title":"CSS3 object-fit/object-position","description":"Method of specifying how an object (image or video) should fit inside its box. object-fit options include \"contain\" (fit according to aspect ratio), \"fill\" (stretches object to fill) and \"cover\" (overflows box but maintains ratio), where object-position allows the object to be repositioned like background-image does.","spec":"http://www.w3.org/TR/css3-images/","status":"cr","links":[{"url":"http://dev.opera.com/articles/view/css3-object-fit-object-position/","title":"Dev.Opera article"},{"url":"http://docs.webplatform.org/wiki/css/properties/object-fit","title":"WebPlatform Docs"},{"url":"https://github.com/anselmh/object-fit","title":"object-fit JavaScript-Polyfill"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"u","34":"u","35":"u"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"y x","11":"y x","11.1":"y x","11.5":"y x","11.6":"y x","12":"y x","12.1":"y x","15":"n","16":"n","17":"n","18":"n","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"a #1"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"y x","11.1":"y x","11.5":"y x","12":"y x","12.1":"y x","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{"1":"Partial support in iOS 8 refers to support for `object-fit` but not `object-position`."},"usage_perc_y":40.04,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"objectfit,objectposition","ie_id":"objectfitandobjectposition","chrome_id":"5302669702856704"},"xhr2":{"title":"XMLHttpRequest 2","description":"Adds more functionality to AJAX requests like file uploads, transfer progress information and the ability to send form data.","spec":"http://www.w3.org/TR/XMLHttpRequest2/","status":"wd","links":[{"url":"https://developer.mozilla.org/en/XMLHttpRequest/FormData","title":"MDN article on FormData"},{"url":"https://github.com/3nr1c/jUri.js","title":"Polyfill for FormData object"},{"url":"http://docs.webplatform.org/wiki/apis/xhr/XMLHttpRequest","title":"WebPlatform Docs"}],"categories":["DOM","JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"a","3.6":"a","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"u","5":"u","6":"u","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":81.84,"usage_perc_a":0.15,"ucprefix":false,"parent":"","keywords":"formdata","ie_id":"","chrome_id":""},"minmaxwh":{"title":"CSS min/max-width/height","description":"Method of setting a minimum or maximum width or height to an element. ","spec":"http://www.w3.org/TR/CSS21/visudet.html#min-max-widths","status":"rec","links":[{"url":"http://code.google.com/p/ie7-js/","title":"JS library with support"},{"url":"http://docs.webplatform.org/wiki/css/properties/min-width","title":"WebPlatform Docs"},{"url":"http://www.impressivewebs.com/min-max-width-height-css/","title":"CSS Basics post"}],"categories":["CSS2"],"stats":{"ie":{"5.5":"p","6":"p","7":"y","8":"y","9":"y","10":"y","11":"y"},"firefox":{"2":"y","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"IE7 does not support \"inherit\" as a value on any of these properties. IE8 has some bugs with max-width/height combined with overflow: auto/scroll.","notes_by_num":{},"usage_perc_y":92.91,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"min-width,min-height,max-width,max-height","ie_id":"","chrome_id":""},"details":{"title":"Details & Summary elements","description":"The <details> element generates a simple no-JavaScript widget to show/hide element contents, optionally by clicking on its child <summary> element.","spec":"http://www.whatwg.org/specs/web-apps/current-work/multipage/interactive-elements.html#the-details-element","status":"wd","links":[{"url":"http://mathiasbynens.be/notes/html5-details-jquery","title":"jQuery fallback script"},{"url":"https://gist.github.com/370590","title":"Fallback script"},{"url":"http://html5doctor.com/summary-figcaption-element/","title":"HTML5 Doctor article"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/features.js#native-details","title":"has.js test"},{"url":"http://docs.webplatform.org/wiki/html/elements/details","title":"WebPlatform Docs"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"p","7":"p","8":"p","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"p","3.5":"p","3.6":"p","4":"p","5":"p","6":"p","7":"p","8":"p","9":"p","10":"p","11":"p","12":"p","13":"p","14":"p","15":"p","16":"p","17":"p","18":"p","19":"p","20":"p","21":"p","22":"p","23":"p","24":"p","25":"p","26":"p","27":"p","28":"p","29":"p","30":"p","31":"p","32":"p","33":"p","34":"p","35":"p"},"chrome":{"4":"p","5":"p","6":"p","7":"p","8":"p","9":"p","10":"p","11":"p","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"p","3.2":"p","4":"p","5":"p","5.1":"p","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"p","9.5-9.6":"p","10.0-10.1":"p","10.5":"p","10.6":"p","11":"p","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"p","4.0-4.1":"p","4.2-4.3":"p","5.0-5.1":"p","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"p"},"android":{"2.1":"p","2.2":"p","2.3":"p","3":"p","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"p","10":"y"},"op_mob":{"10":"p","11":"p","11.1":"p","11.5":"p","12":"p","12.1":"p","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":56.96,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"detailssummary","chrome_id":"5348024557502464"},"text-stroke":{"title":"CSS text-stroke","description":"Method of declaring the outline (stroke) width and color for text.","spec":"http://developer.apple.com/library/safari/documentation/appleapplications/reference/SafariCSSRef/Articles/StandardCSSProperties.html#//apple_ref/doc/uid/TP30001266-_webkit_text_stroke","status":"unoff","links":[{"url":"http://css-tricks.com/7405-adding-stroke-to-web-text/","title":"Information & workarounds"},{"url":"http://www.westciv.com/tools/textStroke/","title":"Live editor"}],"categories":["CSS"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"u","34":"u","35":"u"},"chrome":{"4":"y x","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x","36":"y x","37":"y x","38":"y x","39":"y x","40":"y x"},"safari":{"3.1":"y x","3.2":"y x","4":"y x","5":"y x","5.1":"y x","6":"y x","6.1":"y x","7":"y x","8":"y x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x"},"ios_saf":{"3.2":"a x","4.0-4.1":"y x","4.2-4.3":"y x","5.0-5.1":"y x","6.0-6.1":"y x","7.0-7.1":"y x","8":"y x"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"y x","2.2":"y x","2.3":"y x","3":"n","4":"y x","4.1":"y x","4.2-4.3":"y x","4.4":"y x","4.4.3":"y x"},"bb":{"7":"y x","10":"y x"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y x"},"and_chr":{"37":"y x"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"Does not yet appear in any W3C specification. Was briefly included in a spec as the \"text-outline\" property, but this was removed.","notes_by_num":{},"usage_perc_y":59.21,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"textstroke,stroke-color,stroke-width,fill-color","ie_id":"","chrome_id":""},"inline-block":{"title":"CSS inline-block","description":"Method of displaying an element as a block while flowing it with text. ","spec":"http://www.w3.org/TR/CSS21/visuren.html#fixed-positioning","status":"rec","links":[{"url":"http://robertnyman.com/2010/02/24/css-display-inline-block-why-it-rocks-and-why-it-sucks/","title":"Blog post w/info"},{"url":"http://blog.mozilla.com/webdev/2009/02/20/cross-browser-inline-block/","title":"Info on cross browser support"},{"url":"http://docs.webplatform.org/wiki/css/properties/display","title":"WebPlatform Docs"}],"categories":["CSS2"],"stats":{"ie":{"5.5":"a","6":"a","7":"a","8":"y","9":"y","10":"y","11":"y"},"firefox":{"2":"a x","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Only supported in IE6 and IE7 on elements with a display of \"inline\" by default. [Alternative properties](http://blog.mozilla.com/webdev/2009/02/20/cross-browser-inline-block/) are available to provide complete cross-browser support.","notes_by_num":{},"usage_perc_y":92.8,"usage_perc_a":0.3,"ucprefix":false,"parent":"","keywords":"inlineblock","ie_id":"","chrome_id":""},"notifications":{"title":"Web Notifications","description":"Method of alerting the user outside of a web page by displaying notifications (that do not require interaction by the user).","spec":"http://www.w3.org/TR/notifications/","status":"wd","links":[{"url":"http://www.html5rocks.com/tutorials/notifications/quick/","title":"HTML5 Rocks tutorial"},{"url":"http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification","title":"Chromium API"},{"url":"https://addons.mozilla.org/en-us/firefox/addon/221523/","title":"Add-on "},{"url":"https://developer.mozilla.org/en-US/docs/Web/API/notification","title":"MDN Notifications"},{"url":"http://www.sitepoint.com/introduction-web-notifications-api/","title":"SitePoint article"},{"url":"http://aurelio.audero.it/demo/web-notifications-api-demo.html","title":"Demo"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"a x","6":"a x","7":"a x","8":"a x","9":"a x","10":"a x","11":"a x","12":"a x","13":"a x","14":"a x","15":"a x","16":"a x","17":"a x","18":"a x","19":"a x","20":"a x","21":"a x","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"a x","4.4.3":"a x"},"bb":{"7":"n","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"a x"},"and_chr":{"37":"n"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":48.15,"usage_perc_a":2.35,"ucprefix":false,"parent":"","keywords":"","ie_id":"webnotifications","chrome_id":"5064350557536256"},"stream":{"title":"getUserMedia/Stream API","description":"Method of accessing external device data (such as a webcam video stream). Formerly this was envisioned as the <device> element.","spec":"http://www.w3.org/TR/mediacapture-streams/","status":"wd","links":[{"url":"http://dev.opera.com/blog/webcam-orientation-preview/","title":"Technology preview from Opera"},{"url":"http://docs.webplatform.org/wiki/dom/Navigator/getUserMedia","title":"WebPlatform Docs"}],"categories":["HTML5","JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x","36":"y x","37":"y x","38":"y x","39":"y x","40":"y x"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"y","12.1":"y","15":"n","16":"n","17":"n","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"y x"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"y","12.1":"y","22":"y x"},"and_chr":{"37":"y"},"and_ff":{"32":"y x"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":54.51,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"camera,device,getUserMedia,media stream,Media Capture API","ie_id":"mediacaptureandstreams","chrome_id":"6067380039974912,6605041225957376"},"svg-img":{"title":"SVG in HTML img element","description":"Method of displaying SVG images in HTML using <img>","spec":"http://www.w3.org/TR/html5/dom.html#embedded-content","status":"cr","links":[{"url":"http://blog.dholbert.org/2010/10/svg-as-image.html","title":"Blog post with examples"},{"url":"http://www.codedread.com/blog/","title":"Blog with SVGs an images"}],"categories":["SVG"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"y","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"a","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"a","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":87.89,"usage_perc_a":0.01,"ucprefix":false,"parent":"","keywords":"svg-as-img,svg-in-img","ie_id":"","chrome_id":""},"datalist":{"title":"Datalist element","description":"Method of setting a list of options for a user to select in a text field, while leaving the ability to enter a custom value.","spec":"http://www.whatwg.org/specs/web-apps/current-work/multipage/the-button-element.html#the-datalist-element","status":"wd","links":[{"url":"http://hacks.mozilla.org/2010/11/firefox-4-html5-forms/","title":"Mozilla Hacks article"},{"url":"http://afarkas.github.com/webshim/demos/","title":"HTML5 Library including datalist support"},{"url":"https://developer.mozilla.org/en/HTML/Element/datalist","title":"MDN reference"},{"url":"http://docs.webplatform.org/wiki/html/elements/datalist","title":"WebPlatform Docs"},{"url":"http://demo.agektmr.com/datalist/","title":"Eiji Kitamura's options demos & tests"},{"url":"http://github.com/thgreasi/datalist-polyfill","title":"Minimal Datalist polyfill w/tutorial"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"p","7":"p","8":"p","9":"p","10":"a","11":"a"},"firefox":{"2":"p","3":"p","3.5":"p","3.6":"p","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"p","5":"p","6":"p","7":"p","8":"p","9":"p","10":"p","11":"p","12":"p","13":"p","14":"p","15":"p","16":"p","17":"p","18":"p","19":"n","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"p","3.2":"p","4":"p","5":"p","5.1":"p","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"p","4.0-4.1":"p","4.2-4.3":"p","5.0-5.1":"p","6.0-6.1":"p","7.0-7.1":"p","8":"p"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"p","2.2":"p","2.3":"p","3":"p","4":"p","4.1":"p","4.2-4.3":"p","4.4":"p","4.4.3":"y"},"bb":{"7":"p","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"p"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"p"}},"notes":"Partial support in IE10 refers to [significantly buggy behavior](http://playground.onereason.eu/2013/04/ie10s-lousy-support-for-datalists/).","notes_by_num":{},"usage_perc_y":55.22,"usage_perc_a":9.63,"ucprefix":false,"parent":"forms","keywords":"list attribute","ie_id":"datalistelement","chrome_id":"6090950820495360"},"dataset":{"title":"dataset & data-* attributes","description":"Method of applying and accessing custom data to elements.","spec":"http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#embedding-custom-non-visible-data-with-the-data-*-attributes","status":"wd","links":[{"url":"http://html5doctor.com/html5-custom-data-attributes/","title":"HTML5 Doctor article"},{"url":"http://html5demos.com/dataset","title":"Demo using dataset"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/dom.js#dom-dataset","title":"has.js test"},{"url":"http://docs.webplatform.org/wiki/html/attributes/data-*","title":"WebPlatform Docs"},{"url":"https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement.dataset","title":"MDN Reference - dataset"},{"url":"https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Using_data_attributes","title":"MDN Guide - Using data-* attributes"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"a","6":"a","7":"a","8":"a","9":"a","10":"a","11":"y"},"firefox":{"2":"a","3":"a","3.5":"a","3.6":"a","4":"a","5":"a","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"a","5":"a","6":"a","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"a","3.2":"a","4":"a","5":"a","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"a","9.5-9.6":"a","10.0-10.1":"a","10.5":"a","10.6":"a","11":"a","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"a","4.0-4.1":"a","4.2-4.3":"a","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"a"},"android":{"2.1":"a","2.2":"a","2.3":"a","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"a","11":"a","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"a"}},"notes":"Partial support refers to being able to use `data-*` attributes and access them using `getAttribute`. \r\n\r\n\"Supported\" refers to accessing the values using the `dataset` property. Current spec only refers to support on HTML elements, only some browsers also have support for SVG/MathML elements.","notes_by_num":{},"usage_perc_y":78.81,"usage_perc_a":14.28,"ucprefix":false,"parent":"","keywords":"DOMStringMap","ie_id":"","chrome_id":""},"css-grid":{"title":"CSS Grid Layout","description":"Method of using a grid concept to lay out content, providing a mechanism for authors to divide available space for lay out into columns and rows using a set of predictable sizing behaviors","spec":"http://www.w3.org/TR/css3-grid-layout/","status":"wd","links":[{"url":"http://blogs.msdn.com/b/ie/archive/2011/04/14/ie10-platform-preview-and-css-features-for-adaptive-layouts.aspx","title":"IE Blog post"},{"url":"https://bugs.webkit.org/show_bug.cgi?id=60731","title":"Webkit (Chrome, Safari, etc.) feature request"},{"url":"https://bugzilla.mozilla.org/show_bug.cgi?id=616605","title":"Mozilla (Firefox) feature request"},{"url":"https://github.com/codler/Grid-Layout-Polyfill","title":"Grid Layout Polyfill"}],"categories":["CSS"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"p","10":"y x","11":"y x"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"p","20":"p","21":"p","22":"p","23":"p","24":"p","25":"p","26":"p","27":"p","28":"p","29":"p","30":"p","31":"p","32":"p","33":"u","34":"u","35":"u"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"p","26":"p","27":"p","28":"p","29":"p d #1","30":"p d #1","31":"p d #1","32":"p d #1","33":"p d #1","34":"p d #1","35":"p d #1","36":"p d #1","37":"p d #1","38":"p d #1","39":"p d #1","40":"p d #1"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"p","6.1":"p","7":"p","8":"p"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"p","7.0-7.1":"p","8":"p"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"p","4.4":"p","4.4.3":"p"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"p"},"and_chr":{"37":"p"},"and_ff":{"32":"n"},"ie_mob":{"10":"y x"}},"notes":"","notes_by_num":{"1":"Enabled in Chrome through the \"experimental Web Platform features\" flag in chrome://flags"},"usage_perc_y":10.07,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"grids,grid-row,grid-column","ie_id":"grid","chrome_id":"4589636412243968"},"menu":{"title":"Toolbar/context menu","description":"Method of defining a toolbar menu, a context menu or a list of (interactive) options using the <menu> element.","spec":"http://www.whatwg.org/specs/web-apps/current-work/multipage/interactive-elements.html#the-menuitem-element","status":"cr","links":[{"url":"https://bug617528.bugzilla.mozilla.org/attachment.cgi?id=554309","title":"Demo"},{"url":"http://addyosmani.github.com/jQuery-contextMenu/","title":"jQuery polyfill"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/events.js#event-contextmenu","title":"has.js test"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"a","29":"a","30":"a","31":"a","32":"a","33":"a","34":"a","35":"a"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n","36":"n","37":"n","38":"u","39":"u","40":"u"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"Partial support in Firefox refers to being limited to context menus, not toolbar menus.","notes_by_num":{},"usage_perc_y":0,"usage_perc_a":13.09,"ucprefix":false,"parent":"","keywords":"contextmenu,menuitem,command","ie_id":"","chrome_id":""},"rem":{"title":"rem (root em) units","description":"Type of unit similar to \"em\", but relative only to the root element, not any parent element. Thus compounding does not occur as it does with \"em\" units.","spec":"http://www.w3.org/TR/css3-values/#font-relative-lengths","status":"cr","links":[{"url":"http://snook.ca/archives/html_and_css/font-size-with-rem","title":"Article on usage"},{"url":"https://github.com/chuckcarpenter/REM-unit-polyfill","title":"REM Polyfill"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"y","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"u","5":"u","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":85.44,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"rems","ie_id":"","chrome_id":""},"ttf":{"title":"TTF/OTF - TrueType and OpenType font support","description":"Support for the TrueType (.ttf)and OpenType (.otf) outline font formats in @font-face. ","spec":"http://developer.apple.com/fonts/TTRefMan/index.html","status":"other","links":[{"url":"http://stackoverflow.com/questions/17694143/what-is-the-status-of-ttf-support-in-internet-explorer","title":"What is the status of TTF support in Internet Explorer?"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"a","10":"a","11":"a"},"firefox":{"2":"n","3":"n","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"u"}},"notes":"Partial support in IE9 refers to the fonts only working [when set to be \"installable\"](http://blogs.msdn.com/b/ie/archive/2010/07/15/the-css-corner-better-web-typography-for-better-design.aspx).","notes_by_num":{},"usage_perc_y":73.12,"usage_perc_a":12.09,"ucprefix":false,"parent":"fontface","keywords":"","ie_id":"","chrome_id":""},"touch":{"title":"Touch events","description":"Method of registering when, where and how the interface is touched, for devices with a touch screen. These DOM events are similar to mousedown, mousemove, etc.","spec":"http://www.w3.org/TR/touch-events/","status":"rec","links":[{"url":"http://www.quirksmode.org/mobile/tableTouch.html","title":"Detailed support tables"},{"url":"http://www.quirksmode.org/m/tests/drag2.html","title":"Multi-touch demo"},{"url":"http://schepers.cc/getintouch","title":"Information on the spec development"},{"url":"http://msdn.microsoft.com/en-us/library/ie/hh673557(v=vs.85).aspx","title":"Internet Explorer's gesture and touch implementation."},{"url":"http://github.com/CamHenlin/TouchPolyfill","title":"Touch polyfill for supporting touch events on Internet Explorer"}],"categories":["DOM","JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"p","11":"p"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"a","5":"a","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"n d #1","26":"n d #1","27":"n d #1","28":"n d #1","29":"n d #1","30":"n d #1","31":"n d #1","32":"n d #1","33":"n d #1","34":"n d #1","35":"n d #1"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"p"}},"notes":"Internet Explorer implements Pointer Events specification which supports more input devices than Touch Events one.\r\n\r\nRemoved support in Firefox refers to desktop Firefox only.","notes_by_num":{"1":"Can be enabled in Firefox using the dom.w3c_touch_events.enabled flag (disabled by default for site compatibility reasons)"},"usage_perc_y":55.84,"usage_perc_a":0.63,"ucprefix":false,"parent":"","keywords":"touchstart,touchend,touchmove,touchenter,touchleave,touchcancel","ie_id":"touchevents","chrome_id":"6296903092273152"},"matchesselector":{"title":"matches() DOM method","description":"Method of testing whether or not a DOM element matches a given selector. Formerly known (and largely supported with prefix) as matchesSelector.","spec":"http://www.w3.org/TR/selectors-api2/","status":"wd","links":[{"url":"https://developer.mozilla.org/en/DOM/Element.mozMatchesSelector","title":"MDN article"},{"url":"http://docs.webplatform.org/wiki/dom/HTMLElement/matchesSelector","title":"WebPlatform Docs"}],"categories":["DOM","JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"a x","10":"a x","11":"a x"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"a x","4":"a x","5":"a x","6":"a x","7":"a x","8":"a x","9":"a x","10":"a x","11":"a x","12":"a x","13":"a x","14":"a x","15":"a x","16":"a x","17":"a x","18":"a x","19":"a x","20":"a x","21":"a x","22":"a x","23":"a x","24":"a x","25":"a x","26":"a x","27":"a x","28":"a x","29":"a x","30":"a x","31":"a x","32":"a x","33":"a x","34":"y","35":"y"},"chrome":{"4":"a x","5":"a x","6":"a x","7":"a x","8":"a x","9":"a x","10":"a x","11":"a x","12":"a x","13":"a x","14":"a x","15":"a x","16":"a x","17":"a x","18":"a x","19":"a x","20":"a x","21":"a x","22":"a x","23":"a x","24":"a x","25":"a x","26":"a x","27":"a x","28":"a x","29":"a x","30":"a x","31":"a x","32":"a x","33":"a x","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"a x","5.1":"a x","6":"a x","6.1":"a x","7":"a x","8":"a x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"a x","11.6":"a x","12":"a x","12.1":"a x","15":"a x","16":"a x","17":"a x","18":"a x","19":"a x","20":"a x","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"a x","4.2-4.3":"a x","5.0-5.1":"a x","6.0-6.1":"a x","7.0-7.1":"a x","8":"a x"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"a x","2.3":"a x","3":"a x","4":"a x","4.1":"a x","4.2-4.3":"a x","4.4":"a x","4.4.3":"a x"},"bb":{"7":"a x","10":"a x"},"op_mob":{"10":"n","11":"n","11.1":"a x","11.5":"a x","12":"a x","12.1":"a x","22":"a x"},"and_chr":{"37":"y"},"and_ff":{"32":"a x"},"ie_mob":{"10":"a x"}},"notes":"Partial support refers to supporting the older specification's \"matchesSelector\" name rather than just \"matches\".","notes_by_num":{},"usage_perc_y":37.9,"usage_perc_a":47.58,"ucprefix":false,"parent":"","keywords":" matchesSelector","ie_id":"","chrome_id":""},"pointer-events":{"title":"CSS pointer-events (for HTML)","description":"This CSS property, when set to \"none\" allows elements to not receive hover/click events, instead the event will occur on anything behind it. ","spec":"http://wiki.csswg.org/spec/css4-ui#pointer-events","status":"unoff","links":[{"url":"http://robertnyman.com/2010/03/22/css-pointer-events-to-allow-clicks-on-underlying-elements/","title":"Article & tutorial"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/css.js#css-pointerevents","title":"has.js test"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"Already part of the SVG specification, and all SVG-supporting browsers appear to support the property on SVG elements.","notes_by_num":{},"usage_perc_y":79.87,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"pointerevents","ie_id":"csspointerevents","chrome_id":""},"blobbuilder":{"title":"Blob constructing","description":"Construct Blobs (binary large objects) either using the BlobBuilder API (deprecated) or the Blob constructor.","spec":"http://www.w3.org/TR/file-writer-api/#the-blobbuilder-interface","status":"wd","links":[{"url":"https://developer.mozilla.org/en/DOM/BlobBuilder","title":"MDN article on BlobBuilder"},{"url":"https://developer.mozilla.org/en-US/docs/DOM/Blob","title":"MDN article on Blobs"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"a x","7":"a x","8":"a x","9":"a x","10":"a x","11":"a x","12":"a x","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"a x","9":"a x","10":"a x","11":"a x","12":"a x","13":"a x","14":"a x","15":"a x","16":"a x","17":"a x","18":"a x","19":"a x","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"a x","4":"a x","4.1":"a x","4.2-4.3":"a x","4.4":"a x","4.4.3":"a x"},"bb":{"7":"n","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Partial support refers to only supporting the now deprecated BlobBuilder to create blobs.","notes_by_num":{},"usage_perc_y":74.22,"usage_perc_a":6.58,"ucprefix":true,"parent":"fileapi","keywords":"","ie_id":"blob","chrome_id":"5328783104016384"},"filereader":{"title":"FileReader API","description":"Method of reading the contents of a File or Blob object into memory","spec":"http://www.w3.org/TR/FileAPI/#dfn-filereader","status":"wd","links":[{"url":"https://developer.mozilla.org/en/DOM/FileReader","title":"FileReader API"},{"url":"http://docs.webplatform.org/wiki/apis/file/FileReader","title":"WebPlatform Docs"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":81.08,"usage_perc_a":0,"ucprefix":false,"parent":"fileapi","keywords":"","ie_id":"filereader","chrome_id":"5171003185430528"},"filesystem":{"title":"Filesystem & FileWriter API","description":"Method of reading and writing files to a sandboxed file system.","spec":"http://www.w3.org/TR/file-system-api/","status":"unoff","links":[{"url":"http://www.html5rocks.com/en/tutorials/file/filesystem/","title":"HTML5 Rocks tutorial"},{"url":"http://docs.webplatform.org/wiki/apis/filesystem","title":"WebPlatform Docs"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"a x","9":"a x","10":"a x","11":"a x","12":"a x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x","36":"y x","37":"y x","38":"y x","39":"y x","40":"y x"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"y x"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y x"},"and_chr":{"37":"y x"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"The File API: Directories and System specification is no longer being maintained and support may be dropped in future versions.","notes_by_num":{},"usage_perc_y":41.65,"usage_perc_a":0.21,"ucprefix":false,"parent":"","keywords":"filewriter","ie_id":"filewriter","chrome_id":"5452478162141184"},"bloburls":{"title":"Blob URLs","description":"Method of creating URL handles to the specified File or Blob object.","spec":"http://www.w3.org/TR/FileAPI/#url","status":"wd","links":[{"url":"https://developer.mozilla.org/en/DOM/window.URL.createObjectURL","title":"MDN article"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"y x","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"y x","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"y x","4.1":"y x","4.2-4.3":"y x","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"y x"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y x"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":80.08,"usage_perc_a":0,"ucprefix":false,"parent":"fileapi","keywords":"createobjecturl","ie_id":"","chrome_id":""},"rellist":{"title":"relList (DOMTokenList)","description":"Method of easily manipulating rel attribute values on elements, using the DOMTokenList object (similar to classList).","spec":"http://www.w3.org/TR/html5/text-level-semantics.html#the-a-element","status":"wd","links":[{"url":"https://developer.mozilla.org/en-US/docs/DOM/DOMTokenList","title":"MDN - DOMTokenList"}],"categories":["DOM","HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n","36":"n","37":"n","38":"n","39":"n","40":"n"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":11.24,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"typedarrays":{"title":"Typed Arrays","description":"JavaScript typed arrays provide a mechanism for accessing raw binary data much more efficiently.\r\n","spec":"http://www.khronos.org/registry/typedarray/specs/latest/","status":"other","links":[{"url":"https://developer.mozilla.org/en/javascript_typed_arrays","title":"MDN article"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":81.58,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"float64array,dataview,uint8array","ie_id":"typedarrays","chrome_id":"5135818813341696"},"deviceorientation":{"title":"DeviceOrientation events","description":"API for detecting orientation and motion events from the device running the browser.","spec":"http://www.w3.org/TR/orientation-event/","status":"wd","links":[{"url":"http://www.html5rocks.com/en/tutorials/device/orientation/","title":"HTML5 Rocks tutorial"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/features.js#native-orientation","title":"has.js test"},{"url":"http://html5labs.interoperabilitybridges.com/prototypes/device-orientation-events/device-orientation-events/info","title":"DeviceOrientation implementation prototype for IE10"},{"url":"http://aurelio.audero.it/demo/device-orientation-api-demo.html","title":"Demo"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"a"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"p","4":"p","5":"p","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"a","29":"a","30":"a","31":"a","32":"a","33":"a","34":"a","35":"a"},"chrome":{"4":"n","5":"n","6":"n","7":"a","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"a","29":"a","30":"a","31":"a","32":"a","33":"a","34":"a","35":"a","36":"a","37":"a","38":"a","39":"a","40":"a"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"a","5.0-5.1":"a","6.0-6.1":"a","7.0-7.1":"a","8":"a"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"a","4":"a","4.1":"a","4.2-4.3":"a","4.4":"a","4.4.3":"a"},"bb":{"7":"n","10":"a"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"y","12.1":"y","22":"a"},"and_chr":{"37":"a"},"and_ff":{"32":"a"},"ie_mob":{"10":"n"}},"notes":"Partial support refers to the lack of compassneedscalibration event. Partial support also refers to the lack of devicemotion event support for Chrome 30- and Opera. Opera Mobile 14 lost the ondevicemotion event support. Firefox 3.6, 4 and 5 support the non-standard [MozOrientation](https://developer.mozilla.org/en/DOM/MozOrientation) event.","notes_by_num":{},"usage_perc_y":0.06,"usage_perc_a":75.16,"ucprefix":false,"parent":"","keywords":"","ie_id":"deviceorientation,devicemotion","chrome_id":"5874690627207168,5556931766779904"},"script-defer":{"title":"defer attribute for external scripts","description":"The boolean defer attribute on script elements allows the external JavaScript file to run when the DOM is loaded, without delaying page load first.","spec":"http://www.w3.org/TR/html5/scripting-1.html#attr-script-defer","status":"cr","links":[{"url":"https://developer.mozilla.org/en/HTML/Element/script#Attributes","title":"MDN article"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/script.js#script-defer","title":"has.js test"},{"url":"http://docs.webplatform.org/wiki/html/attributes/defer","title":"WebPlatform Docs"}],"categories":["DOM","HTML5"],"stats":{"ie":{"5.5":"a","6":"a","7":"a","8":"a","9":"a","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Partial support in older IE refers to a buggy implementation (see issue)","notes_by_num":{},"usage_perc_y":81.6,"usage_perc_a":6.47,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"nav-timing":{"title":"Navigation Timing API","description":"API for accessing timing information related to navigation and elements.","spec":"http://www.w3.org/TR/navigation-timing/","status":"cr","links":[{"url":"https://developer.mozilla.org/en/API/navigationTiming","title":"MDN article"},{"url":"http://www.html5rocks.com/en/tutorials/webperformance/basics/","title":"HTML5 Rocks tutorial"},{"url":"http://docs.webplatform.org/wiki/apis/navigation_timing","title":"WebPlatform Docs"}],"categories":["DOM","JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"y","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":73.55,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"performance,performance.timing","ie_id":"navigationtimingapi","chrome_id":"5584144679567360"},"audio-api":{"title":"Web Audio API","description":"High-level JavaScript API for processing and synthesizing audio","spec":"http://www.w3.org/TR/webaudio/","status":"wd","links":[{"url":"https://github.com/corbanbrook/audionode.js","title":"Polyfill to support Web Audio API in Firefox"},{"url":"http://docs.webplatform.org/wiki/apis/webaudio","title":"WebPlatform Docs"},{"url":"http://www.doboism.com/projects/webaudio-compatibility/","title":"Additional browser compatibility tests for specific features"},{"url":"https://github.com/g200kg/WAAPISim","title":"Polyfill to enable Web Audio API through Firefox Audio Data api or flash"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"y x","6.1":"y x","7":"y x","8":"y x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"y x","7.0-7.1":"y x","8":"y x"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"Firefox versions < 25 support an alternative, deprecated audio API.","notes_by_num":{},"usage_perc_y":63.14,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"web-audio","ie_id":"webaudioapi","chrome_id":"6261718720184320"},"css-regions":{"title":"CSS Regions","description":"Method of flowing content into multiple elements.","spec":"http://www.w3.org/TR/css3-regions/","status":"wd","links":[{"url":"http://html.adobe.com/webstandards/cssregions/","title":"Adobe demos and samples"},{"url":"http://msdn.microsoft.com/en-us/ie/hh272902#_CSSConnected","title":"IE10 developer guide info"},{"url":"http://docs.webplatform.org/wiki/css/atrules/@region","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"a x","11":"a x"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"a x","16":"a x","17":"a x","18":"a x","19":"n d","20":"n d","21":"n d","22":"n d","23":"n d","24":"n d","25":"n d","26":"n d","27":"n d","28":"n d","29":"n d","30":"n d","31":"n d","32":"n d","33":"n d","34":"n d","35":"n","36":"n","37":"n","38":"n","39":"n","40":"n"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"y x","7":"y x","8":"y x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"y x","8":"y x"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"n"},"ie_mob":{"10":"a x"}},"notes":"Support in IE10 and IE11 is limited to using an iframe as a content source with the `-ms-flow-into: flow_name;` and `-ms-flow-from: flow_name;` syntax. ","notes_by_num":{},"usage_perc_y":8.8,"usage_perc_a":10.2,"ucprefix":false,"parent":"","keywords":"","ie_id":"regions","chrome_id":"5655612935372800"},"spellcheck-attribute":{"title":"Spellcheck attribute","description":"Attribute for `input`/`textarea` fields to enable/disable the browser's spellchecker.","spec":"http://www.w3.org/TR/html5/editing.html#spelling-and-grammar-checking","status":"cr","links":[{"url":"https://developer.mozilla.org/en-US/docs/Web/HTML/Controlling_spell_checking_in_HTML_formsControlling_spell_checking_in_HTML_forms","title":"MDN article"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"y","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"a","4.0-4.1":"a","4.2-4.3":"a","5.0-5.1":"a","6.0-6.1":"a","7.0-7.1":"a","8":"a"},"op_mini":{"5.0-7.0":"a"},"android":{"2.1":"a","2.2":"a","2.3":"a","3":"a","4":"a","4.1":"a","4.2-4.3":"a","4.4":"a","4.4.3":"a"},"bb":{"7":"a","10":"a"},"op_mob":{"10":"a","11":"a","11.1":"a","11.5":"a","12":"a","12.1":"a","22":"a"},"and_chr":{"37":"a"},"and_ff":{"32":"a"},"ie_mob":{"10":"a"}},"notes":"The partial support in mobile browsers results from their OS generally having built-in spell checking instead of using the wavy underline to indicate misspelled words. `spellcheck=\"false\"` does not seem to have any effect in these browsers.","notes_by_num":{},"usage_perc_y":61.44,"usage_perc_a":24.81,"ucprefix":false,"parent":"","keywords":"spelling","ie_id":"","chrome_id":""},"fullscreen":{"title":"Full Screen API","description":"API for allowing content (like a video or canvas element) to take up the entire screen.","spec":"http://www.w3.org/TR/fullscreen/","status":"wd","links":[{"url":"https://developer.mozilla.org/en/DOM/Using_full-screen_mode","title":"MDN article"},{"url":"http://jlongster.com/2011/11/21/canvas.html","title":"Blog post"},{"url":"http://hacks.mozilla.org/2012/01/using-the-fullscreen-api-in-web-browsers/","title":"Mozilla hacks article"},{"url":"http://docs.webplatform.org/wiki/dom/methods/requestFullscreen","title":"WebPlatform Docs"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"y x"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"a x","11":"a x","12":"a x","13":"a x","14":"a x","15":"a x","16":"a x","17":"a x","18":"a x","19":"a x","20":"a x","21":"a x","22":"a x","23":"a x","24":"a x","25":"a x","26":"a x","27":"a x","28":"a x","29":"a x","30":"a x","31":"a x","32":"a x","33":"a x","34":"a x","35":"a x"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"a x","16":"a x","17":"a x","18":"a x","19":"a x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x","36":"y x","37":"y x","38":"y x","39":"y x","40":"y x"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"a x","6":"y x","6.1":"y x","7":"y x","8":"y x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"y","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"a"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y x"},"and_chr":{"37":"y x"},"and_ff":{"32":"a x"},"ie_mob":{"10":"n"}},"notes":"Partial support refers to supporting an earlier draft of the spec.","notes_by_num":{},"usage_perc_y":51.5,"usage_perc_a":13.9,"ucprefix":false,"parent":"","keywords":"full-screen","ie_id":"fullscreenapi","chrome_id":"5259513871466496"},"requestanimationframe":{"title":"requestAnimationFrame","description":"API allowing a more efficient way of running script-based animation, compared to traditional methods using timeouts.","spec":"http://www.w3.org/TR/animation-timing/#requestAnimationFrame","status":"cr","links":[{"url":"http://paulirish.com/2011/requestanimationframe-for-smart-animating/","title":"Blog post"},{"url":"http://hacks.mozilla.org/2011/08/animating-with-javascript-from-setinterval-to-requestanimationframe/","title":"Mozilla Hacks article"},{"url":"http://docs.webplatform.org/wiki/dom/Window/requestAnimationFrame","title":"WebPlatform Docs"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"y x","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"y x","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"y x","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"y x"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":76.06,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"requestanimationframe","chrome_id":"5233400470306816"},"input-range":{"title":"Range input type","description":"Form field type that allows the user to select a value using a slider widget.","spec":"http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#range-state-(type=range)","status":"wd","links":[{"url":"https://github.com/fryn/html5slider","title":"Polyfill for Firefox"},{"url":"https://github.com/freqdec/fd-slider","title":"Cross-browser polyfill"},{"url":"http://tutorialzine.com/2011/12/what-you-need-to-know-html5-range-input/","title":"Tutorial"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/form.js#input-type-range","title":"has.js test"},{"url":"http://docs.webplatform.org/wiki/html/elements/input/type/range","title":"WebPlatform Docs"},{"url":"https://github.com/andreruffert/rangeslider.js","title":"rangeslider.js polyfill"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"u","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"a","2.2":"a","2.3":"a","3":"a","4":"a","4.1":"a","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Currently all Android browsers with partial support hide the slider input field by default. However, the element [can be styled](http://tiffanybbrown.com/2012/02/07/input-typerange-and-androids-stock-browser/) to be made visible and usable.","notes_by_num":{},"usage_perc_y":78.37,"usage_perc_a":3.52,"ucprefix":false,"parent":"forms","keywords":"input type=\"range\"","ie_id":"","chrome_id":""},"matchmedia":{"title":"matchMedia","description":"API for finding out whether or not a media query applies to the document.","spec":"http://www.w3.org/TR/cssom-view/#dom-window-matchmedia","status":"wd","links":[{"url":"https://github.com/paulirish/matchMedia.js/","title":"matchMedia.js polyfill"},{"url":"https://developer.mozilla.org/en/DOM/window.matchMedia","title":"MDN article"},{"url":"https://developer.mozilla.org/en/CSS/Using_media_queries_from_code","title":"MDN tutorial"},{"url":"http://docs.webplatform.org/wiki/css/media_queries/apis/matchMedia","title":"WebPlatform Docs"}],"categories":["DOM","JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":81.45,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"mediaquerylist","ie_id":"matchmedia","chrome_id":"4677872220372992"},"input-datetime":{"title":"Date/time input types","description":"Form field widget to easily allow users to enter dates and/or times, generally by using a calendar widget.","spec":"http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#date-state-(type=date)","status":"wd","links":[{"url":"http://net.tutsplus.com/tutorials/javascript-ajax/quick-tip-cross-browser-datepickers-within-minutes/","title":"Datepicker tutorial w/polyfill"},{"url":"https://github.com/zoltan-dulac/html5Forms.js","title":"Polyfill for HTML5 forms"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/form.js#input-type-datetime;input-type-datetime-local","title":"has.js test"},{"url":"http://docs.webplatform.org/wiki/html/elements/input/type/date","title":"WebPlatform Docs"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"a","29":"a","30":"a","31":"a","32":"a","33":"a","34":"a","35":"a","36":"a","37":"a","38":"a","39":"a","40":"a"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"u","7":"n","8":"n"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"a","6.0-6.1":"a","7.0-7.1":"a","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"a"},"and_chr":{"37":"y"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"Safari provides date-formatted text fields, but no real calendar widget. Partial support in Chrome refers to a missing calendar widget for the \"datetime\" type (and other types in older versions). Some modified versions of the Android 4.x browser do have support for date/time fields. Partial support in iOS refers to a lack of support for attributes like step, min, or max.","notes_by_num":{},"usage_perc_y":8.85,"usage_perc_a":41.42,"ucprefix":false,"parent":"forms","keywords":"datepicker,timepicker,input type=\"date\",input type=\"time\"","ie_id":"","chrome_id":"6640933999214592"},"input-color":{"title":"Color input type","description":"Form field allowing the user to select a color.","spec":"http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#color-state-(type=color)","status":"wd","links":[{"url":"http://www.html5tutorial.info/html5-color.php","title":"Tutorial"},{"url":"https://github.com/jonstipe/color-polyfill","title":"Polyfill"},{"url":"http://docs.webplatform.org/wiki/html/elements/input/type/color","title":"WebPlatform Docs"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"n","16":"n","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":54.86,"usage_perc_a":0,"ucprefix":false,"parent":"forms","keywords":"colour,input type=\"color\"","ie_id":"","chrome_id":""},"input-number":{"title":"Number input type","description":"Form field type for numbers.","spec":"http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#number-state-(type=number)","status":"wd","links":[{"url":"http://www.html5tutorial.info/html5-number.php","title":"Tutorial"},{"url":"https://github.com/jonstipe/number-polyfill","title":"Polyfill"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/form.js#input-type-number","title":"has.js test"},{"url":"http://docs.webplatform.org/wiki/html/elements/input/type/number","title":"WebPlatform Docs"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"a","11":"a"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"a","4.0-4.1":"a","4.2-4.3":"a","5.0-5.1":"a","6.0-6.1":"a","7.0-7.1":"a","8":"a"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"a","4.1":"a","4.2-4.3":"a","4.4":"a","4.4.3":"a"},"bb":{"7":"n","10":"a"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"a"},"and_chr":{"37":"a"},"and_ff":{"32":"a"},"ie_mob":{"10":"a"}},"notes":"iOS Safari, Android 4, Chrome for Android show number input, but do not use \"step\", \"min\" or \"max\" attributes or show increment/decrement buttons. Internet Explorer 10 and 11 do not show increment/decrement buttons.","notes_by_num":{},"usage_perc_y":50.06,"usage_perc_a":29.95,"ucprefix":false,"parent":"forms","keywords":"spinner,input type=\"number\"","ie_id":"","chrome_id":""},"iframe-sandbox":{"title":"sandbox attribute for iframes","description":"Method of running external site pages with reduced privileges (e.g. no JavaScript) in iframes","spec":"http://www.w3.org/TR/html5/embedded-content-0.html#attr-iframe-sandbox","status":"cr","links":[{"url":"http://blog.chromium.org/2010/05/security-in-depth-html5s-sandbox.html","title":"Chromium blog article"},{"url":"http://msdn.microsoft.com/en-us/hh563496","title":"MSDN article"},{"url":"http://docs.webplatform.org/wiki/html/attributes/sandbox","title":"WebPlatform Docs"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":80.77,"usage_perc_a":1.17,"ucprefix":false,"parent":"","keywords":"","ie_id":"iframesandboxattribute","chrome_id":"5715536319086592"},"css-counters":{"title":"CSS Counters","description":"Method of controlling number values in generated content, using the counter-reset and counter-increment properties.","spec":"http://www.w3.org/TR/CSS21/generate.html#counters","status":"wd","links":[{"url":"http://onwebdev.blogspot.com/2012/02/css-counters-tutorial.html","title":"Tutorial and information"},{"url":"https://developer.mozilla.org/en/CSS_Counters","title":"MDN article"},{"url":"http://docs.webplatform.org/wiki/css/properties/counter-reset","title":"WebPlatform Docs"}],"categories":["CSS2"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"y","9":"y","10":"y","11":"y"},"firefox":{"2":"y","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":92.8,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"css-resize":{"title":"CSS resize property","description":"Method of allowing an element to be resized by the user, with options to limit to a given direction. ","spec":"http://www.w3.org/TR/css3-ui/#resize","status":"wd","links":[{"url":"http://css-tricks.com/almanac/properties/r/resize/","title":"CSS Tricks info"},{"url":"http://davidwalsh.name/textarea-resize","title":"On textarea resizing"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"y x","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"a","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"Opera 12.10+ currently only supports the resize property for textarea elements.","notes_by_num":{},"usage_perc_y":58.63,"usage_perc_a":0.28,"ucprefix":false,"parent":"","keywords":"horizontal,vertical","ie_id":"","chrome_id":""},"input-placeholder":{"title":"input placeholder attribute","description":"Method of setting placeholder text for text-like input fields, to suggest the expected inserted information.","spec":"http://dev.w3.org/html5/spec/Overview.html#attr-input-placeholder","status":"cr","links":[{"url":"http://www.zachleat.com/web/placeholder/","title":"Article on usage"},{"url":"https://github.com/mathiasbynens/jquery-placeholder","title":"Polyfill"},{"url":"https://raw.github.com/phiggins42/has.js/master/detect/form.js#input-attr-placeholder","title":"has.js test"},{"url":"http://docs.webplatform.org/wiki/html/attributes/placeholder","title":"WebPlatform Docs"},{"url":"https://code.google.com/p/android/issues/detail?id=24626","title":"Issue 24626: Placeholder text for an input type="}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"a","3.2":"a","4":"a","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"a","11.1":"a","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"a","4.1":"a","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Partial support in older Safari and Opera versions refers to lacking placeholder support on textarea elements. ","notes_by_num":{},"usage_perc_y":80.37,"usage_perc_a":2.65,"ucprefix":false,"parent":"forms","keywords":"","ie_id":"","chrome_id":""},"spdy":{"title":"SPDY networking protocol","description":"Networking protocol for low-latency transport of content over the web.","spec":"http://tools.ietf.org/html/draft-mbelshe-httpbis-spdy-00","status":"unoff","links":[{"url":"http://en.wikipedia.org/wiki/SPDY","title":"Wikipedia"},{"url":"http://dev.chromium.org/spdy/spdy-whitepaper","title":"SPDY whitepaper"}],"categories":["Other"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"a"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":61.12,"usage_perc_a":7.23,"ucprefix":false,"parent":"","keywords":"","ie_id":"spdy3","chrome_id":"5152586365665280"},"css-repeating-gradients":{"title":"CSS Repeating Gradients","description":"Method of defining a repeating linear or radial color gradient as a CSS image.","spec":"http://www.w3.org/TR/css3-images/#repeating-gradients","status":"cr","links":[{"url":"https://developer.mozilla.org/en/CSS/repeating-linear-gradient","title":"MDN article"},{"url":"http://www.css3files.com/gradient/#repeatinglineargradient","title":"Information page"},{"url":"http://docs.webplatform.org/wiki/css/repeating-linear-gradient","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"y x","4":"y x","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"y x","6":"y x","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"a x","11.5":"a x","11.6":"y x","12":"y x","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"y x","6.0-6.1":"y x","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"y x","4.1":"y x","4.2-4.3":"y x","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"y x"},"op_mob":{"10":"n","11":"n","11.1":"a x","11.5":"a x","12":"y x","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Firefox 10+, Chrome 26+ and Opera 11.6+ also support the new \"to (side)\" syntax.","notes_by_num":{},"usage_perc_y":81.66,"usage_perc_a":0.02,"ucprefix":false,"parent":"css-gradients","keywords":"","ie_id":"","chrome_id":""},"css-filters":{"title":"CSS Filter Effects","description":"Method of applying filter effects (like blur, grayscale, brightness, contrast and hue) to elements, previously only possible by using SVG.","spec":"http://www.w3.org/TR/filter-effects/","status":"wd","links":[{"url":"http://html5-demos.appspot.com/static/css/filters/index.html","title":"Demo file for WebKit browsers"},{"url":"http://www.html5rocks.com/en/tutorials/filters/understanding-css/","title":"HTML5Rocks article"},{"url":"http://dl.dropbox.com/u/3260327/angular/CSS3ImageManipulation.html","title":"Filter editor"},{"url":"http://bennettfeely.com/filters/","title":"Filter Playground"}],"categories":["CSS","CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"a","4":"a","5":"a","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"a","29":"a","30":"a","31":"a","32":"a","33":"a","34":"a","35":"a"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x","36":"y x","37":"y x","38":"y x","39":"y x","40":"y x"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"y x","6.1":"y x","7":"y x","8":"y x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"y x","7.0-7.1":"y x","8":"y x"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y x","4.4.3":"y x"},"bb":{"7":"n","10":"y x"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y x"},"and_chr":{"37":"y x"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"Note that this property is significantly different from and incompatible with Microsoft's [older \"filter\" property](http://msdn.microsoft.com/en-us/library/ie/ms530752%28v=vs.85%29.aspx).\r\n\r\nPartial support in Firefox 31 [only with url() version](https://developer.mozilla.org/en-US/docs/Web/CSS/filter#Browser_compatibility)","notes_by_num":{},"usage_perc_y":52.34,"usage_perc_a":13.31,"ucprefix":false,"parent":"","keywords":"sepia,hue-rotate,invert,saturate","ie_id":"filters","chrome_id":""},"getcomputedstyle":{"title":"getComputedStyle","description":"API to get the current computed CSS styles applied to an element. This may be the current value applied by an animation or as set by a stylesheet.","spec":"http://www.w3.org/TR/cssom/#dom-window-getcomputedstyle","status":"rec","links":[{"url":"https://developer.mozilla.org/en/DOM/window.getComputedStyle","title":"MDN article"},{"url":"http://ie.microsoft.com/testdrive/HTML5/getComputedStyle/","title":"Demo"},{"url":"http://snipplr.com/view/13523/","title":"Polyfill for IE"},{"url":"http://docs.webplatform.org/wiki/css/cssom/methods/getComputedStyle","title":"WebPlatform Docs"}],"categories":["CSS3","DOM","JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"y","10":"y","11":"y"},"firefox":{"2":"n","3":"a","3.5":"a","3.6":"a","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"a","5":"a","6":"a","7":"a","8":"a","9":"a","10":"a","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"a","3.2":"a","4":"a","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"a","9.5-9.6":"a","10.0-10.1":"a","10.5":"a","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"a","4.0-4.1":"a","4.2-4.3":"a","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"a"},"android":{"2.1":"a","2.2":"a","2.3":"a","3":"a","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"a","10":"y"},"op_mob":{"10":"a","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Partial support in older Firefox versions refers to requiring the second parameter to be included.\r\n\r\nPartial support in all other browsers refers to not supporting getComputedStyle on pseudo-elements.","notes_by_num":{},"usage_perc_y":84.19,"usage_perc_a":4.89,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"word-break":{"title":"CSS3 word-break","description":"Property to prevent or allow words to be broken over multiple lines between letters.","spec":"http://www.w3.org/TR/css3-text/#word-break","status":"wd","links":[{"url":"https://developer.mozilla.org/en/CSS/word-break","title":"MDN article"},{"url":"http://docs.webplatform.org/wiki/css/properties/word-break","title":"WebPlatform Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"a","5":"a","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"a","29":"a","30":"a","31":"a","32":"a","33":"a","34":"a","35":"a","36":"a","37":"a","38":"a","39":"a","40":"a"},"safari":{"3.1":"a","3.2":"a","4":"a","5":"a","5.1":"a","6":"a","6.1":"a","7":"a","8":"a"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a"},"ios_saf":{"3.2":"a","4.0-4.1":"a","4.2-4.3":"a","5.0-5.1":"a","6.0-6.1":"a","7.0-7.1":"a","8":"a"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"a","2.2":"a","2.3":"a","3":"a","4":"a","4.1":"a","4.2-4.3":"a","4.4":"a","4.4.3":"a"},"bb":{"7":"a","10":"a"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"a"},"and_chr":{"37":"a"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"Partial support refers to supporting the \"break-all\" value, but not the \"keep-all\" value.","notes_by_num":{},"usage_perc_y":29.43,"usage_perc_a":59.21,"ucprefix":false,"parent":"","keywords":"break-all,keep-all","ie_id":"","chrome_id":""},"viewport-units":{"title":"Viewport units: vw, vh, vmin, vmax","description":"Length units representing 1% of the viewport size for viewport width (vw), height (vh), the smaller of the two (vmin), or the larger of the two (vmax).","spec":"http://www.w3.org/TR/css3-values/#viewport-relative-lengths","status":"cr","links":[{"url":"http://css-tricks.com/viewport-sized-typography/","title":"Blog post"},{"url":"https://github.com/saabi/vminpoly","title":"Polyfill"},{"url":"https://github.com/rodneyrehm/viewport-units-buggyfill","title":"Buggyfill - Polyfill that fixes buggy support"},{"url":"http://blog.rodneyrehm.de/archives/34-iOS7-Mobile-Safari-And-Viewport-Units.html","title":"Back-Forward issue blog post"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"a","10":"a","11":"a"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"a","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"a","7.0-7.1":"a","8":"a"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"a"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"a #1"}},"notes":"Partial support in IE9 refers to supporting \"vm\" instead of \"vmin\".\r\n\r\nPartial support in IE10 refers to lack of \"vmax\" support.\r\n\r\nPartial support in iOS7 is due to buggy behavior of the \"vh\" unit.\r\n\r\nAll other partial support refers to not supporting the \"vmax\" unit. ","notes_by_num":{},"usage_perc_y":57.07,"usage_perc_a":20.36,"ucprefix":false,"parent":"","keywords":"vm,viewport-percentage","ie_id":"","chrome_id":""},"contentsecuritypolicy":{"title":"Content Security Policy","description":"Mitigate cross-site scripting attacks by whitelisting allowed sources of script, style, and other resources.","spec":"http://www.w3.org/TR/CSP/","status":"cr","links":[{"url":"http://html5rocks.com/en/tutorials/security/content-security-policy/","title":"HTML5Rocks article"},{"url":"http://content-security-policy.com/","title":"CSP Examples & Quick Reference"}],"categories":["Other"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"a x","11":"a x"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"y x","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"a x","6":"y x","6.1":"y x","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"a x","6.0-6.1":"y x","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"y x"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"a x"}},"notes":"The HTTP header is 'X-Content-Security-Policy' for Firefox until version 23 and IE10&11, and 'X-Webkit-CSP' for Chrome until version 25 and Safari until version 7. 'Content-Security-Policy' is the official W3C defined header, used by Chrome version 25 and later, Firefox version 23 and later, and Safari 7 and later.","notes_by_num":{},"usage_perc_y":65.77,"usage_perc_a":10.74,"ucprefix":false,"parent":"","keywords":"csp,security,header","ie_id":"contentsecuritypolicy","chrome_id":"5205088045891584"},"pagevisibility":{"title":"Page Visibility","description":"JavaScript API for determining whether a document is visible on the display","spec":"http://www.w3.org/TR/page-visibility/","status":"rec","links":[{"url":"https://developer.mozilla.org/en-US/docs/DOM/Using_the_Page_Visibility_API","title":"MDN article"},{"url":"http://docs.webplatform.org/wiki/apis/timing/properties/visibilityState","title":"WebPlatform Docs"},{"url":"http://www.sitepoint.com/introduction-to-page-visibility-api/","title":"SitePoint article"},{"url":"http://aurelio.audero.it/demo/page-visibility-api-demo.html","title":"Demo"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"y","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y x","4.4.3":"y x"},"bb":{"7":"n","10":"y x"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":75.4,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"visibilitystate","ie_id":"pagevisibilityapi","chrome_id":"5689697795833856"},"stricttransportsecurity":{"title":"Strict Transport Security","description":"Declare that a website is only accessible over a secure connection (HTTPS).","spec":"http://tools.ietf.org/html/rfc6797","status":"other","links":[{"url":"http://dev.chromium.org/sts","title":"Chromium article"},{"url":"https://developer.mozilla.org/en-US/docs/Security/HTTP_Strict_Transport_Security","title":"MDN article"},{"url":"https://www.owasp.org/index.php/HTTP_Strict_Transport_Security","title":"OWASP article"}],"categories":["Other"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"u","8":"u"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"The HTTP header is 'Strict-Transport-Security'.","notes_by_num":{"0":""},"usage_perc_y":58.75,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"sts,hsts,security,header","ie_id":"httpstricttransportsecurityhsts","chrome_id":"4941480133132288"},"style-scoped":{"title":"Scoped CSS","description":"Allows CSS rules to be scoped to part of the document, based on the position of the style element.","spec":"http://www.w3.org/TR/html5/document-metadata.html#attr-style-scoped","status":"cr","links":[{"url":"https://github.com/PM5544/scoped-polyfill","title":"Polyfill"},{"url":"http://html5doctor.com/the-scoped-attribute/","title":"HTML5 Doctor article"},{"url":"http://updates.html5rocks.com/2012/03/A-New-Experimental-Feature-style-scoped","title":"HTML5Rocks article"}],"categories":["CSS","HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n d #1","21":"n d #1","22":"n d #1","23":"n d #1","24":"n d #1","25":"n d #1","26":"n d #1","27":"n d #1","28":"n d #1","29":"n d #1","30":"n d #1","31":"n d #1","32":"n d #1","33":"n d #1","34":"n d #1","35":"n d #1","36":"n d #1","37":"n","38":"n","39":"n","40":"n"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"u","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{"1":"Enabled in Chrome through the \"experimental Web Platform features\" flag in chrome://flags"},"usage_perc_y":12.53,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"scope","ie_id":"scopedstyles","chrome_id":"5374137958662144"},"svg-fragment":{"title":"SVG fragment identifiers","description":"Method of displaying only a part of an SVG image by defining a view ID or view box dimensions as the file's fragment identifier.","spec":"http://www.w3.org/TR/SVG/linking.html#SVGFragmentIdentifiers","status":"rec","links":[{"url":"http://www.broken-links.com/2012/08/14/better-svg-sprites-with-fragment-identifiers/","title":"Blog post"}],"categories":["SVG"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"u","22":"n"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":58.27,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"fragments,sprite","ie_id":"","chrome_id":""},"outline":{"title":"CSS outline","description":"The CSS outline property is a shorthand property for setting one or more of the individual outline properties outline-style, outline-width and outline-color in a single rule. In most cases the use of this shortcut is preferable and more convenient.","spec":"http://www.w3.org/TR/CSS2/ui.html#propdef-outline","status":"rec","links":[{"url":"http://dev.w3.org/csswg/css3-ui/#outline","title":"CSS Basic User Interface Module Level 3"},{"url":"https://developer.mozilla.org/en-US/docs/CSS/outline","title":"Mozilla Developer Network: outline"}],"categories":["CSS2"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"y","9":"y #1","10":"y #1","11":"y #1"},"firefox":{"2":"y","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y #1","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y #1"}},"notes":"","notes_by_num":{"1":"Also supports the value of `invert` for `outline-color`. (support of this value is optional for browsers)"},"usage_perc_y":89.45,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"-moz-outline,outline-width,outline-style,outline-color","ie_id":"","chrome_id":""},"download":{"title":"Download attribute","description":"When used on an anchor, this attribute signifies that the resource it points to should be downloaded by the browser rather than navigate to it.","spec":"http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#downloading-resources","status":"wd","links":[{"url":"http://updates.html5rocks.com/2011/08/Downloading-resources-in-HTML5-a-download","title":"HTML5Rocks post"},{"url":"http://html5-demos.appspot.com/static/a.download.html","title":"Demo: creating a text file and downloading it."}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":55.63,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"download,a.download,a[download],download attribute","ie_id":"adownloadattribute","chrome_id":"6473924464345088"},"pointer":{"title":"Pointer events","description":"This specification integrates various inputs from mice, touchscreens, and pens, making separate implementations no longer necessary and authoring for cross-device pointers easier. Not to be mistaken with the unrelated \"pointer-events\" CSS property.","spec":"http://www.w3.org/TR/pointerevents/","status":"cr","links":[{"url":"http://blogs.msdn.com/b/ie/archive/2011/09/20/touch-input-for-ie10-and-metro-style-apps.aspx","title":"Implementation of Pointer Events in IE10"},{"url":"http://blogs.msdn.com/b/eternalcoding/archive/2013/01/16/hand-js-a-polyfill-for-supporting-pointer-events-on-every-browser.aspx","title":"Hand.js, the polyfill for browsers only supporting Touch Events"},{"url":"http://blogs.msdn.com/b/davrous/archive/2013/02/20/handling-touch-in-your-html5-apps-thanks-to-the-pointer-events-of-ie10-and-windows-8.aspx","title":"Article & tutorial"}],"categories":["DOM","JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"a x","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"p","7":"p","8":"p","9":"p","10":"p","11":"p","12":"p","13":"p","14":"p","15":"p","16":"p","17":"p","18":"p","19":"p","20":"p","21":"p","22":"p","23":"p","24":"p","25":"p","26":"p","27":"p","28":"p","29":"p","30":"p","31":"p","32":"p","33":"p","34":"p","35":"p"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"p","23":"p","24":"p","25":"p","26":"p","27":"p","28":"p","29":"p","30":"p","31":"p","32":"p","33":"p","34":"p","35":"p","36":"p","37":"p","38":"p","39":"p","40":"p"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"u","7":"u","8":"u"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"p","16":"p","17":"p","18":"p","19":"p","20":"p","21":"p","22":"p","23":"p","24":"p","25":"p","26":"p"},"ios_saf":{"3.2":"p","4.0-4.1":"p","4.2-4.3":"p","5.0-5.1":"p","6.0-6.1":"p","7.0-7.1":"p","8":"p"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"p","2.2":"p","2.3":"p","3":"p","4":"p","4.1":"p","4.2-4.3":"p","4.4":"p","4.4.3":"p"},"bb":{"7":"p","10":"p"},"op_mob":{"10":"n","11":"p","11.1":"p","11.5":"p","12":"p","12.1":"p","22":"p"},"and_chr":{"37":"p"},"and_ff":{"32":"p"},"ie_mob":{"10":"a x"}},"notes":"Partial support in IE10 refers the lack of pointerenter and pointerleave events. Firefox Nightly provides 'dom.w3c_pointer_events.enabled' option to support this specification starting with version 28.","notes_by_num":{},"usage_perc_y":7.23,"usage_perc_a":2.84,"ucprefix":false,"parent":"","keywords":"pointerdown,pointermove,pointerup,pointercancel,pointerover,pointerout,pointerenter,pointerleave","ie_id":"pointerevents","chrome_id":"4504699138998272"},"user-select-none":{"title":"CSS user-select: none","description":"Method of preventing text/element selection using CSS. ","spec":"https://developer.mozilla.org/en-US/docs/CSS/user-select","status":"unoff","links":[{"url":"https://developer.mozilla.org/en-US/docs/CSS/user-select","title":"MDN article"},{"url":"http://css-tricks.com/almanac/properties/u/user-select/","title":"CSS Tricks article"},{"url":"http://msdn.microsoft.com/en-us/library/ie/hh781492(v=vs.85).aspx","title":"MSDN Documentation"}],"categories":["CSS"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y x","11":"y x"},"firefox":{"2":"y x","3":"y x","3.5":"y x","3.6":"y x","4":"y x","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x"},"chrome":{"4":"u","5":"u","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x","36":"y x","37":"y x","38":"y x","39":"y x","40":"y x"},"safari":{"3.1":"y x","3.2":"y x","4":"y x","5":"y x","5.1":"y x","6":"y x","6.1":"y x","7":"y x","8":"y x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x"},"ios_saf":{"3.2":"y x","4.0-4.1":"y x","4.2-4.3":"y x","5.0-5.1":"y x","6.0-6.1":"y x","7.0-7.1":"y x","8":"y x"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"y x","2.2":"y x","2.3":"y x","3":"y x","4":"y x","4.1":"y x","4.2-4.3":"y x","4.4":"y x","4.4.3":"y x"},"bb":{"7":"y x","10":"y x"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y x"},"and_chr":{"37":"y x"},"and_ff":{"32":"y x"},"ie_mob":{"10":"y x"}},"notes":"Currently the user-select property does not appear in any W3C specification. Support information here is only for \"none\" value, not others.","notes_by_num":{},"usage_perc_y":82.76,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"webp":{"title":"WebP image format","description":"Image format that supports lossy and lossless compression, as well as animation and alpha transparency.","spec":"https://developers.google.com/speed/webp/","status":"other","links":[{"url":"https://developers.google.com/speed/webp/","title":"Official website"},{"url":"http://antimatter15.github.io/weppy/demo.html","title":"Polyfill for browsers with WebM support"},{"url":"http://libwebpjs.appspot.com/","title":"Decoder in JS"},{"url":"http://webpjs.appspot.com/","title":"Polyfill for browsers with or without WebM support (i.e. IE6-IE9, Safari/iOS version 6.1 and below; Firefox versions 24 and bel"},{"url":"https://developers.google.com/speed/webp/faq#which_web_browsers_natively_support_webp","title":"Official website FAQ - Which web browsers natively support WebP?"}],"categories":["Other"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"p","5":"p","6":"p","7":"p","8":"p","9":"p","10":"p","11":"p","12":"p","13":"p","14":"p","15":"p","16":"p","17":"p","18":"p","19":"p","20":"p","21":"p","22":"p","23":"p","24":"p","25":"p","26":"p","27":"p","28":"p","29":"p","30":"p","31":"p","32":"p","33":"p","34":"p","35":"p"},"chrome":{"4":"n","5":"n","6":"p","7":"p","8":"p","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"p","11":"p","11.1":"a","11.5":"a","11.6":"a","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"a","4.1":"a","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"a","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"Partial support in older Chrome, Opera and Android refers to browser not supporting lossless and alpha versions of WebP. Animated webp images are supported in Chrome 32+ and Opera 19+.","notes_by_num":{},"usage_perc_y":44.58,"usage_perc_a":3.53,"ucprefix":false,"parent":"","keywords":"","ie_id":"webpimageformatsupport","chrome_id":"6471725441089536,4785074604081152"},"intrinsic-width":{"title":"Intrinsic & Extrinsic Sizing","description":"Allows for the heights and widths to be specified in intrinsic values using the fill-available, max-content, min-content, and fit-content properties.","spec":"http://www.w3.org/TR/css3-sizing/","status":"wd","links":[{"url":"http://demosthenes.info/blog/662/Design-From-the-Inside-Out-With-CSS-MinContent","title":"Min-Content tutorial"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"y x","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x","36":"y x","37":"y x","38":"y x","39":"y x","40":"y x"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"y x","7":"y x","8":"y x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"y x","8":"y x"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y x","4.4.3":"y x"},"bb":{"7":"n","10":"y x"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y x"},"and_chr":{"37":"y x"},"and_ff":{"32":"y x"},"ie_mob":{"10":"n"}},"notes":"Prefixes are on the values, not the property names (e.g. -webkit-min-content) Firefox currently supports the \"-moz-available\" property rather than \"-moz-fill-available\".","notes_by_num":{},"usage_perc_y":64.53,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"fill-available,max-content,min-content,fit-content,contain-floats","ie_id":"cssintrinsicsizing","chrome_id":"5901353784180736"},"cryptography":{"title":"Web Cryptography","description":"JavaScript API for performing basic cryptographic operations in web applications","spec":"http://www.w3.org/TR/WebCryptoAPI/","status":"wd","links":[{"url":"http://polycrypt.net/","title":"PolyCrypt: A WebCrypto Polyfill"},{"url":"http://www.slideshare.net/Channy/the-history-and-status-of-web-crypto-api","title":"The History and Status of Web Crypto API"},{"url":"http://research.microsoft.com/en-us/projects/msrjscrypto/","title":"Microsoft Research JavaScript Cryptography Library"}],"categories":["HTML5","JS API"],"stats":{"ie":{"5.5":"n","6":"p","7":"p","8":"p","9":"p","10":"p","11":"a #1"},"firefox":{"2":"p","3":"p","3.5":"p","3.6":"p","4":"p","5":"p","6":"p","7":"p","8":"p","9":"p","10":"p","11":"p","12":"p","13":"p","14":"p","15":"p","16":"p","17":"p","18":"p","19":"p","20":"p","21":"p","22":"p","23":"p","24":"p","25":"p","26":"p","27":"p","28":"p","29":"p","30":"p","31":"p","32":"n d #2","33":"n d #2","34":"y","35":"y"},"chrome":{"4":"p","5":"p","6":"p","7":"p","8":"p","9":"p","10":"p","11":"p","12":"p","13":"p","14":"p","15":"p","16":"p","17":"p","18":"p","19":"p","20":"p","21":"p","22":"p","23":"p","24":"p","25":"p","26":"p","27":"p","28":"p","29":"p","30":"p","31":"p","32":"p","33":"p","34":"p","35":"p","36":"p","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"p","3.2":"p","4":"p","5":"p","5.1":"p","6":"p","6.1":"p","7":"p","8":"p"},"opera":{"9":"p","9.5-9.6":"p","10.0-10.1":"p","10.5":"p","10.6":"p","11":"p","11.1":"p","11.5":"p","11.6":"p","12":"p","12.1":"p","15":"p","16":"p","17":"p","18":"p","19":"p","20":"p","21":"p","22":"p","23":"p","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"p","4.0-4.1":"p","4.2-4.3":"p","5.0-5.1":"p","6.0-6.1":"p","7.0-7.1":"p","8":"p"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"p","2.2":"p","2.3":"p","3":"p","4":"p","4.1":"p","4.2-4.3":"p","4.4":"p","4.4.3":"p"},"bb":{"7":"p","10":"p"},"op_mob":{"10":"p","11":"p","11.1":"p","11.5":"p","12":"p","12.1":"p","22":"p"},"and_chr":{"37":"y"},"and_ff":{"32":"p"},"ie_mob":{"10":"p"}},"notes":"Many browsers support the `[crypto.getRandomValues()](#feat=getrandomvalues)` method, but not actual cryptography functionality under `crypto.subtle`. \r\n\r\nAs the specification is currently still in development, users may be better off using polyfills or libraries like [PolyCrypt](http://polycrypt.net/). \r\n\r\nFirefox also has support for [unofficial features](https://developer.mozilla.org/en-US/docs/JavaScript_crypto).","notes_by_num":{"1":"Support in IE11 is based an older version of the specification. ","2":"Supported in Firefox behind the `dom.webcrypto.enabled` flag. "},"usage_perc_y":8.08,"usage_perc_a":7.23,"ucprefix":false,"parent":"","keywords":"subtle,subtlecrypto","ie_id":"webcryptoapi","chrome_id":"5030265697075200"},"template":{"title":"HTML templates","description":"Method of declaring a portion of reusable markup that is parsed but not rendered until cloned.","spec":"http://www.w3.org/TR/html5/scripting-1.html#the-template-element","status":"wd","links":[{"url":"http://www.html5rocks.com/en/tutorials/webcomponents/template/","title":"HTML5Rocks - HTML's New template Tag"},{"url":"http://polymer-project.org","title":"Polymer project (polyfill & web components framework)"}],"categories":["DOM","HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":54.42,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"web components, template","ie_id":"templateelement","chrome_id":"5207287069147136"},"opus":{"title":"Opus","description":"Royalty-free open audio codec by IETF, which incorporated SILK from Skype and CELT from Xiph.org, to serve higher sound quality and lower latency at the same bitrate.","spec":"http://tools.ietf.org/html/rfc6716","status":"other","links":[{"url":"https://hacks.mozilla.org/2012/07/firefox-beta-15-supports-the-new-opus-audio-format/","title":"Introduction of Opus by Mozilla"},{"url":"http://www.ietf.org/mail-archive/web/rtcweb/current/msg04953.html","title":"Google's statement about the use of VP8 and Opus codec for WebRTC standard"}],"categories":["Other"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"For Opera the Linux version may be able to play it when the GStreamer module is up to date and the served mime-type is 'audio/ogg'.","notes_by_num":{},"usage_perc_y":44.65,"usage_perc_a":0,"ucprefix":false,"parent":"audio","keywords":"","ie_id":"","chrome_id":"4891189287321600"},"jpegxr":{"title":"JPEG XR image format","description":"The latest JPEG image format of Joint Photographic Experts Group which boasts better compression and supports lossless compression, alpha channel, and 48-bit deep color over normal jpg format.","spec":"http://www.itu.int/rec/T-REC-T.832","status":"other","links":[{"url":"http://msdn.microsoft.com/en-us/library/windows/desktop/hh707223(v=vs.85).aspx","title":"Microsoft JPEG XR Codec Overview"}],"categories":["Other"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"y","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n","36":"n","37":"n","38":"n","39":"n","40":"n"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"n"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":12.53,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"channel-messaging":{"title":"Channel messaging","description":"Method for having two-way communication between browsing contexts (using MessageChannel)","spec":"http://www.w3.org/TR/webmessaging/#channel-messaging","status":"cr","links":[{"url":"http://dev.opera.com/articles/view/window-postmessage-messagechannel/#channel","title":"An Introduction to HTML5 web messaging"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n d #1","27":"n d #1","28":"n d #1","29":"n d #1","30":"n d #1","31":"n d #1","32":"n d #1","33":"n d #1","34":"n d #1","35":"n d #1"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"u","10.0-10.1":"u","10.5":"u","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"u","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"n"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{"1":"Supported in Firefox behind the `dom.messageChannel.enabled` flag."},"usage_perc_y":64.2,"usage_perc_a":0,"ucprefix":false,"parent":"x-doc-messaging","keywords":"","ie_id":"messagechannels","chrome_id":"6710044586409984"},"css3-tabsize":{"title":"CSS3 tab-size","description":"Method of customizing the width of the tab character. Only effective using 'white-space: pre' or 'white-space: pre-wrap'.","spec":"http://www.w3.org/TR/css3-text/#tab-size1","status":"wd","links":[{"url":"https://developer.mozilla.org/en-US/docs/Web/CSS/tab-size","title":"MDN article"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"y x","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"y x","11":"y x","11.1":"y x","11.5":"y x","11.6":"y x","12":"y x","12.1":"y x","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"n","11":"y x","11.1":"y x","11.5":"y x","12":"y x","12.1":"y x","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y x"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":65.49,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"tab-size,tab-width","ie_id":"","chrome_id":""},"mutationobserver":{"title":"Mutation Observer","description":"Method for observing and reacting to changes to the DOM. Replaces MutationEvents, which is deprecated.","spec":"http://www.w3.org/TR/dom/","status":"wd","links":[{"url":"https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver","title":"MutationObserver from MDN"},{"url":"https://github.com/Polymer/MutationObservers","title":"Polyfill"}],"categories":["DOM","JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"p","10":"p","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"y x","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"y x","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"p","4.1":"p","4.2-4.3":"p","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"y x"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"p"}},"notes":"When the content of a node with a single CharacterData child node is changed by innerHTML attribute and the node have a single different one as a result, WebKit browsers consider it as a characterData mutation of the child CharacterData node, while other browsers think it as a childList mutation of the parent node.","notes_by_num":{},"usage_perc_y":72.5,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"MutationObserver","ie_id":"mutationobservers","chrome_id":"5021194726146048"},"css-selection":{"title":"::selection CSS pseudo-element","description":"The ::selection CSS pseudo-element applies rules to the portion of a document that has been highlighted (e.g., selected with the mouse or another pointing device) by the user.","spec":"https://developer.mozilla.org/en-US/docs/Web/CSS/::selection","status":"unoff","links":[{"url":"http://quirksmode.org/css/selectors/selection.html","title":"::selection test"},{"url":"http://docs.webplatform.org/wiki/css/selectors/pseudo-elements/::selection","title":"WebPlatform Docs"}],"categories":["CSS"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"y","10":"y","11":"y"},"firefox":{"2":"y x","3":"y x","3.5":"y x","3.6":"y x","4":"y x","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"u","11":"u","11.1":"u","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"n"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":73.13,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"::selection,selection","ie_id":"","chrome_id":""},"css-placeholder":{"title":":placeholder-shown CSS pseudo-class","description":"The :placeholder-shown pseudo-class represents the placeholder contents of a form field with placeholder text.","spec":"http://dev.w3.org/csswg/selectors/#placeholder","status":"unoff","links":[{"url":"http://msdn.microsoft.com/en-us/library/ie/hh772745(v=vs.85).aspx","title":"MSDN article"},{"url":"http://css-tricks.com/snippets/css/style-placeholder-text/","title":"CSS-Tricks article with all prefixes"},{"url":"http://wiki.csswg.org/ideas/placeholder-styling","title":"CSSWG discussion"}],"categories":["CSS"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"a x","11":"a x"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"a x","5":"a x","6":"a x","7":"a x","8":"a x","9":"a x","10":"a x","11":"a x","12":"a x","13":"a x","14":"a x","15":"a x","16":"a x","17":"a x","18":"a x","19":"a x","20":"a x","21":"a x","22":"a x","23":"a x","24":"a x","25":"a x","26":"a x","27":"a x","28":"a x","29":"a x","30":"a x","31":"a x","32":"a x","33":"a x","34":"a x","35":"a x"},"chrome":{"4":"a x","5":"a x","6":"a x","7":"a x","8":"a x","9":"a x","10":"a x","11":"a x","12":"a x","13":"a x","14":"a x","15":"a x","16":"a x","17":"a x","18":"a x","19":"a x","20":"a x","21":"a x","22":"a x","23":"a x","24":"a x","25":"a x","26":"a x","27":"a x","28":"a x","29":"a x","30":"a x","31":"a x","32":"a x","33":"a x","34":"a x","35":"a x","36":"a x","37":"a x","38":"a x","39":"a x","40":"a x"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"a x","5.1":"a x","6":"a x","6.1":"a x","7":"a x","8":"a x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"a x","16":"a x","17":"a x","18":"a x","19":"a x","20":"a x","21":"a x","22":"a x","23":"a x","24":"a x","25":"a x","26":"a x"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"a x","5.0-5.1":"a x","6.0-6.1":"a x","7.0-7.1":"a x","8":"a x"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"a x","2.2":"a x","2.3":"a x","3":"a x","4":"a x","4.1":"a x","4.2-4.3":"a x","4.4":"a x","4.4.3":"a x"},"bb":{"7":"u","10":"a x"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"a x"},"and_chr":{"37":"a x"},"and_ff":{"32":"a x"},"ie_mob":{"10":"a x"}},"notes":"Partial support refers to support for alternative syntax: ::-webkit-input-placeholder (Chrome/Safari/Opera),\r\n::-moz-placeholder (Firefox) and \r\n:-ms-input-placeholder (IE). ","notes_by_num":{},"usage_perc_y":0,"usage_perc_a":82.41,"ucprefix":false,"parent":"","keywords":"::placeholder,placeholder","ie_id":"","chrome_id":""},"canvas-blending":{"title":"Canvas blend modes","description":"Method of defining the effect resulting from overlaying two layers on a Canvas element. ","spec":"http://www.w3.org/TR/compositing-1/#blending","status":"wd","links":[{"url":"http://blogs.adobe.com/webplatform/2013/01/28/blending-features-in-canvas/","title":"Blog post"}],"categories":["Canvas"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":62.65,"usage_perc_a":0,"ucprefix":false,"parent":"canvas","keywords":"","ie_id":"compositingandblendingincanvas2d","chrome_id":""},"clipboard":{"title":"Clipboard API","description":"API to provide copy, cut and paste functionality using the OS clipboard.","spec":"http://www.w3.org/TR/clipboard-apis/","status":"wd","links":[{"url":"https://developer.mozilla.org/en-US/docs/Web/API/ClipboardEvent","title":"MDN page on ClipboardEvent"},{"url":"http://www.deluxeblogtips.com/2010/06/javascript-copy-to-clipboard.html","title":"Blog post on cross-browser usage"}],"categories":["JS API"],"stats":{"ie":{"5.5":"a #1","6":"a #1","7":"a #1","8":"a #1","9":"a #1","10":"a #1","11":"a #1"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"a","14":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"a","29":"a","30":"a","31":"a","32":"a","33":"a","34":"a","35":"a","36":"a","37":"a","38":"a","39":"a","40":"a"},"safari":{"3.1":"u","3.2":"u","4":"a","5":"a","5.1":"a","6":"a","6.1":"a","7":"a","8":"a"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"a","6.0-6.1":"a","7.0-7.1":"a","8":"a"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"a","4.4.3":"a"},"bb":{"7":"n","10":"a"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"a"},"and_chr":{"37":"a"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"Partial support in IE refers using [a non-standard method](http://msdn.microsoft.com/en-us/library/ie/ms535220%28v=vs.85%29.aspx) of interacting with the clipboard. For other browsers it refers to not supporting the ClipboardEvent constructor.","notes_by_num":{},"usage_perc_y":12.24,"usage_perc_a":69.5,"ucprefix":false,"parent":"","keywords":"cut,copy,paste,clipboarddata","ie_id":"","chrome_id":""},"rtcpeerconnection":{"title":"WebRTC Peer-to-peer connections","description":"Method of allowing two users to communicate directly, browser to browser using the RTCPeerConnection API.","spec":"http://www.w3.org/TR/webrtc/#peer-to-peer-connections","status":"wd","links":[{"url":"http://www.webrtc.org/","title":"WebRTC Project site"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x","36":"y x","37":"y x","38":"y x","39":"y x","40":"y x"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y x"},"and_chr":{"37":"y x"},"and_ff":{"32":"y x"},"ie_mob":{"10":"n"}},"notes":"BlackBerry 10 recognizes RTCPeerConnection but real support is unconfirmed.","notes_by_num":{},"usage_perc_y":53.11,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"webrtcwebrtcv10api","chrome_id":"6612462929444864"},"css3-cursors":{"title":"CSS3 Cursors (original values)","description":"CSS3 cursor values added in the 2004 spec, including none, context-menu, cell, vertical-text, alias, copy, no-drop, not-allowed, nesw-resize, nwse-resize, col-resize, row-resize and all-scroll. ","spec":"http://www.w3.org/TR/css3-ui/#cursor","status":"wd","links":[{"url":"https://developer.mozilla.org/en-US/docs/Web/CSS/cursor","title":"MDN Documentation"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"a","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a"},"firefox":{"2":"a","3":"a","3.5":"a","3.6":"a","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"a","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"a","3.2":"a","4":"a","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"a","9.5-9.6":"a","10.0-10.1":"a","10.5":"a","10.6":"a","11":"a","11.1":"a","11.5":"a","11.6":"a","12":"a","12.1":"a","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"u"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"Internet Explorer does not support the alias, cell, copy, ew-resize, ns-resize, nesw-resize, nwse-resize or context-menu cursors. Opera 12.10- does not support 'none' or a URI.","notes_by_num":{},"usage_perc_y":51.46,"usage_perc_a":16.82,"ucprefix":false,"parent":"","keywords":"cursors, pointers","ie_id":"","chrome_id":""},"webvtt":{"title":"WebVTT - Web Video Text Tracks","description":"Format for marking up text captions for multimedia resources.","spec":"http://dev.w3.org/html5/webvtt/","status":"unoff","links":[{"url":"http://www.html5rocks.com/en/tutorials/track/basics/","title":"Getting Started With the Track Element"},{"url":"http://dev.opera.com/articles/view/an-introduction-to-webvtt-and-track/","title":"An Introduction to WebVTT and track"}],"categories":["Other"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n d","25":"n d","26":"n d","27":"n d","28":"n d","29":"n d","30":"n d","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"WebVTT must be used with the <track> element.\r\n\r\nFirefox currently lacks support for the for ::cue pseudoelement.","notes_by_num":{},"usage_perc_y":72.18,"usage_perc_a":0,"ucprefix":false,"parent":"video","keywords":"captions,track","ie_id":"","chrome_id":"6719115557339136"},"promises":{"title":"Promises","description":"A promise represents the eventual result of an asynchronous operation.","spec":"https://people.mozilla.org/~jorendorff/es6-draft.html#sec-promise-objects","status":"other","links":[{"url":"http://promises-aplus.github.io/promises-spec/","title":"Promises/A+ spec"},{"url":"http://www.chromestatus.com/features/5681726336532480","title":"Chromium dashboard - ES6 Promises"},{"url":"http://www.html5rocks.com/en/tutorials/es6/promises/","title":"JavaScript Promises: There and back again - HTML5 Rocks"},{"url":"https://github.com/jakearchibald/ES6-Promises","title":"A polyfill for ES6-style Promises"}],"categories":["DOM","JS API"],"stats":{"ie":{"5.5":"p","6":"p","7":"p","8":"p","9":"p","10":"p","11":"p"},"firefox":{"2":"p","3":"p","3.5":"p","3.6":"p","4":"p","5":"p","6":"p","7":"p","8":"p","9":"p","10":"p","11":"p","12":"p","13":"p","14":"p","15":"p","16":"p","17":"p","18":"p","19":"p","20":"p","21":"p","22":"p","23":"p","24":"p","25":"p","26":"p","27":"a","28":"a","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"p","5":"p","6":"p","7":"p","8":"p","9":"p","10":"p","11":"p","12":"p","13":"p","14":"p","15":"p","16":"p","17":"p","18":"p","19":"p","20":"p","21":"p","22":"p","23":"p","24":"p","25":"p","26":"p","27":"p","28":"p","29":"p","30":"p","31":"p","32":"a","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"p","3.2":"p","4":"p","5":"p","5.1":"p","6":"p","6.1":"p","7":"p","8":"y"},"opera":{"9":"p","9.5-9.6":"p","10.0-10.1":"p","10.5":"p","10.6":"p","11":"p","11.1":"p","11.5":"p","11.6":"p","12":"p","12.1":"p","15":"p","16":"p","17":"p","18":"p","19":"a","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"p","4.0-4.1":"p","4.2-4.3":"p","5.0-5.1":"p","6.0-6.1":"p","7.0-7.1":"p","8":"y"},"op_mini":{"5.0-7.0":"p"},"android":{"2.1":"p","2.2":"p","2.3":"p","3":"p","4":"p","4.1":"p","4.2-4.3":"p","4.4":"p","4.4.3":"p"},"bb":{"7":"p","10":"p"},"op_mob":{"10":"p","11":"p","11.1":"p","11.5":"p","12":"p","12.1":"p","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"p"}},"notes":"","notes_by_num":{},"usage_perc_y":50.2,"usage_perc_a":0.58,"ucprefix":false,"parent":"","keywords":"futures","ie_id":"","chrome_id":"5681726336532480"},"css-sticky":{"title":"CSS position:sticky","description":"Keeps elements positioned as \"fixed\" or \"relative\" depending on how it appears in the viewport. As a result the element is \"stuck\" when necessary while scrolling.","spec":"http://dev.w3.org/csswg/css-position/#sticky-positioning","status":"unoff","links":[{"url":"http://updates.html5rocks.com/2012/08/Stick-your-landings-position-sticky-lands-in-WebKit","title":"HTML5Rocks"},{"url":"https://developer.mozilla.org/en-US/docs/Web/CSS/position","title":"MDN article"},{"url":"http://docs.webplatform.org/wiki/css/properties/position","title":"WebPlatform Docs"},{"url":"https://github.com/filamentgroup/fixed-sticky","title":"Polyfill"}],"categories":["CSS"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n d #1","27":"n d #1","28":"n d #1","29":"n d #1","30":"n d #1","31":"n d #1","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n d #2","24":"n d #2","25":"n d #2","26":"n d #2","27":"n d #2","28":"n d #2","29":"n d #2","30":"n d #2","31":"n d #2","32":"n d #2","33":"n d #2","34":"n d #2","35":"n d #2","36":"n d #2","37":"n","38":"n","39":"n","40":"n"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"y x","7":"y x","8":"y x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"y x","7.0-7.1":"y x","8":"y x"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{"1":"Can be enabled in Firefox by setting the about:config preference layout.css.sticky.enabled to true","2":"Enabled in Chrome through the \"experimental Web Platform features\" flag in chrome://flags"},"usage_perc_y":9.66,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"positionsticky","chrome_id":"6190250464378880"},"dialog":{"title":"Dialog element","description":"Method of easily creating custom dialog boxes to display to the user with modal or non-modal options. Also includes a `::backdrop` pseudo-element for behind the element.","spec":"http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-dialog-element","status":"wd","links":[{"url":"https://github.com/GoogleChrome/dialog-polyfill","title":"Polyfill"}],"categories":["DOM","HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"u","34":"u","35":"u"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n d #1","33":"n d #1","34":"n d #1","35":"n d #1","36":"n d #1","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"u"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n d #2","20":"n d #2","21":"n d #2","22":"n d #2","23":"n d #2","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"u"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"u"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"y"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{"1":"Enabled through the \"Experimental Web Platform features\" flag in `chrome://flags`","2":"Enabled through the \"Experimental Web Platform features\" flag in `opera://flags`"},"usage_perc_y":8.06,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"HTMLDialogElement,showModal,backdrop","ie_id":"","chrome_id":"5770237022568448"},"css-variables":{"title":"CSS Variables","description":"Permits the declaration and usage of cascading variables in stylesheets.","spec":"http://www.w3.org/TR/css-variables/","status":"wd","links":[{"url":"https://hacks.mozilla.org/2013/12/css-variables-in-firefox-nightly/","title":"Mozilla hacks article (older syntax)"},{"url":"https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables","title":"MDN article"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n","36":"n","37":"n","38":"u","39":"u","40":"u"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":10.55,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"css variables","ie_id":"cssvariables","chrome_id":"6401356696911872"},"vibration":{"title":"Vibration API","description":"Method to access the vibration mechanism of the hosting device.","spec":"http://www.w3.org/TR/vibration/","status":"wd","links":[{"url":"https://developer.mozilla.org/en-US/docs/Web/Guide/API/Vibration","title":"MDN article"},{"url":"http://davidwalsh.name/vibration-api","title":"Vibration API sample code & demo"},{"url":"http://code.tutsplus.com/tutorials/html5-vibration-api--mobile-22585","title":"Tuts+ article"},{"url":"http://aurelio.audero.it/demo/vibration-api-demo.html","title":"Demo"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":54.37,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"vibration,mobile,device","ie_id":"vibrationapi","chrome_id":"5698768766763008"},"css-backgroundblendmode":{"title":"CSS background-blend-mode","description":"Allows blending between CSS background images, gradients, and colors.","spec":"http://www.w3.org/TR/compositing-1/#background-blend-mode","status":"cr","links":[{"url":"http://codepen.io/bennettfeely/pen/rxoAc","title":"codepen example"},{"url":"https://medium.com/web-design-technique/6b51bf53743a","title":"Blog post"},{"url":"http://bennettfeely.com/gradients","title":"Demo"}],"categories":["CSS"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":48.46,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"css blend modes,css blending modes,blending,multiply,screen,background","ie_id":"","chrome_id":"5768037999312896"},"css-mixblendmode":{"title":"Blending of HTML/SVG elements","description":"Allows blending between arbitrary SVG and HTML elements","spec":"http://www.w3.org/TR/compositing-1/#mix-blend-mode","status":"cr","links":[{"url":"http://codepen.io/bennettfeely/pen/csjzd","title":"codepen example"},{"url":"http://css-tricks.com/basics-css-blend-modes/","title":"Blog post"}],"categories":["CSS"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n d #1","30":"n d #1","31":"n d #1","32":"n d #1","33":"n d #1","34":"n d #1","35":"n d #1","36":"n d #1","37":"n d #1","38":"n d #1","39":"n d #1","40":"n d #1"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{"1":"Enabled in Chrome through the \"experimental Web Platform features\" flag in chrome://flags"},"usage_perc_y":0.54,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"css blend modes,css blending modes","ie_id":"mixblendmode","chrome_id":"6362616360337408"},"web-speech":{"title":"Web Speech API","description":"Method to provide speech input and text-to-speech output features in a web browser.","spec":"https://dvcs.w3.org/hg/speech-api/raw-file/tip/speechapi.html","status":"unoff","links":[{"url":"http://updates.html5rocks.com/2013/01/Voice-Driven-Web-Apps-Introduction-to-the-Web-Speech-API","title":"HTML5Rocks article"},{"url":"http://www.sitepoint.com/introducing-web-speech-api/","title":"SitePoint article"},{"url":"http://aurelio.audero.it/demo/web-speech-api-demo.html","title":"Demo"},{"url":"http://zenorocha.github.io/voice-elements/","title":"Advanced demo and resource"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"a x","26":"a x","27":"a x","28":"a x","29":"a x","30":"a x","31":"a x","32":"a x","33":"a x","34":"a x","35":"a x","36":"a x","37":"a x","38":"a x","39":"a x","40":"a x"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"a x","7":"a x","8":"a x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"a x","8":"a x"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"a x"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"Partial support in Chrome refers to some attributes missing. Partial support in Safari refers to only Speech Synthesis supported.","notes_by_num":{},"usage_perc_y":0,"usage_perc_a":48.9,"ucprefix":false,"parent":"","keywords":"speech,recognition,ASR","ie_id":"webspeechapiinput","chrome_id":"5908775487668224"},"high-resolution-time":{"title":"High Resolution Time API","description":"Method to provide the current time in sub-millisecond resolution and such that it is not subject to system clock skew or adjustments. Called using performance.now()","spec":"http://www.w3.org/TR/hr-time/","status":"rec","links":[{"url":"https://developer.mozilla.org/en-US/docs/Web/API/Performance.now()","title":"MDN article"},{"url":"http://updates.html5rocks.com/2012/08/When-milliseconds-are-not-enough-performance-now","title":"HTML5Rocks article"},{"url":"http://www.sitepoint.com/discovering-the-high-resolution-time-api/","title":"SitePoint article"},{"url":"http://aurelio.audero.it/demo/high-resolution-time-api-demo.html","title":"Demo"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"y x","21":"y x","22":"y x","23":"y x","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":65.85,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"performance,now,testing","ie_id":"highresolutiontime","chrome_id":"5349124069130240"},"battery-status":{"title":"Battery Status API","description":"Method to provide information about the battery status of the hosting device.","spec":"http://www.w3.org/TR/battery-status/","status":"cr","links":[{"url":"https://developer.mozilla.org/en-US/docs/WebAPI/Battery_Status","title":"MDN Docs"},{"url":"http://www.smartjava.org/examples/webapi-battery/","title":"Simple demo"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n","36":"n","37":"n","38":"n","39":"n","40":"n"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"Support has already landed in WebKit but it is yet to make into Android and Chrome [android issue](https://code.google.com/p/chromium/issues/detail?id=135863)  [chrome issue](https://code.google.com/p/chromium/issues/detail?id=122593)","notes_by_num":{},"usage_perc_y":13.15,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"batterystatusapi","chrome_id":"4537134732017664"},"text-decoration":{"title":"text-decoration styling","description":"Method of defining the type, style and color of lines in the text-decoration property.","spec":"http://www.w3.org/TR/css-text-decor-3/#line-decoration","status":"cr","links":[{"url":"https://developer.mozilla.org/en-US/docs/Web/CSS/text-decoration-style","title":"MDN Documentation for text-decoration-style"},{"url":"https://developer.mozilla.org/en-US/docs/Web/CSS/text-decoration-color","title":"MDN Documentation for text-decoration-color"},{"url":"https://developer.mozilla.org/en-US/docs/Web/CSS/text-decoration-line","title":"MDN Documentation for text-decoration-line"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n x d #1","27":"n x d #1","28":"n x d #1","29":"n x d #1","30":"n x d #1","31":"n x d #1","32":"n x d #1","33":"n x d #1","34":"n x d #1","35":"n x d #1","36":"n x d #1","37":"n x d #1","38":"n x d #1","39":"n x d #1","40":"n x d #1"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"u"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"a x #2"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"y x"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{"1":"Enabled in Chrome through the \"experimental Web Platform features\" flag in chrome://flags","2":"Partial support in iOS 8 refers to not supporting the text-decoration-style property."},"usage_perc_y":13.26,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"text-decoration-line,text-decoration-style,text-decoration-color","ie_id":"","chrome_id":""},"speech-synthesis":{"title":"Speech Synthesis API","description":"A web API for controlling a text-to-speech output.","spec":"https://dvcs.w3.org/hg/speech-api/raw-file/tip/speechapi.html#tts-section","status":"unoff","links":[{"url":"http://updates.html5rocks.com/2014/01/Web-apps-that-talk---Introduction-to-the-Speech-Synthesis-API","title":"HTML5Rocks article"},{"url":"http://www.sitepoint.com/talking-web-pages-and-the-speech-synthesis-api/","title":"SitePoint article"},{"url":"http://aurelio.audero.it/demo/speech-synthesis-api-demo.html","title":"Demo"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"y"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":46.38,"usage_perc_a":0,"ucprefix":false,"parent":"web-speech","keywords":"speech,synthesis,speechSynthesis,TTS,SpeechSynthesisUtterance,","ie_id":"webspeechapisynthesis","chrome_id":"4782875580825600"},"user-timing":{"title":"User Timing API","description":"Method to help web developers measure the performance of their applications by giving them access to high precision timestamps.","spec":"http://www.w3.org/TR/user-timing/","status":"rec","links":[{"url":"http://www.sitepoint.com/discovering-user-timing-api/","title":"SitePoint article"},{"url":"http://www.html5rocks.com/en/tutorials/webperformance/usertiming/","title":"HTML5Rocks article"},{"url":"https://gist.github.com/pmeenan/5902672","title":"Polyfill"},{"url":"http://aurelio.audero.it/demo/user-timing-api-demo.html","title":"Demo"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"n"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":52.27,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"performance,testing,mark,measure","ie_id":"usertimingapi","chrome_id":"5066549580791808"},"srcset":{"title":"Srcset attribute","description":"Allows authors to specify alternate high-resolution sources on `img` elements","spec":"http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content.html#attr-img-srcset","status":"other","links":[{"url":"https://www.webkit.org/blog/2910/improved-support-for-high-resolution-displays-with-the-srcset-image-attribute/","title":"Improved support for high-resolution displays with the srcset image attribute"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n d #1","33":"n d #1","34":"n d #1","35":"n d #1"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"a #2","35":"a #2","36":"a #2","37":"a #2","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"a #2"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"y","22":"y","23":"y","24":"a #2","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{"1":"Can be enabled in Firefox by setting the about:config preference dom.image.srcset.enabled to true","2":"Supports the subset of the syntax for resolution switching (using the `x` modifier), but not the full syntax that can be used with `sizes` (using the `w` modifier)."},"usage_perc_y":7.69,"usage_perc_a":30.23,"ucprefix":false,"parent":"","keywords":"","ie_id":"imgsrcset","chrome_id":"4644337115725824"},"ambient-light":{"title":"Ambient Light API","description":"Defines events that provide information about the ambient light level, as measured by a device's light sensor.","spec":"http://www.w3.org/TR/ambient-light/","status":"cr","links":[{"url":"http://aurelio.audero.it/demo/ambient-light-api-demo.html","title":"Demo"},{"url":"http://modernweb.com/2014/05/27/introduction-to-the-ambient-light-api/","title":"Article"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n","36":"n","37":"n","38":"n","39":"n","40":"n"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"Firefox desktop supports this API only on Mac OS X. [Support for Windows 7 is in progress](https://bugzilla.mozilla.org/show_bug.cgi?id=754199)","notes_by_num":{},"usage_perc_y":12.24,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"ambientlightevents","chrome_id":"5298357018820608"},"will-change":{"title":"CSS will-change property","description":"Method of optimizing animations by informing the browser which elements will change and what properties will change.","spec":"http://www.w3.org/TR/css-will-change-1/","status":"wd","links":[{"url":"http://dev.opera.com/articles/css-will-change-property/","title":"Detailed article"},{"url":"http://aerotwist.com/blog/bye-bye-layer-hacks/","title":"Blog post"}],"categories":["CSS"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n d #1","30":"n d #1","31":"n d #1","32":"n d #1","33":"n d #1","34":"n d #1","35":"n d #1"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"u"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"u"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"u"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{"1":"Supported in Firefox behind the `layout.css.will-change.enabled` flag"},"usage_perc_y":27.83,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"scroll-position","ie_id":"csswillchange","chrome_id":"5954199330226176"},"css-shapes":{"title":"CSS Shapes Level 1","description":"Allows geometric shapes to be set in CSS to define an area for text to flow around.","spec":"http://www.w3.org/TR/css-shapes/","status":"cr","links":[{"url":"http://html.adobe.com/webplatform/layout/shapes/","title":"Adobe demos and samples"},{"url":"http://html.adobe.com/webplatform/layout/shapes/browser-support/","title":"CSS shapes support test by Adobe"},{"url":"http://alistapart.com/article/css-shapes-101","title":"A List Apart article"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n d #1","35":"n d #1","36":"n d #1","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"y x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"y x"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"y"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{"1":"Enabled in Chrome through the \"experimental Web Platform features\" flag in chrome://flags"},"usage_perc_y":8.09,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"circle,ellipse,polygon,inset,shape-outside,shape-inside","ie_id":"shapes","chrome_id":"5163890719588352"},"domcontentloaded":{"title":"DOMContentLoaded","description":"JavaScript event that fires when the DOM is loaded, but before all page assets are loaded (CSS, images, etc.).","spec":"http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html","status":"other","links":[{"url":"https://developer.mozilla.org/en-US/docs/Web/Reference/Events/DOMContentLoaded","title":"MDN: DOMContentLoaded"}],"categories":["DOM"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"y","10":"y","11":"y"},"firefox":{"2":"y","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"y","9.5-9.6":"y","10.0-10.1":"y","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"y","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":89.08,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"dom,domready,onload,contentloaded,document","ie_id":"","chrome_id":""},"proximity":{"title":"Proximity API","description":"Defines events that provide information about the distance between a device and an object, as measured by a proximity sensor.","spec":"http://www.w3.org/TR/proximity/","status":"cr","links":[{"url":"http://aurelio.audero.it/demo/proximity-api-demo.html","title":"Demo"},{"url":"http://www.sitepoint.com/introducing-proximity-api/","title":"SitePoint article"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n","36":"n","37":"n","38":"n","39":"n","40":"n"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":12.89,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"kerning-pairs-ligatures":{"title":"Improved kerning pairs & ligatures","description":"Currently non-standard method of improving kerning pairs & ligatures using text-rendering: optimizeLegibility.","spec":"http://www.w3.org/TR/SVG11/painting.html#TextRenderingProperty","status":"unoff","links":[{"url":"https://developer.mozilla.org/en-US/docs/Web/CSS/text-rendering","title":"MDN article"},{"url":"http://css-tricks.com/almanac/properties/t/text-rendering/","title":"CSS Tricks article"}],"categories":["CSS"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"u","4.0-4.1":"u","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":71.55,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"optimizeLegibility,optimizeSpeed,geometricPrecision","ie_id":"","chrome_id":""},"iframe-seamless":{"title":"seamless attribute for iframes","description":"The seamless attribute makes an iframe's contents actually part of a page, and adopts the styles from its hosting page. ","spec":"http://www.w3.org/html/wg/drafts/html/master/single-page.html#attr-iframe-seamless","status":"wd","links":[{"url":"https://github.com/ornj/seamless-polyfill","title":"Experimental polyfill"},{"url":"http://labs.ft.com/2013/01/seamless-iframes-not-quite-seamless/","title":"Article"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"u","34":"u","35":"u"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n d","21":"n d","22":"n d","23":"n d","24":"n d","25":"n d","26":"n d","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n","36":"n","37":"n","38":"u","39":"u","40":"u"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"u"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"u","26":"u"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"u"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"Chrome 20-26 had partial support behind a flag, though this was [later removed](http://crbug.com/229421). \r\n\r\nSafari 7 (& iOS 7 Safari) hides the border of seamless iframes and recognizes the 'seamless' DOM property, but does not provide actual support.","notes_by_num":{},"usage_perc_y":0,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"iframeseamlessattribute","chrome_id":"6630329993396224"},"css-image-orientation":{"title":"CSS3 image-orientation","description":"CSS property used generally to fix the intended orientation of an image. This can be done using 90 degree increments or based on the image's EXIF data using the \"from-image\" value.","spec":"http://www.w3.org/TR/css3-images/#image-orientation","status":"cr","links":[{"url":"https://developer.mozilla.org/en-US/docs/Web/CSS/image-orientation","title":"MDN article"},{"url":"http://sethfowler.org/blog/2013/09/13/new-in-firefox-26-css-image-orientation/","title":"Blog post"},{"url":"http://jsbin.com/EXUTolo/4","title":"Demo (Chinese)"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n","36":"n","37":"n","38":"n","39":"n","40":"n"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n"},"ios_saf":{"3.2":"a","4.0-4.1":"a","4.2-4.3":"a","5.0-5.1":"a","6.0-6.1":"a","7.0-7.1":"a","8":"a"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"Partial support in iOS refers to the browser using EXIF data by default, though it does not actually support the property. Opening the image in a new tab in Chrome results in the image shown in the orientation according to the EXIF data.","notes_by_num":{},"usage_perc_y":11.81,"usage_perc_a":6.93,"ucprefix":false,"parent":"","keywords":"image-orientation,from-image,flip","ie_id":"","chrome_id":""},"picture":{"title":"Picture element","description":"A responsive images method to control which image resource a user agent presents to a user, based on resolution, media query and/or support for a particular image format","spec":"http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content.html#embedded-content","status":"wd","links":[{"url":"http://responsiveimages.org/demos/","title":"Demo"},{"url":"http://code.tutsplus.com/tutorials/better-responsive-images-with-the-picture-element--net-36583","title":"Tutorial"},{"url":"http://usecases.responsiveimages.org/","title":"Read about the use cases"},{"url":"http://responsiveimages.org/","title":"General information about Responsive Images"},{"url":"http://dev.opera.com/articles/responsive-images/","title":"Blog post on usage"},{"url":"http://www.html5rocks.com/tutorials/responsive/picture-element/","title":"HTML5 Rocks tutorial"}],"categories":["DOM","HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n d #3","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n","36":"n","37":"n d #1","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n d #2","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{"1":"Enabled in Chrome through the \"experimental Web Platform features\" flag in chrome://flags","2":"Enabled in Opera through the \"experimental Web Platform features\" flag in opera://flags","3":"Enabled in Firefox by setting the about:config preference dom.image.picture.enable to true"},"usage_perc_y":0.19,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"pictureelement","chrome_id":"5910974510923776"},"woff2":{"title":"WOFF 2.0 - A better web font compression format","description":"TrueType/OpenType font that provides better compression than WOFF 1.0.","spec":"http://www.w3.org/TR/WOFF2/","status":"wd","links":[{"url":"https://gist.github.com/sergejmueller/cf6b4f2133bcb3e2f64a","title":"Basics about WOFF 2.0"}],"categories":["Other"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"y"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":35.29,"usage_perc_a":0,"ucprefix":false,"parent":"fontface","keywords":"woff, fontface, webfonts","ie_id":"","chrome_id":"6718644721549312"},"text-size-adjust":{"title":"CSS text-size-adjust","description":"On mobile devices, the text-size-adjust CSS property allows Web authors to control if and how the text-inflating algorithm is applied to the textual content of the element it is applied to.","spec":"http://dev.w3.org/csswg/css-size-adjust/","status":"wd","links":[{"url":"https://developer.mozilla.org/en-US/docs/Web/CSS/text-size-adjust","title":"MDN Docs"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n","36":"n","37":"n","38":"n","39":"n","40":"n"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"y x","6.0-6.1":"y x","7.0-7.1":"y x","8":"y x"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"n"},"and_ff":{"32":"y x"},"ie_mob":{"10":"y x"}},"notes":"","notes_by_num":{},"usage_perc_y":7.5,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"web-animation":{"title":"Web Animations API","description":"This function lets you create an animation purely in JavaScript and have it run as efficiently as any CSS Animation or Transition.","spec":"http://dev.w3.org/fxtf/web-animations/","status":"wd","links":[{"url":"http://updates.html5rocks.com/2014/05/Web-Animations---element-animate-is-now-in-Chrome-36","title":"HTML5 Rocks"},{"url":"http://updates.html5rocks.com/2013/12/New-Web-Animations-engine-in-Blink-drives-CSS-Animations-Transitions","title":"HTML5 Rocks"}],"categories":["DOM","JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"y"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":35.29,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"js,animation,animate","ie_id":"webanimationsjavascriptapi","chrome_id":"4854343836631040"},"resource-timing":{"title":"Resource Timing","description":"Method to help web developers to collect complete timing information related to resources on a document.","spec":"http://www.w3.org/TR/resource-timing/","status":"cr","links":[{"url":"http://aurelio.audero.it/demo/resource-timing-api-demo.html","title":"Demo"},{"url":"http://googledevelopers.blogspot.com/2013/12/measuring-network-performance-with.html","title":"Blog post"},{"url":"http://www.sitepoint.com/introduction-resource-timing-api/","title":"SitePoint article"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n d #1","32":"n d #1","33":"n d #1","34":"n d #1","35":"n d #1"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"n"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{"1":"Can be enabled in Firefox using the dom.enable_resource_timing flag"},"usage_perc_y":52.27,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"performance,testing,resource","ie_id":"resourcetimingapi","chrome_id":"5796350423728128"},"custom-elements":{"title":"Custom Elements","description":"Method of defining and using new types of DOM elements in a document.","spec":"http://www.w3.org/TR/custom-elements/","status":"wd","links":[{"url":"http://w3c.github.io/webcomponents/spec/custom/","title":"W3C Editor's Draft spec (closer to current implementations)"},{"url":"http://www.polymer-project.org/platform/custom-elements.html","title":"Polymer project (polyfill & web components framework)"},{"url":"http://www.html5rocks.com/tutorials/webcomponents/customelements/","title":"HTML5Rocks - Custom Elements: defining new elements in HTML"},{"url":"https://code.google.com/p/chromium/issues/detail?id=234509","title":"Chromium tracking bug: Implement Custom Elements"},{"url":"https://bugzilla.mozilla.org/show_bug.cgi?id=889230","title":"Firefox tracking bug: Implement Custom Elements (from Web Components)"},{"url":"http://status.modern.ie/customelements","title":"IE Web Platform Status and Roadmap: Custom Elements"}],"categories":["DOM","HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"p","11":"p"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n d #1","24":"n d #1","25":"n d #1","26":"n d #1","27":"n d #1","28":"n d #1","29":"n d #1","30":"p d #1","31":"p d #1","32":"p d #1","33":"p d #1","34":"p d #1","35":"p d #1"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n d","28":"n d","29":"n d","30":"n d","31":"n d","32":"n d","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"p","6.1":"p","7":"p","8":"p"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n d","16":"n d","17":"n d","18":"n d","19":"n d","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"p","8":"p"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"u"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{"1":"Enabled through the \"dom.webcomponents.enabled\" preference in about:config"},"usage_perc_y":38.84,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"web components","ie_id":"customelements","chrome_id":"4642138092470272"},"imports":{"title":"HTML Imports","description":"Method of including and reusing HTML documents in other HTML documents.","spec":"http://www.w3.org/TR/html-imports/","status":"wd","links":[{"url":"http://www.polymer-project.org/platform/html-imports.html","title":"Polymer project (polyfill & web components framework)"},{"url":"http://www.html5rocks.com/tutorials/webcomponents/imports/","title":"HTML5Rocks - HTML Imports: #include for the web"},{"url":"https://code.google.com/p/chromium/issues/detail?id=240592","title":"Chromium tracking bug: Implement HTML Imports"},{"url":"https://bugzilla.mozilla.org/show_bug.cgi?id=877072","title":"Firefox tracking bug: Implement HTML Imports"},{"url":"http://status.modern.ie/htmlimports","title":"IE Web Platform Status and Roadmap: HTML Imports"}],"categories":["DOM","HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"p","11":"p"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"p","31":"p","32":"p d #1","33":"p d #1","34":"p d #1","35":"p d #1"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n d #2","31":"n d #2","32":"n d #2","33":"n d #2","34":"n d #2","35":"p d #3","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"p","6.1":"p","7":"p","8":"p"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n d #4","18":"n d #4","19":"n d #4","20":"n d #4","21":"n d #4","22":"p d #5","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"p","8":"p"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"u"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"y"},"and_ff":{"32":"p"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{"1":"Enabled through the \"dom.webcomponents.enabled\" preference in about:config","2":"Enabled through the \"Enable HTML Imports\" flag in chrome://flags","3":"Enabled through the \"Experimental Web Platform features\" flag in chrome://flags","4":"Enabled through the \"Enable HTML Imports\" flag in opera://flags","5":"Enabled through the \"Experimental Web Platform features\" flag in opera://flags"},"usage_perc_y":35.29,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"web components","ie_id":"htmlimports","chrome_id":"5144752345317376"},"input-file-multiple":{"title":"Multiple file selection","description":"Allows users to select multiple files in the file picker.","spec":"http://www.w3.org/TR/html5/forms.html#attr-input-multiple","status":"wd","links":[{"url":"https://code.google.com/p/chromium/issues/detail?id=348912","title":"Chrome bug (for Android)"},{"url":"http://www.raymondcamden.com/2012/2/28/Working-with-HTML5s-multiple-file-upload-support","title":"Article"}],"categories":["HTML5"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n #1"},"android":{"2.1":"n #1","2.2":"n #1","2.3":"n #1","3":"n #1","4":"n #1","4.1":"n #1","4.2-4.3":"n #1","4.4":"n #1","4.4.3":"n #1"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n #1","11":"n #1","11.1":"n #1","11.5":"n #1","12":"n #1","12.1":"n #1","22":"n #1"},"and_chr":{"37":"n #1"},"and_ff":{"32":"n #1"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{"1":"Not supported when tested on Android, presumably an OS limitation. "},"usage_perc_y":68.53,"usage_perc_a":0,"ucprefix":false,"parent":"forms","keywords":"","ie_id":"","chrome_id":""},"atob-btoa":{"title":"Base64 encoding and decoding","description":"Utility functions for of encoding and decoding strings to and from base 64: window.atob() and window.btoa().","spec":"http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#atob","status":"other","links":[{"url":"https://developer.mozilla.org/en-US/docs/Web/API/Window.btoa","title":"MDN article on btoa()"},{"url":"https://developer.mozilla.org/en-US/docs/Web/API/Window.atob","title":"MDN article on atob()"},{"url":"https://github.com/davidchambers/Base64.js","title":"Polyfill"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y","11":"y"},"firefox":{"2":"y","3":"y","3.5":"y","3.6":"y","4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"y","5":"y","6":"y","7":"y","8":"y","9":"y","10":"y","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"y","3.2":"y","4":"y","5":"y","5.1":"y","6":"y","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"u","10.0-10.1":"u","10.5":"u","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"y","4.0-4.1":"y","4.2-4.3":"y","5.0-5.1":"y","6.0-6.1":"y","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3":"y"},"bb":{"7":"y","10":"y"},"op_mob":{"10":"u","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":86.58,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"atob,btoa","ie_id":"","chrome_id":""},"css-appearance":{"title":"CSS Appearance","description":"The `appearance` property defines how elements (particularly form controls) appear by default. By setting the value to `none` the default appearance can be entirely redefined using other CSS properties.","spec":"http://wiki.csswg.org/spec/css4-ui#appearance","status":"unoff","links":[{"url":"http://css-tricks.com/almanac/properties/a/appearance/","title":"CSS Tricks article"}],"categories":["CSS"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"y x","3":"y x","3.5":"y x","3.6":"y x","4":"y x","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x"},"chrome":{"4":"y x","5":"y x","6":"y x","7":"y x","8":"y x","9":"y x","10":"y x","11":"y x","12":"y x","13":"y x","14":"y x","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x","27":"y x","28":"y x","29":"y x","30":"y x","31":"y x","32":"y x","33":"y x","34":"y x","35":"y x","36":"y x","37":"y x","38":"y x","39":"y x","40":"y x"},"safari":{"3.1":"y x","3.2":"y x","4":"y x","5":"y x","5.1":"y x","6":"y x","6.1":"y x","7":"y x","8":"y x"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y x","16":"y x","17":"y x","18":"y x","19":"y x","20":"y x","21":"y x","22":"y x","23":"y x","24":"y x","25":"y x","26":"y x"},"ios_saf":{"3.2":"y x","4.0-4.1":"y x","4.2-4.3":"y x","5.0-5.1":"y x","6.0-6.1":"y x","7.0-7.1":"y x","8":"y x"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"y x","2.2":"y x","2.3":"y x","3":"y x","4":"y x","4.1":"y x","4.2-4.3":"y x","4.4":"y x","4.4.3":"y x"},"bb":{"7":"y x","10":"y x"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y x"},"and_chr":{"37":"y x"},"and_ff":{"32":"y x"},"ie_mob":{"10":"n"}},"notes":"The `appearance` property currently does not appear in any CSS specification so there is no specifically correct usage.","notes_by_num":{},"usage_perc_y":72.72,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"css-background-offsets":{"title":"CSS background-position edge offsets","description":"Allows CSS background images to be positioned relative to the specified edge using the 3 to 4 value syntax. For example: `background-position: right 5px bottom 5px;` for positioning 5px from the bottom-right corner.","spec":"http://www.w3.org/TR/css3-background/#background-position","status":"wd","links":[{"url":"https://developer.mozilla.org/en-US/docs/Web/CSS/background-position","title":"MDN article on background-position"},{"url":"http://briantree.se/quick-tip-06-use-four-value-syntax-properly-position-background-images/","title":"Basic information"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"y","10":"y","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"y","10.6":"y","11":"y","11.1":"y","11.5":"y","11.6":"y","12":"y","12.1":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"y"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"y"},"op_mob":{"10":"n","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"y"}},"notes":"","notes_by_num":{},"usage_perc_y":79.78,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"4 value syntax","ie_id":"","chrome_id":""},"css-supports-api":{"title":"CSS.supports() DOM API","description":"The CSS.supports() static methods returns a Boolean value indicating if the browser supports a given CSS feature, or not.","spec":"http://dev.w3.org/csswg/css-conditional/#the-css-interface","status":"cr","links":[{"url":"https://developer.mozilla.org/en-US/docs/Web/API/CSS.supports","title":"MDN Docs"},{"url":"http://jsbin.com/rimevilotari/1/edit","title":"Demo (Chinese)"},{"url":"http://dev.opera.com/articles/native-css-feature-detection/","title":"Native CSS Feature Detection via the @supports Rule"},{"url":"http://davidwalsh.name/css-supports","title":"CSS @supports"},{"url":"http://blog.csdn.net/hfahe/article/details/8619480","title":"Article (Chinese)"}],"categories":["DOM","JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n d","21":"n d","22":"n d","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"u"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"y #1","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"y","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"See also [@supports in CSS](#feat=css-featurequeries)\r\n\r\nSee the [WebKit Bug](http://trac.webkit.org/changeset/142739) for status in Safari","notes_by_num":{"1":"Opera 12 uses a different method name('window.supportsCSS')"},"usage_perc_y":54.01,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"conditional","ie_id":"conditionalrules","chrome_id":"4993981813358592"},"css-touch-action":{"title":"CSS touch-action property","description":"touch-action is a CSS property that controls filtering of gesture events, providing developers with a declarative mechanism to selectively disable touch scrolling (in one or both axes), pinch-zooming or double-tap-zooming.","spec":"http://www.w3.org/TR/pointerevents/#the-touch-action-css-property","status":"cr","links":[{"url":"http://docs.webplatform.org/wiki/css/properties/touch-action","title":"WebPlatform Docs"},{"url":"http://msdn.microsoft.com/en-us/library/windows/apps/hh767313.aspx","title":"MSDN Docs"},{"url":"http://updates.html5rocks.com/2013/12/300ms-tap-delay-gone-away","title":"300ms tap delay, gone away"},{"url":"http://blogs.telerik.com/appbuilder/posts/13-11-21/what-exactly-is.....-the-300ms-click-delay","title":"What Exactly Is..... The 300ms Click Delay"},{"url":"http://thx.github.io/mobile/300ms-click-delay/","title":"What Exactly Is..... The 300ms Click Delay(Chinese)"}],"categories":["CSS"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"y x #2","11":"y"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n d #1","30":"n d #1","31":"n d #1","32":"n d #1","33":"n d #1","34":"n d #1","35":"n d #1"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"u"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"n"},"and_chr":{"37":"y"},"and_ff":{"32":"n"},"ie_mob":{"10":"y x #2"}},"notes":"","notes_by_num":{"1":"Supported in Firefox behind the `layout.css.touch_action.enabled` flag, Firefox for Windows 8 Touch ('Metro') enabled by default.","2":"IE10+ has already supported these property which are not in standard at present such as'pinch-zoom','double-tap-zoom','cross-slide-x','cross-slide-y'."},"usage_perc_y":45.36,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"touch action","ie_id":"csstouchaction","chrome_id":"5912074022551552"},"css-clip-path":{"title":"CSS clip-path property","description":"Method of defining the visible region of an element using SVG or a shape definition.","spec":"http://www.w3.org/TR/css-masking-1/#the-clip-path","status":"wd","links":[{"url":"http://css-tricks.com/almanac/properties/c/clip/","title":"CSS Tricks article"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"a #1","3.6":"a #1","4":"a #1","5":"a #1","6":"a #1","7":"a #1","8":"a #1","9":"a #1","10":"a #1","11":"a #1","12":"a #1","13":"a #1","14":"a #1","15":"a #1","16":"a #1","17":"a #1","18":"a #1","19":"a #1","20":"a #1","21":"a #1","22":"a #1","23":"a #1","24":"a #1","25":"a #1","26":"a #1","27":"a #1","28":"a #1","29":"a #1","30":"a #1","31":"a #1","32":"a #1","33":"a #1","34":"a #1","35":"a #1"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"a x #2","25":"a x #2","26":"a x #2","27":"a x #2","28":"a x #2","29":"a x #2","30":"a x #2","31":"a x #2","32":"a x #2","33":"a x #2","34":"a x #2","35":"a x #2","36":"a x #2","37":"a x #2","38":"a x #2","39":"a x #2","40":"a x #2"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"a x #2","8":"a x #2"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"a x #2","16":"a x #2","17":"a x #2","18":"a x #2","19":"a x #2","20":"a x #2","21":"a x #2","22":"a x #2","23":"a x #2","24":"a x #2","25":"a x #2","26":"a x #2"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"a x #2","8":"a x #2"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"a x #2","4.4.3":"a x #2"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"a x #2"},"and_chr":{"37":"a x #2"},"and_ff":{"32":"a #1"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{"1":"Partial support refers to only supporting the `url()` syntax.","2":"Partial support refers to supporting shapes and the `url(#foo)` syntax for inline SVG, but not shapes in external SVGs."},"usage_perc_y":0,"usage_perc_a":64.02,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"getrandomvalues":{"title":"crypto.getRandomValues()","description":"Method of generating cryptographically random values.","spec":"http://www.w3.org/TR/WebCryptoAPI/#RandomSource-method-getRandomValues","status":"wd","links":[{"url":"https://developer.mozilla.org/en-US/docs/Web/API/window.crypto.getRandomValues","title":"MDN article"}],"categories":["JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"y x"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"y","12":"y","13":"y","14":"y","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y","30":"y","31":"y","32":"y","33":"y","34":"y","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"y","7":"y","8":"y"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"y","16":"y","17":"y","18":"y","19":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"y","8":"y"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3":"y"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"y"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":71.8,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":""},"font-loading":{"title":"CSS Font Loading","description":"This CSS module defines a scripting interface to font faces in CSS, allowing font faces to be easily created and loaded from script. It also provides methods to track the loading status of an individual font, or of all the fonts on an entire page.","spec":"http://dev.w3.org/csswg/css-font-loading/","status":"cr","links":[{"url":"https://www.igvita.com/2014/01/31/optimizing-web-font-rendering-performance/#font-load-events","title":"Optimizing with font load events"}],"categories":["CSS3","JS API"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n"},"chrome":{"4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"y","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"n","3.2":"n","4":"n","5":"n","5.1":"n","6":"n","6.1":"n","7":"n","8":"n"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"y","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"n","4.0-4.1":"n","4.2-4.3":"n","5.0-5.1":"n","6.0-6.1":"n","7.0-7.1":"n","8":"n"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3":"n"},"bb":{"7":"n","10":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"y"},"and_chr":{"37":"y"},"and_ff":{"32":"n"},"ie_mob":{"10":"n"}},"notes":"","notes_by_num":{},"usage_perc_y":37.19,"usage_perc_a":0,"ucprefix":false,"parent":"","keywords":"","ie_id":"","chrome_id":"6244676289953792"},"font-unicode-range":{"title":"Font unicode-range subsetting","description":"This @font-face descriptor defines the set of Unicode codepoints that may be supported by the font face for which it is declared. The descriptor value is a comma-delimited list of Unicode range (<urange>) values. The union of these ranges defines the set of codepoints that serves as a hint for user agents when deciding whether or not to download a font resource for a given text run.","spec":"http://dev.w3.org/csswg/css-fonts/#descdef-unicode-range","status":"cr","links":[{"url":"https://developer.mozilla.org/en-US/docs/Web/CSS/unicode-range","title":"MDN: unicode-range"},{"url":"https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariCSSRef/Articles/StandardCSSProperties.html#//apple_ref/css/property/unicode-range","title":"Safari CSS Reference: unicode-range"},{"url":"http://docs.webplatform.org/wiki/css/properties/unicode-range","title":"Web Platform Docs: unicode-range"}],"categories":["CSS3"],"stats":{"ie":{"5.5":"n","6":"n","7":"n","8":"n","9":"a","10":"a","11":"a"},"firefox":{"2":"n","3":"n","3.5":"n","3.6":"n","4":"n","5":"n","6":"n","7":"n","8":"n","9":"n","10":"n","11":"n","12":"n","13":"n","14":"n","15":"n","16":"n","17":"n","18":"n","19":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n","30":"n","31":"n","32":"n","33":"n","34":"n","35":"n"},"chrome":{"4":"a","5":"a","6":"a","7":"a","8":"a","9":"a","10":"a","11":"a","12":"a","13":"a","14":"a","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"a","29":"a","30":"a","31":"a","32":"a","33":"a","34":"a","35":"a","36":"y","37":"y","38":"y","39":"y","40":"y"},"safari":{"3.1":"a","3.2":"a","4":"a","5":"a","5.1":"a","6":"a","6.1":"a","7":"a","8":"a"},"opera":{"9":"n","9.5-9.6":"n","10.0-10.1":"n","10.5":"n","10.6":"n","11":"n","11.1":"n","11.5":"n","11.6":"n","12":"n","12.1":"n","15":"a","16":"a","17":"a","18":"a","19":"a","20":"a","21":"a","22":"a","23":"y","24":"y","25":"y","26":"y"},"ios_saf":{"3.2":"a","4.0-4.1":"a","4.2-4.3":"a","5.0-5.1":"a","6.0-6.1":"a","7.0-7.1":"a","8":"a"},"op_mini":{"5.0-7.0":"n"},"android":{"2.1":"a","2.2":"a","2.3":"a","3":"a","4":"a","4.1":"a","4.2-4.3":"a","4.4":"a","4.4.3":"a"},"bb":{"7":"u","10":"u"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","22":"a"},"and_chr":{"37":"y"},"and_ff":{"32":"a"},"ie_mob":{"10":"a"}},"notes":"Partial support indicates that unnecessary code-ranges are downloaded by the browser - see [browser test matrix](https://docs.google.com/a/chromium.org/spreadsheets/d/18h-1gaosu4-KYxH8JUNL6ZDuOsOKmWfauoai3CS3hPY/edit?pli=1#gid=0).","notes_by_num":{},"usage_perc_y":35.29,"usage_perc_a":36.48,"ucprefix":false,"parent":"","keywords":"font face,unicode,unicode-range","ie_id":"","chrome_id":""}}}
+},{}],52:[function(require,module,exports){
+module.exports={
+  "title":"CSS3 Background-image options",
+  "description":"New properties to affect background images, including background-clip, background-origin and background-size",
+  "spec":"http://www.w3.org/TR/css3-background/#backgrounds",
+  "status":"cr",
+  "links":[
+    {
+      "url":"http://www.standardista.com/css3/css3-background-properties",
+      "title":"Detailed compatibility tables and demos"
+    },
+    {
+      "url":"http://www.css3files.com/background/",
+      "title":"Information page"
+    },
+    {
+      "url":"https://github.com/louisremi/background-size-polyfill",
+      "title":"Polyfill for IE7-8"
     }
-
-    AtRule.prototype.styleType = function() {
-      return this.type + ((this.rules != null) || (this.decls != null) ? '-body' : '-bodiless');
-    };
-
-    AtRule.prototype.defaultStyle = function(type) {
-      if (type === 'atrule-body') {
-        return {
-          between: ' ',
-          after: this.defaultAfter()
-        };
-      } else {
-        return {
-          between: ''
-        };
-      }
-    };
-
-    AtRule.prototype.addMixin = function(type) {
-      var container, detector, mixin, name, value, _ref;
-      mixin = type === 'rules' ? Container.WithRules : Container.WithDecls;
-      if (!mixin) {
-        return;
-      }
-      _ref = mixin.prototype;
-      for (name in _ref) {
-        value = _ref[name];
-        if (name === 'constructor') {
-          continue;
-        }
-        container = Container.prototype[name] === value;
-        detector = name === 'append' || name === 'prepend';
-        if (container && !detector) {
-          continue;
-        }
-        this[name] = value;
-      }
-      return mixin.apply(this);
-    };
-
-    AtRule.raw('params');
-
-    AtRule.prototype.stringify = function(builder, last) {
-      var name, params, semicolon, style;
-      style = this.style();
-      name = '@' + this.name;
-      params = this._params ? this._params.toString() : '';
-      name += this.afterName != null ? this.afterName : params ? ' ' : '';
-      if ((this.rules != null) || (this.decls != null)) {
-        return this.stringifyBlock(builder, name + params + style.between + '{');
-      } else {
-        if (this.before) {
-          builder(this.before);
-        }
-        semicolon = !last || this.semicolon ? ';' : '';
-        return builder(name + params + style.between + semicolon, this);
-      }
-    };
-
-    return AtRule;
-
-  })(Container);
-
-  _ref = ['append', 'prepend'];
-  _fn = function(name) {
-    return AtRule.prototype[name] = function(child) {
-      var mixin;
-      mixin = child.type === 'decl' ? 'decls' : 'rules';
-      this.addMixin(mixin);
-      return this[name](child);
-    };
-  };
-  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-    name = _ref[_i];
-    _fn(name);
-  }
-
-  module.exports = AtRule;
-
-}).call(this);
-
-},{"./container":46}],45:[function(_dereq_,module,exports){
-(function() {
-  var Comment, Node,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  Node = _dereq_('./node');
-
-  Comment = (function(_super) {
-    __extends(Comment, _super);
-
-    function Comment() {
-      this.type = 'comment';
-      Comment.__super__.constructor.apply(this, arguments);
+  ],
+  "bugs":[
+    {
+      "description":"iOS Safari has buggy behavior with `background-size: cover;` on a page's body."
     }
-
-    Comment.prototype.defaultStyle = function() {
-      return {
-        left: ' ',
-        right: ' '
-      };
-    };
-
-    Comment.prototype.stringify = function(builder) {
-      var style;
-      if (this.before) {
-        builder(this.before);
-      }
-      style = this.style();
-      return builder("/*" + (style.left + this.text + style.right) + "*/", this);
-    };
-
-    return Comment;
-
-  })(Node);
-
-  module.exports = Comment;
-
-}).call(this);
-
-},{"./node":51}],46:[function(_dereq_,module,exports){
-(function() {
-  var Container, Declaration, Node,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  Node = _dereq_('./node');
-
-  Declaration = _dereq_('./declaration');
-
-  Container = (function(_super) {
-    __extends(Container, _super);
-
-    function Container() {
-      return Container.__super__.constructor.apply(this, arguments);
+  ],
+  "categories":[
+    "CSS3"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"y",
+      "10":"y",
+      "11":"y"
+    },
+    "firefox":{
+      "2":"n",
+      "3":"n",
+      "3.5":"n",
+      "3.6":"a x",
+      "4":"y",
+      "5":"y",
+      "6":"y",
+      "7":"y",
+      "8":"y",
+      "9":"y",
+      "10":"y",
+      "11":"y",
+      "12":"y",
+      "13":"y",
+      "14":"y",
+      "15":"y",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y",
+      "27":"y",
+      "28":"y",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y"
+    },
+    "chrome":{
+      "4":"y",
+      "5":"y",
+      "6":"y",
+      "7":"y",
+      "8":"y",
+      "9":"y",
+      "10":"y",
+      "11":"y",
+      "12":"y",
+      "13":"y",
+      "14":"y",
+      "15":"y",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y",
+      "27":"y",
+      "28":"y",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y",
+      "36":"y",
+      "37":"y",
+      "38":"y",
+      "39":"y",
+      "40":"y"
+    },
+    "safari":{
+      "3.1":"a",
+      "3.2":"a",
+      "4":"a",
+      "5":"y",
+      "5.1":"y",
+      "6":"a",
+      "6.1":"a",
+      "7":"a",
+      "8":"a"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"a x",
+      "10.5":"y",
+      "10.6":"y",
+      "11":"y",
+      "11.1":"y",
+      "11.5":"y",
+      "11.6":"y",
+      "12":"y",
+      "12.1":"y",
+      "15":"y",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y"
+    },
+    "ios_saf":{
+      "3.2":"a",
+      "4.0-4.1":"y",
+      "4.2-4.3":"y",
+      "5.0-5.1":"y",
+      "6.0-6.1":"y",
+      "7.0-7.1":"y",
+      "8":"y"
+    },
+    "op_mini":{
+      "5.0-7.0":"a"
+    },
+    "android":{
+      "2.1":"a x",
+      "2.2":"y x",
+      "2.3":"y x",
+      "3":"y",
+      "4":"y",
+      "4.1":"y",
+      "4.2-4.3":"y",
+      "4.4":"y",
+      "4.4.3":"y"
+    },
+    "bb":{
+      "7":"y",
+      "10":"y"
+    },
+    "op_mob":{
+      "10":"y",
+      "11":"y",
+      "11.1":"y",
+      "11.5":"y",
+      "12":"y",
+      "12.1":"y",
+      "22":"y"
+    },
+    "and_chr":{
+      "37":"y"
+    },
+    "and_ff":{
+      "32":"y"
+    },
+    "ie_mob":{
+      "10":"y"
     }
+  },
+  "notes":"Partial support in Opera Mini refers to not supporting background sizing or background attachments. However Opera Mini 7.5 supports background sizing (including cover and contain values). Partial support in Safari 6 refers to not supporting background sizing offset from edges syntax.",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":82.85,
+  "usage_perc_a":6.14,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"",
+  "ie_id":"",
+  "chrome_id":"",
+  "shown":true
+}
+},{}],53:[function(require,module,exports){
+module.exports={
+  "title":"CSS3 Border images",
+  "description":"Method of using images for borders",
+  "spec":"http://www.w3.org/TR/css3-background/#the-border-image",
+  "status":"cr",
+  "links":[
+    {
+      "url":"http://www.css3files.com/border/",
+      "title":"Information page"
+    },
+    {
+      "url":"http://docs.webplatform.org/wiki/css/properties/border-image",
+      "title":"WebPlatform Docs"
+    }
+  ],
+  "bugs":[
+    
+  ],
+  "categories":[
+    "CSS3"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"y"
+    },
+    "firefox":{
+      "2":"n",
+      "3":"n",
+      "3.5":"a x",
+      "3.6":"a x",
+      "4":"a x",
+      "5":"a x",
+      "6":"a x",
+      "7":"a x",
+      "8":"a x",
+      "9":"a x",
+      "10":"a x",
+      "11":"a x",
+      "12":"a x",
+      "13":"a x",
+      "14":"a x",
+      "15":"y",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y",
+      "27":"y",
+      "28":"y",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y"
+    },
+    "chrome":{
+      "4":"a x",
+      "5":"a x",
+      "6":"a x",
+      "7":"a x",
+      "8":"a x",
+      "9":"a x",
+      "10":"a x",
+      "11":"a x",
+      "12":"a x",
+      "13":"a x",
+      "14":"a x",
+      "15":"y x",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y",
+      "27":"y",
+      "28":"y",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y",
+      "36":"y",
+      "37":"y",
+      "38":"y",
+      "39":"y",
+      "40":"y"
+    },
+    "safari":{
+      "3.1":"a x",
+      "3.2":"a x",
+      "4":"a x",
+      "5":"a x",
+      "5.1":"a x",
+      "6":"y",
+      "6.1":"y",
+      "7":"y",
+      "8":"y"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"a",
+      "10.6":"a",
+      "11":"a x",
+      "11.1":"a x",
+      "11.5":"a x",
+      "11.6":"a x",
+      "12":"a x",
+      "12.1":"a x",
+      "15":"y",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y"
+    },
+    "ios_saf":{
+      "3.2":"a x",
+      "4.0-4.1":"a x",
+      "4.2-4.3":"a x",
+      "5.0-5.1":"a x",
+      "6.0-6.1":"y",
+      "7.0-7.1":"y",
+      "8":"y"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"a x",
+      "2.2":"a x",
+      "2.3":"a x",
+      "3":"a x",
+      "4":"a x",
+      "4.1":"a x",
+      "4.2-4.3":"a x",
+      "4.4":"y",
+      "4.4.3":"y"
+    },
+    "bb":{
+      "7":"a x",
+      "10":"y"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"a x",
+      "11.1":"a x",
+      "11.5":"a x",
+      "12":"a x",
+      "12.1":"a x",
+      "22":"y"
+    },
+    "and_chr":{
+      "37":"y"
+    },
+    "and_ff":{
+      "32":"y"
+    },
+    "ie_mob":{
+      "10":"n"
+    }
+  },
+  "notes":"Note that both the border-style and border-width must be specified for border-images to work according to spec, though older implementations may not have this requirement. Partial support refers to supporting the shorthand syntax, but not the individual properties (border-image-source, border-image-slice, etc). ",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":72.55,
+  "usage_perc_a":7.79,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"",
+  "ie_id":"",
+  "chrome_id":"",
+  "shown":true
+}
+},{}],54:[function(require,module,exports){
+module.exports={
+  "title":"CSS3 Border-radius (rounded corners)",
+  "description":"Method of making the border corners round",
+  "spec":"http://www.w3.org/TR/css3-background/#the-border-radius",
+  "status":"cr",
+  "links":[
+    {
+      "url":"http://border-radius.com",
+      "title":"Border-radius CSS Generator"
+    },
+    {
+      "url":"http://muddledramblings.com/table-of-css3-border-radius-compliance",
+      "title":"Detailed compliance table"
+    },
+    {
+      "url":"http://www.css3files.com/border/#borderradius",
+      "title":"Information page"
+    },
+    {
+      "url":"http://css3pie.com/",
+      "title":"Polyfill which includes border-radius"
+    },
+    {
+      "url":"http://docs.webplatform.org/wiki/css/properties/border-radius",
+      "title":"WebPlatform Docs"
+    }
+  ],
+  "bugs":[
+    {
+      "description":"Safari does not apply border-radius correctly to image borders: http://stackoverflow.com/q/17202128"
+    },
+    {
+      "description":"Android Browser 2.3 does not support % value for border-radius."
+    },
+    {
+      "description":"Border-radius does not work on fieldset elements in IE9."
+    },
+    {
+      "description":"The stock browser on the Samsung Galaxy S4 with Android 4.2 does not support the \"border-radius\" shorthand property but does support the long-hand properties for each corner like \"border-top-left-radius\"."
+    }
+  ],
+  "categories":[
+    "CSS3"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"y",
+      "10":"y",
+      "11":"y"
+    },
+    "firefox":{
+      "2":"a x",
+      "3":"y x",
+      "3.5":"y x",
+      "3.6":"y x",
+      "4":"y",
+      "5":"y",
+      "6":"y",
+      "7":"y",
+      "8":"y",
+      "9":"y",
+      "10":"y",
+      "11":"y",
+      "12":"y",
+      "13":"y",
+      "14":"y",
+      "15":"y",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y",
+      "27":"y",
+      "28":"y",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y"
+    },
+    "chrome":{
+      "4":"y x",
+      "5":"y",
+      "6":"y",
+      "7":"y",
+      "8":"y",
+      "9":"y",
+      "10":"y",
+      "11":"y",
+      "12":"y",
+      "13":"y",
+      "14":"y",
+      "15":"y",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y",
+      "27":"y",
+      "28":"y",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y",
+      "36":"y",
+      "37":"y",
+      "38":"y",
+      "39":"y",
+      "40":"y"
+    },
+    "safari":{
+      "3.1":"y x",
+      "3.2":"y x",
+      "4":"y x",
+      "5":"y",
+      "5.1":"y",
+      "6":"y",
+      "6.1":"y",
+      "7":"y",
+      "8":"y"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"y",
+      "10.6":"y",
+      "11":"y",
+      "11.1":"y",
+      "11.5":"y",
+      "11.6":"y",
+      "12":"y",
+      "12.1":"y",
+      "15":"y",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y"
+    },
+    "ios_saf":{
+      "3.2":"y x",
+      "4.0-4.1":"y",
+      "4.2-4.3":"y",
+      "5.0-5.1":"y",
+      "6.0-6.1":"y",
+      "7.0-7.1":"y",
+      "8":"y"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"y x",
+      "2.2":"y",
+      "2.3":"y",
+      "3":"y",
+      "4":"y",
+      "4.1":"y",
+      "4.2-4.3":"y",
+      "4.4":"y",
+      "4.4.3":"y"
+    },
+    "bb":{
+      "7":"y",
+      "10":"y"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"y",
+      "11.1":"y",
+      "11.5":"y",
+      "12":"y",
+      "12.1":"y",
+      "22":"y"
+    },
+    "and_chr":{
+      "37":"y"
+    },
+    "and_ff":{
+      "32":"y"
+    },
+    "ie_mob":{
+      "10":"y"
+    }
+  },
+  "notes":"",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":85.68,
+  "usage_perc_a":0.01,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"roundedcorners, border radius,-moz-border-radius",
+  "ie_id":"",
+  "chrome_id":"",
+  "shown":true
+}
+},{}],55:[function(require,module,exports){
+module.exports={
+  "title":"calc() as CSS unit value",
+  "description":"Method of allowing calculated values for length units, i.e. `width: calc(100% - 3em)`",
+  "spec":"http://www.w3.org/TR/css3-values/#calc",
+  "status":"cr",
+  "links":[
+    {
+      "url":"http://hacks.mozilla.org/2010/06/css3-calc/",
+      "title":"Mozilla Hacks article"
+    },
+    {
+      "url":"https://developer.mozilla.org/en/CSS/-moz-calc",
+      "title":"MDN article"
+    },
+    {
+      "url":"http://docs.webplatform.org/wiki/css/functions/calc",
+      "title":"WebPlatform Docs"
+    }
+  ],
+  "bugs":[
+    {
+      "description":"Webkit doesn't support viewport units in `calc()` expressions: https://bugs.webkit.org/show_bug.cgi?id=94158 and https://code.google.com/p/chromium/issues/detail?id=168840; Blink added support with Revision 172971"
+    },
+    {
+      "description":"`calc()` doesn't work [inside a transform in IE](http://connect.microsoft.com/IE/feedback/details/814380/css3-using-calc-inside-a-transform-is-invalid)"
+    },
+    {
+      "description":"IE9 appears to ignore `calc()` expressions when `display:table` is used."
+    },
+    {
+      "description":"Safari 6 has a bug where an element with a width defined using `calc()` has its width reset when changing the height using JS (fixed in Safari 7)."
+    }
+  ],
+  "categories":[
+    "CSS3"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"a",
+      "10":"y",
+      "11":"y"
+    },
+    "firefox":{
+      "2":"n",
+      "3":"n",
+      "3.5":"n",
+      "3.6":"n",
+      "4":"y x",
+      "5":"y x",
+      "6":"y x",
+      "7":"y x",
+      "8":"y x",
+      "9":"y x",
+      "10":"y x",
+      "11":"y x",
+      "12":"y x",
+      "13":"y x",
+      "14":"y x",
+      "15":"y x",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y",
+      "27":"y",
+      "28":"y",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y"
+    },
+    "chrome":{
+      "4":"n",
+      "5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n",
+      "12":"n",
+      "13":"n",
+      "14":"n",
+      "15":"n",
+      "16":"n",
+      "17":"n",
+      "18":"n",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y",
+      "27":"y",
+      "28":"y",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y",
+      "36":"y",
+      "37":"y",
+      "38":"y",
+      "39":"y",
+      "40":"y"
+    },
+    "safari":{
+      "3.1":"n",
+      "3.2":"n",
+      "4":"n",
+      "5":"n",
+      "5.1":"n",
+      "6":"y x",
+      "6.1":"y",
+      "7":"y",
+      "8":"y"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"n",
+      "10.6":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "11.6":"n",
+      "12":"n",
+      "12.1":"n",
+      "15":"y",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y"
+    },
+    "ios_saf":{
+      "3.2":"n",
+      "4.0-4.1":"n",
+      "4.2-4.3":"n",
+      "5.0-5.1":"n",
+      "6.0-6.1":"y x",
+      "7.0-7.1":"y",
+      "8":"y"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"n",
+      "2.2":"n",
+      "2.3":"n",
+      "3":"n",
+      "4":"n",
+      "4.1":"n",
+      "4.2-4.3":"n",
+      "4.4":"y",
+      "4.4.3":"y"
+    },
+    "bb":{
+      "7":"n",
+      "10":"y x"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "12":"n",
+      "12.1":"n",
+      "22":"y"
+    },
+    "and_chr":{
+      "37":"y"
+    },
+    "and_ff":{
+      "32":"y"
+    },
+    "ie_mob":{
+      "10":"y"
+    }
+  },
+  "notes":"Support can be somewhat emulated in older versions of IE using the non-standard `expression()` syntax. Partial support in IE9 refers to the browser crashing when used as a `background-position` value.",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":75.69,
+  "usage_perc_a":2.46,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"",
+  "ie_id":"csscalc",
+  "chrome_id":"5765241438732288",
+  "shown":true
+}
+},{}],56:[function(require,module,exports){
+module.exports={
+  "title":"CSS3 Animation",
+  "description":"Complex method of animating certain properties of an element",
+  "spec":"http://www.w3.org/TR/css3-animations/",
+  "status":"wd",
+  "links":[
+    {
+      "url":"http://robertnyman.com/2010/05/06/css3-animations/",
+      "title":"Blog post on usage"
+    },
+    {
+      "url":"http://www.css3files.com/animation/",
+      "title":"Information page"
+    },
+    {
+      "url":"http://docs.webplatform.org/wiki/css/properties/animations",
+      "title":"WebPlatform Docs"
+    }
+  ],
+  "bugs":[
+    {
+      "description":"'animation-fill-mode' property is not supported in Android browser below 2.3."
+    },
+    {
+      "description":"iOS 6.1 and below do not support animation on pseudo-elements."
+    }
+  ],
+  "categories":[
+    "CSS3"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"y",
+      "11":"y"
+    },
+    "firefox":{
+      "2":"n",
+      "3":"n",
+      "3.5":"n",
+      "3.6":"n",
+      "4":"n",
+      "5":"y x",
+      "6":"y x",
+      "7":"y x",
+      "8":"y x",
+      "9":"y x",
+      "10":"y x",
+      "11":"y x",
+      "12":"y x",
+      "13":"y x",
+      "14":"y x",
+      "15":"y x",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y",
+      "27":"y",
+      "28":"y",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y"
+    },
+    "chrome":{
+      "4":"y x",
+      "5":"y x",
+      "6":"y x",
+      "7":"y x",
+      "8":"y x",
+      "9":"y x",
+      "10":"y x",
+      "11":"y x",
+      "12":"y x",
+      "13":"y x",
+      "14":"y x",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x",
+      "27":"y x",
+      "28":"y x",
+      "29":"y x",
+      "30":"y x",
+      "31":"y x",
+      "32":"y x",
+      "33":"y x",
+      "34":"y x",
+      "35":"y x",
+      "36":"y x",
+      "37":"y x",
+      "38":"y x",
+      "39":"y x",
+      "40":"y x"
+    },
+    "safari":{
+      "3.1":"n",
+      "3.2":"n",
+      "4":"y x",
+      "5":"y x",
+      "5.1":"y x",
+      "6":"y x",
+      "6.1":"y x",
+      "7":"y x",
+      "8":"y x"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"n",
+      "10.6":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "11.6":"n",
+      "12":"y x",
+      "12.1":"y",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x"
+    },
+    "ios_saf":{
+      "3.2":"y x",
+      "4.0-4.1":"y x",
+      "4.2-4.3":"y x",
+      "5.0-5.1":"y x",
+      "6.0-6.1":"y x",
+      "7.0-7.1":"y x",
+      "8":"y x"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"a x",
+      "2.2":"a x",
+      "2.3":"a x",
+      "3":"a x",
+      "4":"y x",
+      "4.1":"y x",
+      "4.2-4.3":"y x",
+      "4.4":"y x",
+      "4.4.3":"y x"
+    },
+    "bb":{
+      "7":"y x",
+      "10":"y x"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "12":"n",
+      "12.1":"y",
+      "22":"y x"
+    },
+    "and_chr":{
+      "37":"y x"
+    },
+    "and_ff":{
+      "32":"y"
+    },
+    "ie_mob":{
+      "10":"y"
+    }
+  },
+  "notes":"Partial support in Android browser refers to buggy behavior in different scenarios.",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":81.93,
+  "usage_perc_a":0.99,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"animations,css-animations,keyframe,keyframes",
+  "ie_id":"",
+  "chrome_id":"",
+  "shown":true
+}
+},{}],57:[function(require,module,exports){
+module.exports={
+  "title":"CSS3 Box-shadow",
+  "description":"Method of displaying an inner or outer shadow effect to elements",
+  "spec":"http://www.w3.org/TR/css3-background/#box-shadow",
+  "status":"cr",
+  "links":[
+    {
+      "url":"https://developer.mozilla.org/En/CSS/-moz-box-shadow",
+      "title":"MDN article"
+    },
+    {
+      "url":"http://westciv.com/tools/boxshadows/index.html",
+      "title":"Live editor"
+    },
+    {
+      "url":"http://tests.themasta.com/blogstuff/boxshadowdemo.html",
+      "title":"Demo of various effects"
+    },
+    {
+      "url":"http://www.css3files.com/shadow/",
+      "title":"Information page"
+    },
+    {
+      "url":"http://docs.webplatform.org/wiki/css/properties/box-shadow",
+      "title":"WebPlatform Docs"
+    }
+  ],
+  "bugs":[
+    {
+      "description":"Safari 6, iOS 6 and Android 2.3 default browser don't work with a 0px value for \"spread\".\r\ne.g. -webkit-box-shadow: 5px 1px 0px #f04e29;\r\ndoesn't work, but\r\n-webkit-box-shadow: 5px 1px 1px #f04e29\r\ndoes."
+    }
+  ],
+  "categories":[
+    "CSS3"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"y",
+      "10":"y",
+      "11":"y"
+    },
+    "firefox":{
+      "2":"n",
+      "3":"n",
+      "3.5":"y x",
+      "3.6":"y x",
+      "4":"y",
+      "5":"y",
+      "6":"y",
+      "7":"y",
+      "8":"y",
+      "9":"y",
+      "10":"y",
+      "11":"y",
+      "12":"y",
+      "13":"y",
+      "14":"y",
+      "15":"y",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y",
+      "27":"y",
+      "28":"y",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y"
+    },
+    "chrome":{
+      "4":"y x",
+      "5":"y x",
+      "6":"y x",
+      "7":"y x",
+      "8":"y x",
+      "9":"y x",
+      "10":"y",
+      "11":"y",
+      "12":"y",
+      "13":"y",
+      "14":"y",
+      "15":"y",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y",
+      "27":"y",
+      "28":"y",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y",
+      "36":"y",
+      "37":"y",
+      "38":"y",
+      "39":"y",
+      "40":"y"
+    },
+    "safari":{
+      "3.1":"a x",
+      "3.2":"a x",
+      "4":"a x",
+      "5":"y x",
+      "5.1":"y",
+      "6":"y",
+      "6.1":"y",
+      "7":"y",
+      "8":"y"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"y",
+      "10.6":"y",
+      "11":"y",
+      "11.1":"y",
+      "11.5":"y",
+      "11.6":"y",
+      "12":"y",
+      "12.1":"y",
+      "15":"y",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y"
+    },
+    "ios_saf":{
+      "3.2":"a x",
+      "4.0-4.1":"y x",
+      "4.2-4.3":"y x",
+      "5.0-5.1":"y",
+      "6.0-6.1":"y",
+      "7.0-7.1":"y",
+      "8":"y"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"a x",
+      "2.2":"a x",
+      "2.3":"a x",
+      "3":"a x",
+      "4":"y",
+      "4.1":"y",
+      "4.2-4.3":"y",
+      "4.4":"y",
+      "4.4.3":"y"
+    },
+    "bb":{
+      "7":"y x",
+      "10":"y"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"y",
+      "11.1":"y",
+      "11.5":"y",
+      "12":"y",
+      "12.1":"y",
+      "22":"y"
+    },
+    "and_chr":{
+      "37":"y"
+    },
+    "and_ff":{
+      "32":"y"
+    },
+    "ie_mob":{
+      "10":"y"
+    }
+  },
+  "notes":"Can be partially emulated in older IE versions using the non-standard \"shadow\" filter. Partial support in Safari, iOS Safari and Android Browser refers to missing \"inset\" and blur radius value support.",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":84.56,
+  "usage_perc_a":1.07,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"box-shadows,boxshadows,box shadow,shaow",
+  "ie_id":"",
+  "chrome_id":"",
+  "shown":true
+}
+},{}],58:[function(require,module,exports){
+module.exports={
+  "title":"CSS Filter Effects",
+  "description":"Method of applying filter effects (like blur, grayscale, brightness, contrast and hue) to elements, previously only possible by using SVG.",
+  "spec":"http://www.w3.org/TR/filter-effects/",
+  "status":"wd",
+  "links":[
+    {
+      "url":"http://html5-demos.appspot.com/static/css/filters/index.html",
+      "title":"Demo file for WebKit browsers"
+    },
+    {
+      "url":"http://www.html5rocks.com/en/tutorials/filters/understanding-css/",
+      "title":"HTML5Rocks article"
+    },
+    {
+      "url":"http://dl.dropbox.com/u/3260327/angular/CSS3ImageManipulation.html",
+      "title":"Filter editor"
+    },
+    {
+      "url":"http://bennettfeely.com/filters/",
+      "title":"Filter Playground"
+    }
+  ],
+  "bugs":[
+    
+  ],
+  "categories":[
+    "CSS",
+    "CSS3"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n"
+    },
+    "firefox":{
+      "2":"n",
+      "3":"n",
+      "3.5":"n",
+      "3.6":"a",
+      "4":"a",
+      "5":"a",
+      "6":"a",
+      "7":"a",
+      "8":"a",
+      "9":"a",
+      "10":"a",
+      "11":"a",
+      "12":"a",
+      "13":"a",
+      "14":"a",
+      "15":"a",
+      "16":"a",
+      "17":"a",
+      "18":"a",
+      "19":"a",
+      "20":"a",
+      "21":"a",
+      "22":"a",
+      "23":"a",
+      "24":"a",
+      "25":"a",
+      "26":"a",
+      "27":"a",
+      "28":"a",
+      "29":"a",
+      "30":"a",
+      "31":"a",
+      "32":"a",
+      "33":"a",
+      "34":"a",
+      "35":"a"
+    },
+    "chrome":{
+      "4":"n",
+      "5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n",
+      "12":"n",
+      "13":"n",
+      "14":"n",
+      "15":"n",
+      "16":"n",
+      "17":"n",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x",
+      "27":"y x",
+      "28":"y x",
+      "29":"y x",
+      "30":"y x",
+      "31":"y x",
+      "32":"y x",
+      "33":"y x",
+      "34":"y x",
+      "35":"y x",
+      "36":"y x",
+      "37":"y x",
+      "38":"y x",
+      "39":"y x",
+      "40":"y x"
+    },
+    "safari":{
+      "3.1":"n",
+      "3.2":"n",
+      "4":"n",
+      "5":"n",
+      "5.1":"n",
+      "6":"y x",
+      "6.1":"y x",
+      "7":"y x",
+      "8":"y x"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"n",
+      "10.6":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "11.6":"n",
+      "12":"n",
+      "12.1":"n",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x"
+    },
+    "ios_saf":{
+      "3.2":"n",
+      "4.0-4.1":"n",
+      "4.2-4.3":"n",
+      "5.0-5.1":"n",
+      "6.0-6.1":"y x",
+      "7.0-7.1":"y x",
+      "8":"y x"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"n",
+      "2.2":"n",
+      "2.3":"n",
+      "3":"n",
+      "4":"n",
+      "4.1":"n",
+      "4.2-4.3":"n",
+      "4.4":"y x",
+      "4.4.3":"y x"
+    },
+    "bb":{
+      "7":"n",
+      "10":"y x"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "12":"n",
+      "12.1":"n",
+      "22":"y x"
+    },
+    "and_chr":{
+      "37":"y x"
+    },
+    "and_ff":{
+      "32":"n"
+    },
+    "ie_mob":{
+      "10":"n"
+    }
+  },
+  "notes":"Note that this property is significantly different from and incompatible with Microsoft's [older \"filter\" property](http://msdn.microsoft.com/en-us/library/ie/ms530752%28v=vs.85%29.aspx).\r\n\r\nPartial support in Firefox 31 [only with url() version](https://developer.mozilla.org/en-US/docs/Web/CSS/filter#Browser_compatibility)",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":52.34,
+  "usage_perc_a":13.31,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"sepia,hue-rotate,invert,saturate",
+  "ie_id":"filters",
+  "chrome_id":"",
+  "shown":true
+}
+},{}],59:[function(require,module,exports){
+module.exports={
+  "title":"CSS Gradients",
+  "description":"Method of defining a linear or radial color gradient as a CSS image.",
+  "spec":"http://www.w3.org/TR/css3-images/",
+  "status":"cr",
+  "links":[
+    {
+      "url":"http://www.colorzilla.com/gradient-editor/",
+      "title":"Cross-browser editor"
+    },
+    {
+      "url":"http://www.css3files.com/gradient/",
+      "title":"Information page"
+    },
+    {
+      "url":"http://css3pie.com/",
+      "title":"Tool to emulate support in IE"
+    },
+    {
+      "url":"http://docs.webplatform.org/wiki/css/functions/linear-gradient",
+      "title":"WebPlatform Docs"
+    }
+  ],
+  "bugs":[
+    
+  ],
+  "categories":[
+    "CSS3"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"y",
+      "11":"y"
+    },
+    "firefox":{
+      "2":"n",
+      "3":"n",
+      "3.5":"n",
+      "3.6":"y x",
+      "4":"y x",
+      "5":"y x",
+      "6":"y x",
+      "7":"y x",
+      "8":"y x",
+      "9":"y x",
+      "10":"y x",
+      "11":"y x",
+      "12":"y x",
+      "13":"y x",
+      "14":"y x",
+      "15":"y x",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y",
+      "27":"y",
+      "28":"y",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y"
+    },
+    "chrome":{
+      "4":"a x",
+      "5":"a x",
+      "6":"a x",
+      "7":"a x",
+      "8":"a x",
+      "9":"a x",
+      "10":"y x",
+      "11":"y x",
+      "12":"y x",
+      "13":"y x",
+      "14":"y x",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y",
+      "27":"y",
+      "28":"y",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y",
+      "36":"y",
+      "37":"y",
+      "38":"y",
+      "39":"y",
+      "40":"y"
+    },
+    "safari":{
+      "3.1":"n",
+      "3.2":"n",
+      "4":"a x",
+      "5":"a x",
+      "5.1":"y x",
+      "6":"y x",
+      "6.1":"y",
+      "7":"y",
+      "8":"y"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"n",
+      "10.6":"n",
+      "11":"n",
+      "11.1":"a x",
+      "11.5":"a x",
+      "11.6":"y x",
+      "12":"y x",
+      "12.1":"y",
+      "15":"y",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y"
+    },
+    "ios_saf":{
+      "3.2":"a x",
+      "4.0-4.1":"a x",
+      "4.2-4.3":"a x",
+      "5.0-5.1":"y x",
+      "6.0-6.1":"y x",
+      "7.0-7.1":"y",
+      "8":"y"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"a x",
+      "2.2":"a x",
+      "2.3":"a x",
+      "3":"a x",
+      "4":"y x",
+      "4.1":"y x",
+      "4.2-4.3":"y x",
+      "4.4":"y",
+      "4.4.3":"y"
+    },
+    "bb":{
+      "7":"a x",
+      "10":"y x"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"n",
+      "11.1":"a x",
+      "11.5":"a x",
+      "12":"y x",
+      "12.1":"y",
+      "22":"y"
+    },
+    "and_chr":{
+      "37":"y"
+    },
+    "and_ff":{
+      "32":"y"
+    },
+    "ie_mob":{
+      "10":"y"
+    }
+  },
+  "notes":"Syntax used by browsers with prefixed support may be incompatible with that for proper support. \r\n\r\nPartial support in Opera 11.10 and 11.50 also refers to only having support for linear gradients.\r\n\r\nSupport can be somewhat emulated in older IE versions using the non-standard \"gradient\" filter. \r\n\r\nFirefox 10+, Opera 11.6+, Chrome 26+ and IE10+ also support the new \"to (side)\" syntax.",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":81.66,
+  "usage_perc_a":1.45,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"linear,linear-gradient,gradiant",
+  "ie_id":"gradients",
+  "chrome_id":"5785905063264256",
+  "shown":true
+}
+},{}],60:[function(require,module,exports){
+module.exports={
+  "title":"CSS Hyphenation",
+  "description":"Method of controlling when words at the end of lines should be hyphenated using the \"hyphens\" property.",
+  "spec":"http://www.w3.org/TR/css3-text/#hyphenation",
+  "status":"wd",
+  "links":[
+    {
+      "url":"https://developer.mozilla.org/en/CSS/hyphens",
+      "title":"MDN article"
+    },
+    {
+      "url":"http://blog.fontdeck.com/post/9037028497/hyphens",
+      "title":"Blog post"
+    },
+    {
+      "url":"http://docs.webplatform.org/wiki/css/properties/hyphens",
+      "title":"WebPlatform Docs"
+    }
+  ],
+  "bugs":[
+    
+  ],
+  "categories":[
+    "CSS3"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"y x",
+      "11":"y x"
+    },
+    "firefox":{
+      "2":"n",
+      "3":"n",
+      "3.5":"n",
+      "3.6":"n",
+      "4":"n",
+      "5":"n",
+      "6":"y x",
+      "7":"y x",
+      "8":"y x",
+      "9":"y x",
+      "10":"y x",
+      "11":"y x",
+      "12":"y x",
+      "13":"y x",
+      "14":"y x",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x",
+      "27":"y x",
+      "28":"y x",
+      "29":"y x",
+      "30":"y x",
+      "31":"y x",
+      "32":"y x",
+      "33":"y x",
+      "34":"y x",
+      "35":"y x"
+    },
+    "chrome":{
+      "4":"n",
+      "5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n",
+      "12":"n",
+      "13":"n",
+      "14":"n",
+      "15":"n",
+      "16":"n",
+      "17":"n",
+      "18":"n",
+      "19":"n",
+      "20":"n",
+      "21":"n",
+      "22":"n",
+      "23":"n",
+      "24":"n",
+      "25":"n",
+      "26":"n",
+      "27":"n",
+      "28":"n",
+      "29":"n",
+      "30":"n",
+      "31":"n",
+      "32":"n",
+      "33":"n",
+      "34":"n",
+      "35":"n",
+      "36":"n",
+      "37":"n",
+      "38":"n",
+      "39":"n",
+      "40":"n"
+    },
+    "safari":{
+      "3.1":"n",
+      "3.2":"n",
+      "4":"n",
+      "5":"n",
+      "5.1":"y x",
+      "6":"y x",
+      "6.1":"y x",
+      "7":"y x",
+      "8":"y x"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"n",
+      "10.6":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "11.6":"n",
+      "12":"n",
+      "12.1":"n",
+      "15":"n",
+      "16":"n",
+      "17":"n",
+      "18":"n",
+      "19":"n",
+      "20":"n",
+      "21":"n",
+      "22":"n",
+      "23":"n",
+      "24":"n",
+      "25":"n",
+      "26":"n"
+    },
+    "ios_saf":{
+      "3.2":"n",
+      "4.0-4.1":"n",
+      "4.2-4.3":"y x",
+      "5.0-5.1":"y x",
+      "6.0-6.1":"y x",
+      "7.0-7.1":"y x",
+      "8":"y x"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"n",
+      "2.2":"n",
+      "2.3":"n",
+      "3":"n",
+      "4":"n",
+      "4.1":"n",
+      "4.2-4.3":"n",
+      "4.4":"n",
+      "4.4.3":"n"
+    },
+    "bb":{
+      "7":"n",
+      "10":"n"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "12":"n",
+      "12.1":"n",
+      "22":"n"
+    },
+    "and_chr":{
+      "37":"n"
+    },
+    "and_ff":{
+      "32":"y x"
+    },
+    "ie_mob":{
+      "10":"n"
+    }
+  },
+  "notes":"Chrome 29- and Android 4.0 Browser support \"-webkit-hyphens: none\", but not the \"auto\" property. Chrome 30+ doesn't support it either.",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":32.97,
+  "usage_perc_a":0,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"hyphen,shy",
+  "ie_id":"",
+  "chrome_id":"",
+  "shown":true
+}
+},{}],61:[function(require,module,exports){
+module.exports={
+  "title":"CSS Masks",
+  "description":"Method of displaying part of an element, using a selected image as a mask",
+  "spec":"http://www.w3.org/TR/css-masking/",
+  "status":"wd",
+  "links":[
+    {
+      "url":"http://docs.webplatform.org/wiki/css/properties/mask",
+      "title":"WebPlatform Docs"
+    },
+    {
+      "url":"http://www.html5rocks.com/en/tutorials/masking/adobe/",
+      "title":"HTML5 Rocks article"
+    },
+    {
+      "url":"http://thenittygritty.co/css-masking",
+      "title":"Detailed blog post"
+    }
+  ],
+  "bugs":[
+    
+  ],
+  "categories":[
+    "CSS"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n"
+    },
+    "firefox":{
+      "2":"n",
+      "3":"n",
+      "3.5":"a",
+      "3.6":"a",
+      "4":"a",
+      "5":"a",
+      "6":"a",
+      "7":"a",
+      "8":"a",
+      "9":"a",
+      "10":"a",
+      "11":"a",
+      "12":"a",
+      "13":"a",
+      "14":"a",
+      "15":"a",
+      "16":"a",
+      "17":"a",
+      "18":"a",
+      "19":"a",
+      "20":"a",
+      "21":"a",
+      "22":"a",
+      "23":"a",
+      "24":"a",
+      "25":"a",
+      "26":"a",
+      "27":"a",
+      "28":"a",
+      "29":"a",
+      "30":"a",
+      "31":"a",
+      "32":"a",
+      "33":"a",
+      "34":"a",
+      "35":"a"
+    },
+    "chrome":{
+      "4":"a x",
+      "5":"a x",
+      "6":"a x",
+      "7":"a x",
+      "8":"a x",
+      "9":"a x",
+      "10":"a x",
+      "11":"a x",
+      "12":"a x",
+      "13":"a x",
+      "14":"a x",
+      "15":"a x",
+      "16":"a x",
+      "17":"a x",
+      "18":"a x",
+      "19":"a x",
+      "20":"a x",
+      "21":"a x",
+      "22":"a x",
+      "23":"a x",
+      "24":"a x",
+      "25":"a x",
+      "26":"a x",
+      "27":"a x",
+      "28":"a x",
+      "29":"a x",
+      "30":"a x",
+      "31":"a x",
+      "32":"a x",
+      "33":"a x",
+      "34":"a x",
+      "35":"a x",
+      "36":"a x",
+      "37":"a x",
+      "38":"a x",
+      "39":"a x",
+      "40":"a x"
+    },
+    "safari":{
+      "3.1":"n",
+      "3.2":"n",
+      "4":"a x",
+      "5":"a x",
+      "5.1":"a x",
+      "6":"a x",
+      "6.1":"a x",
+      "7":"a x",
+      "8":"a x"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"n",
+      "10.6":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "11.6":"n",
+      "12":"n",
+      "12.1":"n",
+      "15":"a x",
+      "16":"a x",
+      "17":"a x",
+      "18":"a x",
+      "19":"a x",
+      "20":"a x",
+      "21":"a x",
+      "22":"a x",
+      "23":"a x",
+      "24":"a x",
+      "25":"a x",
+      "26":"a x"
+    },
+    "ios_saf":{
+      "3.2":"a x",
+      "4.0-4.1":"a x",
+      "4.2-4.3":"a x",
+      "5.0-5.1":"a x",
+      "6.0-6.1":"a x",
+      "7.0-7.1":"a x",
+      "8":"a x"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"a x",
+      "2.2":"a x",
+      "2.3":"a x",
+      "3":"a x",
+      "4":"a x",
+      "4.1":"a x",
+      "4.2-4.3":"a x",
+      "4.4":"a x",
+      "4.4.3":"a x"
+    },
+    "bb":{
+      "7":"a x",
+      "10":"a x"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "12":"n",
+      "12.1":"n",
+      "22":"a x"
+    },
+    "and_chr":{
+      "37":"a x"
+    },
+    "and_ff":{
+      "32":"a"
+    },
+    "ie_mob":{
+      "10":"n"
+    }
+  },
+  "notes":"Partial support in WebKit/Blink browsers refers to supporting the mask-image and mask-box-image properties, but lacks support for othe parts of the spec. Partial support in Firefox refers to only support for inline SVG mask elements i.e. mask: url(#foo).",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":0,
+  "usage_perc_a":72.66,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"",
+  "ie_id":"masks",
+  "chrome_id":"5381559662149632",
+  "shown":true
+}
+},{}],62:[function(require,module,exports){
+module.exports={
+  "title":":placeholder-shown CSS pseudo-class",
+  "description":"The :placeholder-shown pseudo-class represents the placeholder contents of a form field with placeholder text.",
+  "spec":"http://dev.w3.org/csswg/selectors/#placeholder",
+  "status":"unoff",
+  "links":[
+    {
+      "url":"http://msdn.microsoft.com/en-us/library/ie/hh772745(v=vs.85).aspx",
+      "title":"MSDN article"
+    },
+    {
+      "url":"http://css-tricks.com/snippets/css/style-placeholder-text/",
+      "title":"CSS-Tricks article with all prefixes"
+    },
+    {
+      "url":"http://wiki.csswg.org/ideas/placeholder-styling",
+      "title":"CSSWG discussion"
+    }
+  ],
+  "bugs":[
+    
+  ],
+  "categories":[
+    "CSS"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"a x",
+      "11":"a x"
+    },
+    "firefox":{
+      "2":"n",
+      "3":"n",
+      "3.5":"n",
+      "3.6":"n",
+      "4":"a x",
+      "5":"a x",
+      "6":"a x",
+      "7":"a x",
+      "8":"a x",
+      "9":"a x",
+      "10":"a x",
+      "11":"a x",
+      "12":"a x",
+      "13":"a x",
+      "14":"a x",
+      "15":"a x",
+      "16":"a x",
+      "17":"a x",
+      "18":"a x",
+      "19":"a x",
+      "20":"a x",
+      "21":"a x",
+      "22":"a x",
+      "23":"a x",
+      "24":"a x",
+      "25":"a x",
+      "26":"a x",
+      "27":"a x",
+      "28":"a x",
+      "29":"a x",
+      "30":"a x",
+      "31":"a x",
+      "32":"a x",
+      "33":"a x",
+      "34":"a x",
+      "35":"a x"
+    },
+    "chrome":{
+      "4":"a x",
+      "5":"a x",
+      "6":"a x",
+      "7":"a x",
+      "8":"a x",
+      "9":"a x",
+      "10":"a x",
+      "11":"a x",
+      "12":"a x",
+      "13":"a x",
+      "14":"a x",
+      "15":"a x",
+      "16":"a x",
+      "17":"a x",
+      "18":"a x",
+      "19":"a x",
+      "20":"a x",
+      "21":"a x",
+      "22":"a x",
+      "23":"a x",
+      "24":"a x",
+      "25":"a x",
+      "26":"a x",
+      "27":"a x",
+      "28":"a x",
+      "29":"a x",
+      "30":"a x",
+      "31":"a x",
+      "32":"a x",
+      "33":"a x",
+      "34":"a x",
+      "35":"a x",
+      "36":"a x",
+      "37":"a x",
+      "38":"a x",
+      "39":"a x",
+      "40":"a x"
+    },
+    "safari":{
+      "3.1":"n",
+      "3.2":"n",
+      "4":"n",
+      "5":"a x",
+      "5.1":"a x",
+      "6":"a x",
+      "6.1":"a x",
+      "7":"a x",
+      "8":"a x"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"n",
+      "10.6":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "11.6":"n",
+      "12":"n",
+      "12.1":"n",
+      "15":"a x",
+      "16":"a x",
+      "17":"a x",
+      "18":"a x",
+      "19":"a x",
+      "20":"a x",
+      "21":"a x",
+      "22":"a x",
+      "23":"a x",
+      "24":"a x",
+      "25":"a x",
+      "26":"a x"
+    },
+    "ios_saf":{
+      "3.2":"n",
+      "4.0-4.1":"n",
+      "4.2-4.3":"a x",
+      "5.0-5.1":"a x",
+      "6.0-6.1":"a x",
+      "7.0-7.1":"a x",
+      "8":"a x"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"a x",
+      "2.2":"a x",
+      "2.3":"a x",
+      "3":"a x",
+      "4":"a x",
+      "4.1":"a x",
+      "4.2-4.3":"a x",
+      "4.4":"a x",
+      "4.4.3":"a x"
+    },
+    "bb":{
+      "7":"u",
+      "10":"a x"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "12":"n",
+      "12.1":"n",
+      "22":"a x"
+    },
+    "and_chr":{
+      "37":"a x"
+    },
+    "and_ff":{
+      "32":"a x"
+    },
+    "ie_mob":{
+      "10":"a x"
+    }
+  },
+  "notes":"Partial support refers to support for alternative syntax: ::-webkit-input-placeholder (Chrome/Safari/Opera),\r\n::-moz-placeholder (Firefox) and \r\n:-ms-input-placeholder (IE). ",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":0,
+  "usage_perc_a":82.41,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"::placeholder,placeholder",
+  "ie_id":"",
+  "chrome_id":"",
+  "shown":true
+}
+},{}],63:[function(require,module,exports){
+module.exports={
+  "title":"::selection CSS pseudo-element",
+  "description":"The ::selection CSS pseudo-element applies rules to the portion of a document that has been highlighted (e.g., selected with the mouse or another pointing device) by the user.",
+  "spec":"https://developer.mozilla.org/en-US/docs/Web/CSS/::selection",
+  "status":"unoff",
+  "links":[
+    {
+      "url":"http://quirksmode.org/css/selectors/selection.html",
+      "title":"::selection test"
+    },
+    {
+      "url":"http://docs.webplatform.org/wiki/css/selectors/pseudo-elements/::selection",
+      "title":"WebPlatform Docs"
+    }
+  ],
+  "bugs":[
+    {
+      "description":"::selection does not work on input elements in Chrome (tested on OS X and Windows XP)"
+    }
+  ],
+  "categories":[
+    "CSS"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"y",
+      "10":"y",
+      "11":"y"
+    },
+    "firefox":{
+      "2":"y x",
+      "3":"y x",
+      "3.5":"y x",
+      "3.6":"y x",
+      "4":"y x",
+      "5":"y x",
+      "6":"y x",
+      "7":"y x",
+      "8":"y x",
+      "9":"y x",
+      "10":"y x",
+      "11":"y x",
+      "12":"y x",
+      "13":"y x",
+      "14":"y x",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x",
+      "27":"y x",
+      "28":"y x",
+      "29":"y x",
+      "30":"y x",
+      "31":"y x",
+      "32":"y x",
+      "33":"y x",
+      "34":"y x",
+      "35":"y x"
+    },
+    "chrome":{
+      "4":"y",
+      "5":"y",
+      "6":"y",
+      "7":"y",
+      "8":"y",
+      "9":"y",
+      "10":"y",
+      "11":"y",
+      "12":"y",
+      "13":"y",
+      "14":"y",
+      "15":"y",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y",
+      "27":"y",
+      "28":"y",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y",
+      "36":"y",
+      "37":"y",
+      "38":"y",
+      "39":"y",
+      "40":"y"
+    },
+    "safari":{
+      "3.1":"y",
+      "3.2":"y",
+      "4":"y",
+      "5":"y",
+      "5.1":"y",
+      "6":"y",
+      "6.1":"y",
+      "7":"y",
+      "8":"y"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"y",
+      "10.0-10.1":"y",
+      "10.5":"y",
+      "10.6":"y",
+      "11":"y",
+      "11.1":"y",
+      "11.5":"y",
+      "11.6":"y",
+      "12":"y",
+      "12.1":"y",
+      "15":"y",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y"
+    },
+    "ios_saf":{
+      "3.2":"n",
+      "4.0-4.1":"n",
+      "4.2-4.3":"n",
+      "5.0-5.1":"n",
+      "6.0-6.1":"n",
+      "7.0-7.1":"n",
+      "8":"n"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"n",
+      "2.2":"n",
+      "2.3":"n",
+      "3":"n",
+      "4":"n",
+      "4.1":"n",
+      "4.2-4.3":"n",
+      "4.4":"y",
+      "4.4.3":"y"
+    },
+    "bb":{
+      "7":"n",
+      "10":"n"
+    },
+    "op_mob":{
+      "10":"u",
+      "11":"u",
+      "11.1":"u",
+      "11.5":"y",
+      "12":"y",
+      "12.1":"y",
+      "22":"y"
+    },
+    "and_chr":{
+      "37":"y"
+    },
+    "and_ff":{
+      "32":"n"
+    },
+    "ie_mob":{
+      "10":"y"
+    }
+  },
+  "notes":"",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":73.13,
+  "usage_perc_a":0,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"::selection,selection",
+  "ie_id":"",
+  "chrome_id":"",
+  "shown":true
+}
+},{}],64:[function(require,module,exports){
+module.exports={
+  "title":"CSS position:sticky",
+  "description":"Keeps elements positioned as \"fixed\" or \"relative\" depending on how it appears in the viewport. As a result the element is \"stuck\" when necessary while scrolling.",
+  "spec":"http://dev.w3.org/csswg/css-position/#sticky-positioning",
+  "status":"unoff",
+  "links":[
+    {
+      "url":"http://updates.html5rocks.com/2012/08/Stick-your-landings-position-sticky-lands-in-WebKit",
+      "title":"HTML5Rocks"
+    },
+    {
+      "url":"https://developer.mozilla.org/en-US/docs/Web/CSS/position",
+      "title":"MDN article"
+    },
+    {
+      "url":"http://docs.webplatform.org/wiki/css/properties/position",
+      "title":"WebPlatform Docs"
+    },
+    {
+      "url":"https://github.com/filamentgroup/fixed-sticky",
+      "title":"Polyfill"
+    }
+  ],
+  "bugs":[
+    {
+      "description":"Safari does not appear to support [sticky table headers](http://jsfiddle.net/Mf4YT/2/)."
+    }
+  ],
+  "categories":[
+    "CSS"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n"
+    },
+    "firefox":{
+      "2":"n",
+      "3":"n",
+      "3.5":"n",
+      "3.6":"n",
+      "4":"n",
+      "5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n",
+      "12":"n",
+      "13":"n",
+      "14":"n",
+      "15":"n",
+      "16":"n",
+      "17":"n",
+      "18":"n",
+      "19":"n",
+      "20":"n",
+      "21":"n",
+      "22":"n",
+      "23":"n",
+      "24":"n",
+      "25":"n",
+      "26":"n d #1",
+      "27":"n d #1",
+      "28":"n d #1",
+      "29":"n d #1",
+      "30":"n d #1",
+      "31":"n d #1",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y"
+    },
+    "chrome":{
+      "4":"n",
+      "5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n",
+      "12":"n",
+      "13":"n",
+      "14":"n",
+      "15":"n",
+      "16":"n",
+      "17":"n",
+      "18":"n",
+      "19":"n",
+      "20":"n",
+      "21":"n",
+      "22":"n",
+      "23":"n d #2",
+      "24":"n d #2",
+      "25":"n d #2",
+      "26":"n d #2",
+      "27":"n d #2",
+      "28":"n d #2",
+      "29":"n d #2",
+      "30":"n d #2",
+      "31":"n d #2",
+      "32":"n d #2",
+      "33":"n d #2",
+      "34":"n d #2",
+      "35":"n d #2",
+      "36":"n d #2",
+      "37":"n",
+      "38":"n",
+      "39":"n",
+      "40":"n"
+    },
+    "safari":{
+      "3.1":"n",
+      "3.2":"n",
+      "4":"n",
+      "5":"n",
+      "5.1":"n",
+      "6":"n",
+      "6.1":"y x",
+      "7":"y x",
+      "8":"y x"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"n",
+      "10.6":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "11.6":"n",
+      "12":"n",
+      "12.1":"n",
+      "15":"n",
+      "16":"n",
+      "17":"n",
+      "18":"n",
+      "19":"n",
+      "20":"n",
+      "21":"n",
+      "22":"n",
+      "23":"n",
+      "24":"n",
+      "25":"n",
+      "26":"n"
+    },
+    "ios_saf":{
+      "3.2":"n",
+      "4.0-4.1":"n",
+      "4.2-4.3":"n",
+      "5.0-5.1":"n",
+      "6.0-6.1":"y x",
+      "7.0-7.1":"y x",
+      "8":"y x"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"n",
+      "2.2":"n",
+      "2.3":"n",
+      "3":"n",
+      "4":"n",
+      "4.1":"n",
+      "4.2-4.3":"n",
+      "4.4":"n",
+      "4.4.3":"n"
+    },
+    "bb":{
+      "7":"n",
+      "10":"n"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "12":"n",
+      "12.1":"n",
+      "22":"n"
+    },
+    "and_chr":{
+      "37":"n"
+    },
+    "and_ff":{
+      "32":"y"
+    },
+    "ie_mob":{
+      "10":"n"
+    }
+  },
+  "notes":"",
+  "notes_by_num":{
+    "1":"Can be enabled in Firefox by setting the about:config preference layout.css.sticky.enabled to true",
+    "2":"Enabled in Chrome through the \"experimental Web Platform features\" flag in chrome://flags"
+  },
+  "usage_perc_y":9.66,
+  "usage_perc_a":0,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"",
+  "ie_id":"positionsticky",
+  "chrome_id":"6190250464378880",
+  "shown":true
+}
+},{}],65:[function(require,module,exports){
+module.exports={
+  "title":"CSS3 Transitions",
+  "description":"Simple method of animating certain properties of an element",
+  "spec":"http://www.w3.org/TR/css3-transitions/",
+  "status":"wd",
+  "links":[
+    {
+      "url":"http://www.webdesignerdepot.com/2010/01/css-transitions-101/",
+      "title":"Article on usage"
+    },
+    {
+      "url":"http://www.css3files.com/transition/",
+      "title":"Information page"
+    },
+    {
+      "url":"http://www.the-art-of-web.com/css/timing-function/",
+      "title":"Examples on timing functions"
+    },
+    {
+      "url":"http://www.opera.com/docs/specs/presto2.12/css/transitions/",
+      "title":"Animation of property types support in Opera"
+    },
+    {
+      "url":"http://docs.webplatform.org/wiki/css/properties/transition",
+      "title":"WebPlatform Docs"
+    }
+  ],
+  "bugs":[
+    {
+      "description":"Not supported on any pseudo-elements besides ::before and ::after for Firefox, Chrome 26+, Opera 16+ and IE10+."
+    },
+    {
+      "description":"Transitionable properties with calc() derived values are not supported below and including IE11 (http://connect.microsoft.com/IE/feedback/details/762719/css3-calc-bug-inside-transition-or-transform)"
+    },
+    {
+      "description":"'background-size' is not supported below and including IE10"
+    }
+  ],
+  "categories":[
+    "CSS3"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"y",
+      "11":"y"
+    },
+    "firefox":{
+      "2":"n",
+      "3":"n",
+      "3.5":"n",
+      "3.6":"n",
+      "4":"y x",
+      "5":"y x",
+      "6":"y x",
+      "7":"y x",
+      "8":"y x",
+      "9":"y x",
+      "10":"y x",
+      "11":"y x",
+      "12":"y x",
+      "13":"y x",
+      "14":"y x",
+      "15":"y x",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y",
+      "27":"y",
+      "28":"y",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y"
+    },
+    "chrome":{
+      "4":"y x",
+      "5":"y x",
+      "6":"y x",
+      "7":"y x",
+      "8":"y x",
+      "9":"y x",
+      "10":"y x",
+      "11":"y x",
+      "12":"y x",
+      "13":"y x",
+      "14":"y x",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y",
+      "27":"y",
+      "28":"y",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y",
+      "36":"y",
+      "37":"y",
+      "38":"y",
+      "39":"y",
+      "40":"y"
+    },
+    "safari":{
+      "3.1":"y x",
+      "3.2":"y x",
+      "4":"y x",
+      "5":"y x",
+      "5.1":"y x",
+      "6":"y x",
+      "6.1":"y",
+      "7":"y",
+      "8":"y"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"y x",
+      "10.6":"y x",
+      "11":"y x",
+      "11.1":"y x",
+      "11.5":"y x",
+      "11.6":"y x",
+      "12":"y x",
+      "12.1":"y",
+      "15":"y",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y"
+    },
+    "ios_saf":{
+      "3.2":"y x",
+      "4.0-4.1":"y x",
+      "4.2-4.3":"y x",
+      "5.0-5.1":"y x",
+      "6.0-6.1":"y x",
+      "7.0-7.1":"y",
+      "8":"y"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"y x",
+      "2.2":"y x",
+      "2.3":"y x",
+      "3":"y x",
+      "4":"y x",
+      "4.1":"y x",
+      "4.2-4.3":"y x",
+      "4.4":"y",
+      "4.4.3":"y"
+    },
+    "bb":{
+      "7":"y x",
+      "10":"y x"
+    },
+    "op_mob":{
+      "10":"y x",
+      "11":"y x",
+      "11.1":"y x",
+      "11.5":"y x",
+      "12":"y x",
+      "12.1":"y",
+      "22":"y"
+    },
+    "and_chr":{
+      "37":"y"
+    },
+    "and_ff":{
+      "32":"y"
+    },
+    "ie_mob":{
+      "10":"y"
+    }
+  },
+  "notes":"",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":83.03,
+  "usage_perc_a":0,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"css transition",
+  "ie_id":"",
+  "chrome_id":"",
+  "shown":true
+}
+},{}],66:[function(require,module,exports){
+module.exports={
+  "title":"CSS3 Box-sizing",
+  "description":"Method of specifying whether or not an element's borders and padding should be included in size units",
+  "spec":"http://www.w3.org/TR/css3-ui/#box-sizing",
+  "status":"wd",
+  "links":[
+    {
+      "url":"https://developer.mozilla.org/En/CSS/Box-sizing",
+      "title":"MDN article"
+    },
+    {
+      "url":"http://www.456bereastreet.com/archive/201104/controlling_width_with_css3_box-sizing/",
+      "title":"Blog post"
+    },
+    {
+      "url":"https://github.com/Schepp/box-sizing-polyfill",
+      "title":"Polyfill for IE"
+    },
+    {
+      "url":"http://css-tricks.com/box-sizing/",
+      "title":"CSS Tricks"
+    },
+    {
+      "url":"http://docs.webplatform.org/wiki/css/properties/box-sizing",
+      "title":"WebPlatform Docs"
+    }
+  ],
+  "bugs":[
+    {
+      "description":"Android browsers do not calculate correctly the dimensions (width and height) of the HTML select element."
+    },
+    {
+      "description":"Safari 6.0.x does not use box-sizing on elements with display: table;"
+    },
+    {
+      "description":"IE9 will subtract the width of the scrollbar to the width of the element when set to position: absolute, overflow: auto / overflow-y: scroll"
+    }
+  ],
+  "categories":[
+    "CSS3"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"p",
+      "6":"p",
+      "7":"p",
+      "8":"a",
+      "9":"a",
+      "10":"a",
+      "11":"a"
+    },
+    "firefox":{
+      "2":"y x",
+      "3":"y x",
+      "3.5":"y x",
+      "3.6":"y x",
+      "4":"y x",
+      "5":"y x",
+      "6":"y x",
+      "7":"y x",
+      "8":"y x",
+      "9":"y x",
+      "10":"y x",
+      "11":"y x",
+      "12":"y x",
+      "13":"y x",
+      "14":"y x",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x",
+      "27":"y x",
+      "28":"y x",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y"
+    },
+    "chrome":{
+      "4":"a x",
+      "5":"a x",
+      "6":"a x",
+      "7":"a x",
+      "8":"a x",
+      "9":"a x",
+      "10":"a",
+      "11":"a",
+      "12":"a",
+      "13":"a",
+      "14":"a",
+      "15":"a",
+      "16":"a",
+      "17":"a",
+      "18":"a",
+      "19":"a",
+      "20":"a",
+      "21":"a",
+      "22":"a",
+      "23":"a",
+      "24":"a",
+      "25":"a",
+      "26":"a",
+      "27":"a",
+      "28":"a",
+      "29":"a",
+      "30":"a",
+      "31":"a",
+      "32":"a",
+      "33":"a",
+      "34":"a",
+      "35":"a",
+      "36":"a",
+      "37":"a",
+      "38":"a",
+      "39":"a",
+      "40":"a"
+    },
+    "safari":{
+      "3.1":"a x",
+      "3.2":"a x",
+      "4":"a x",
+      "5":"a x",
+      "5.1":"a",
+      "6":"a",
+      "6.1":"a",
+      "7":"a",
+      "8":"a"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"a",
+      "10.0-10.1":"a",
+      "10.5":"a",
+      "10.6":"a",
+      "11":"a",
+      "11.1":"a",
+      "11.5":"a",
+      "11.6":"a",
+      "12":"a",
+      "12.1":"a",
+      "15":"a",
+      "16":"a",
+      "17":"a",
+      "18":"a",
+      "19":"a",
+      "20":"a",
+      "21":"a",
+      "22":"a",
+      "23":"a",
+      "24":"a",
+      "25":"a",
+      "26":"a"
+    },
+    "ios_saf":{
+      "3.2":"a x",
+      "4.0-4.1":"a x",
+      "4.2-4.3":"a x",
+      "5.0-5.1":"a",
+      "6.0-6.1":"a",
+      "7.0-7.1":"a",
+      "8":"a"
+    },
+    "op_mini":{
+      "5.0-7.0":"a"
+    },
+    "android":{
+      "2.1":"a x",
+      "2.2":"a x",
+      "2.3":"a x",
+      "3":"a x",
+      "4":"a",
+      "4.1":"a",
+      "4.2-4.3":"a",
+      "4.4":"a",
+      "4.4.3":"a"
+    },
+    "bb":{
+      "7":"a x",
+      "10":"a"
+    },
+    "op_mob":{
+      "10":"a",
+      "11":"a",
+      "11.1":"a",
+      "11.5":"a",
+      "12":"a",
+      "12.1":"a",
+      "22":"a"
+    },
+    "and_chr":{
+      "37":"a"
+    },
+    "and_ff":{
+      "32":"y"
+    },
+    "ie_mob":{
+      "10":"a"
+    }
+  },
+  "notes":"Partial support refers to supporting only the `content-box` and `border-box` values, not `padding-box` (which was added to the spec later).",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":13.52,
+  "usage_perc_a":79.28,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"border-box,content-box,padding-box",
+  "ie_id":"",
+  "chrome_id":"",
+  "shown":true
+}
+},{}],67:[function(require,module,exports){
+module.exports={
+  "title":"CSS3 Cursors (new values)",
+  "description":"Support for zoom-in and zoom-out values for the CSS3 cursor property.",
+  "spec":"http://www.w3.org/TR/css3-ui/#cursor",
+  "status":"wd",
+  "links":[
+    {
+      "url":"https://developer.mozilla.org/en-US/docs/Web/CSS/cursor",
+      "title":"MDN Documentation"
+    }
+  ],
+  "bugs":[
+    
+  ],
+  "categories":[
+    "CSS3"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n"
+    },
+    "firefox":{
+      "2":"y x",
+      "3":"y x",
+      "3.5":"y x",
+      "3.6":"y x",
+      "4":"y x",
+      "5":"y x",
+      "6":"y x",
+      "7":"y x",
+      "8":"y x",
+      "9":"y x",
+      "10":"y x",
+      "11":"y x",
+      "12":"y x",
+      "13":"y x",
+      "14":"y x",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y",
+      "25":"y",
+      "26":"y",
+      "27":"y",
+      "28":"y",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y"
+    },
+    "chrome":{
+      "4":"y x",
+      "5":"y x",
+      "6":"y x",
+      "7":"y x",
+      "8":"y x",
+      "9":"y x",
+      "10":"y x",
+      "11":"y x",
+      "12":"y x",
+      "13":"y x",
+      "14":"y x",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x",
+      "27":"y x",
+      "28":"y x",
+      "29":"y x",
+      "30":"y x",
+      "31":"y x",
+      "32":"y x",
+      "33":"y x",
+      "34":"y x",
+      "35":"y x",
+      "36":"y x",
+      "37":"y x",
+      "38":"y x",
+      "39":"y x",
+      "40":"y x"
+    },
+    "safari":{
+      "3.1":"y x",
+      "3.2":"y x",
+      "4":"y x",
+      "5":"y x",
+      "5.1":"y x",
+      "6":"y x",
+      "6.1":"y x",
+      "7":"y x",
+      "8":"y x"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"n",
+      "10.6":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "11.6":"y",
+      "12":"y",
+      "12.1":"y",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x"
+    },
+    "ios_saf":{
+      "3.2":"n",
+      "4.0-4.1":"n",
+      "4.2-4.3":"n",
+      "5.0-5.1":"n",
+      "6.0-6.1":"n",
+      "7.0-7.1":"n",
+      "8":"n"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"n",
+      "2.2":"n",
+      "2.3":"n",
+      "3":"n",
+      "4":"n",
+      "4.1":"n",
+      "4.2-4.3":"n",
+      "4.4":"n",
+      "4.4.3":"n"
+    },
+    "bb":{
+      "7":"y x",
+      "10":"y x"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "12":"n",
+      "12.1":"n",
+      "22":"n"
+    },
+    "and_chr":{
+      "37":"n"
+    },
+    "and_ff":{
+      "32":"n"
+    },
+    "ie_mob":{
+      "10":"n"
+    }
+  },
+  "notes":"Chrome, Safari and Firefox also support the unofficial 'grab' and 'grabbing' values (with prefix)",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":52.19,
+  "usage_perc_a":0,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"cursors, pointers",
+  "ie_id":"",
+  "chrome_id":"",
+  "shown":false
+}
+},{}],68:[function(require,module,exports){
+module.exports={
+  "title":"CSS3 tab-size",
+  "description":"Method of customizing the width of the tab character. Only effective using 'white-space: pre' or 'white-space: pre-wrap'.",
+  "spec":"http://www.w3.org/TR/css3-text/#tab-size1",
+  "status":"wd",
+  "links":[
+    {
+      "url":"https://developer.mozilla.org/en-US/docs/Web/CSS/tab-size",
+      "title":"MDN article"
+    }
+  ],
+  "bugs":[
+    
+  ],
+  "categories":[
+    "CSS3"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n"
+    },
+    "firefox":{
+      "2":"n",
+      "3":"n",
+      "3.5":"n",
+      "3.6":"n",
+      "4":"y x",
+      "5":"y x",
+      "6":"y x",
+      "7":"y x",
+      "8":"y x",
+      "9":"y x",
+      "10":"y x",
+      "11":"y x",
+      "12":"y x",
+      "13":"y x",
+      "14":"y x",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x",
+      "27":"y x",
+      "28":"y x",
+      "29":"y x",
+      "30":"y x",
+      "31":"y x",
+      "32":"y x",
+      "33":"y x",
+      "34":"y x",
+      "35":"y x"
+    },
+    "chrome":{
+      "4":"n",
+      "5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n",
+      "12":"n",
+      "13":"n",
+      "14":"n",
+      "15":"n",
+      "16":"n",
+      "17":"n",
+      "18":"n",
+      "19":"n",
+      "20":"n",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y",
+      "27":"y",
+      "28":"y",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y",
+      "36":"y",
+      "37":"y",
+      "38":"y",
+      "39":"y",
+      "40":"y"
+    },
+    "safari":{
+      "3.1":"n",
+      "3.2":"n",
+      "4":"n",
+      "5":"n",
+      "5.1":"n",
+      "6":"n",
+      "6.1":"y",
+      "7":"y",
+      "8":"y"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"n",
+      "10.6":"y x",
+      "11":"y x",
+      "11.1":"y x",
+      "11.5":"y x",
+      "11.6":"y x",
+      "12":"y x",
+      "12.1":"y x",
+      "15":"y",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y"
+    },
+    "ios_saf":{
+      "3.2":"n",
+      "4.0-4.1":"n",
+      "4.2-4.3":"n",
+      "5.0-5.1":"n",
+      "6.0-6.1":"n",
+      "7.0-7.1":"y",
+      "8":"y"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"n",
+      "2.2":"n",
+      "2.3":"n",
+      "3":"n",
+      "4":"n",
+      "4.1":"n",
+      "4.2-4.3":"n",
+      "4.4":"y",
+      "4.4.3":"y"
+    },
+    "bb":{
+      "7":"y",
+      "10":"y"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"y x",
+      "11.1":"y x",
+      "11.5":"y x",
+      "12":"y x",
+      "12.1":"y x",
+      "22":"y"
+    },
+    "and_chr":{
+      "37":"y"
+    },
+    "and_ff":{
+      "32":"y x"
+    },
+    "ie_mob":{
+      "10":"n"
+    }
+  },
+  "notes":"",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":65.49,
+  "usage_perc_a":0,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"tab-size,tab-width",
+  "ie_id":"",
+  "chrome_id":"",
+  "shown":true
+}
+},{}],69:[function(require,module,exports){
+module.exports={
+  "title":"Flexible Box Layout Module",
+  "description":"Method of positioning elements in horizontal or vertical stacks.",
+  "spec":"http://www.w3.org/TR/css3-flexbox/",
+  "status":"cr",
+  "links":[
+    {
+      "url":"http://bennettfeely.com/flexplorer/",
+      "title":"Flexbox CSS generator"
+    },
+    {
+      "url":"http://www.adobe.com/devnet/html5/articles/working-with-flexbox-the-new-spec.html",
+      "title":"Article on using the latest spec"
+    },
+    {
+      "url":"http://dev.opera.com/articles/view/advanced-cross-browser-flexbox/",
+      "title":"Tutorial on cross-browser support"
+    },
+    {
+      "url":"http://philipwalton.github.io/solved-by-flexbox/",
+      "title":"Examples on how to solve common layout problems with flexbox"
+    },
+    {
+      "url":"http://css-tricks.com/snippets/css/a-guide-to-flexbox/",
+      "title":"A Complete Guide to Flexbox"
+    },
+    {
+      "url":"http://the-echoplex.net/flexyboxes/",
+      "title":"Flexbox playground and code generator"
+    }
+  ],
+  "bugs":[
+    {
+      "description":"IE10 and IE11 default values for `flex` are `0 0 auto` rather than `0 1 auto`, as per the draft spec, as of September 2013."
+    },
+    {
+      "description":"In IE10 and IE11, containers with `display: flex` and `flex-direction: column` will not properly calculate their flexed childrens' sizes if the container has `min-height` but no explicit `height` property. [See bug](https://connect.microsoft.com/IE/feedback/details/802625/min-height-and-flexbox-flex-direction-column-dont-work-together-in-ie-10-11-preview)."
+    },
+    {
+      "description":"In Chrome and Safari, the height of (non flex) children are not recognized in percentages. However Firefox and IE recognize and scale the children based on percentage heights. [Chrome bug](http://crbug.com/341310)"
+    }
+  ],
+  "categories":[
+    "CSS3"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"a x #2",
+      "11":"y"
+    },
+    "firefox":{
+      "2":"a x #1",
+      "3":"a x #1",
+      "3.5":"a x #1",
+      "3.6":"a x #1",
+      "4":"a x #1",
+      "5":"a x #1",
+      "6":"a x #1",
+      "7":"a x #1",
+      "8":"a x #1",
+      "9":"a x #1",
+      "10":"a x #1",
+      "11":"a x #1",
+      "12":"a x #1",
+      "13":"a x #1",
+      "14":"a x #1",
+      "15":"a x #1",
+      "16":"a x #1",
+      "17":"a x #1",
+      "18":"a x #1",
+      "19":"a x #1",
+      "20":"a x #1",
+      "21":"a x #1",
+      "22":"a #3",
+      "23":"a #3",
+      "24":"a #3",
+      "25":"a #3",
+      "26":"a #3",
+      "27":"a #3",
+      "28":"y",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y"
+    },
+    "chrome":{
+      "4":"a x #1",
+      "5":"a x #1",
+      "6":"a x #1",
+      "7":"a x #1",
+      "8":"a x #1",
+      "9":"a x #1",
+      "10":"a x #1",
+      "11":"a x #1",
+      "12":"a x #1",
+      "13":"a x #1",
+      "14":"a x #1",
+      "15":"a x #1",
+      "16":"a x #1",
+      "17":"a x #1",
+      "18":"a x #1",
+      "19":"a x #1",
+      "20":"a x #1",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x",
+      "27":"y x",
+      "28":"y x",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y",
+      "36":"y",
+      "37":"y",
+      "38":"y",
+      "39":"y",
+      "40":"y"
+    },
+    "safari":{
+      "3.1":"a x #1",
+      "3.2":"a x #1",
+      "4":"a x #1",
+      "5":"a x #1",
+      "5.1":"a x #1",
+      "6":"a x #1",
+      "6.1":"y x",
+      "7":"y x",
+      "8":"y x"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"n",
+      "10.6":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "11.6":"n",
+      "12":"n",
+      "12.1":"y",
+      "15":"y x",
+      "16":"y x",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y"
+    },
+    "ios_saf":{
+      "3.2":"a x #1",
+      "4.0-4.1":"a x #1",
+      "4.2-4.3":"a x #1",
+      "5.0-5.1":"a x #1",
+      "6.0-6.1":"a x #1",
+      "7.0-7.1":"y x",
+      "8":"y x"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"a x #1",
+      "2.2":"a x #1",
+      "2.3":"a x #1",
+      "3":"a x #1",
+      "4":"a x #1",
+      "4.1":"a x #1",
+      "4.2-4.3":"a x #1",
+      "4.4":"y",
+      "4.4.3":"y"
+    },
+    "bb":{
+      "7":"a x #1",
+      "10":"y x"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "12":"n",
+      "12.1":"y",
+      "22":"y"
+    },
+    "and_chr":{
+      "37":"y"
+    },
+    "and_ff":{
+      "32":"y"
+    },
+    "ie_mob":{
+      "10":"a x #2"
+    }
+  },
+  "notes":"Most partial support refers to supporting an [older version](http://www.w3.org/TR/2009/WD-css3-flexbox-20090723/) of the specification or an [older syntax](http://www.w3.org/TR/2012/WD-css3-flexbox-20120322/).",
+  "notes_by_num":{
+    "1":"Only supports the [old flexbox](http://www.w3.org/TR/2009/WD-css3-flexbox-20090723) specification",
+    "2":"Only supports the [2012 syntax](http://www.w3.org/TR/2012/WD-css3-flexbox-20120322/)",
+    "3":"Does not support flex-wrap or flex-flow properties"
+  },
+  "usage_perc_y":70.79,
+  "usage_perc_a":12.34,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"flex-box,flex-direction,flex-wrap,flex-flow,flex-grow,flex-basis",
+  "ie_id":"flexbox",
+  "chrome_id":"4837301406400512",
+  "shown":true
+}
+},{}],70:[function(require,module,exports){
+module.exports={
+  "title":"Font feature settings",
+  "description":"Method of applying advanced typographic and language-specific font features to supported OpenType fonts.",
+  "spec":"http://w3.org/TR/css3-fonts/#font-rend-props",
+  "status":"wd",
+  "links":[
+    {
+      "url":"http://ie.microsoft.com/testdrive/Graphics/opentype/",
+      "title":"Demo pages (IE/Firefox only)"
+    },
+    {
+      "url":"http://hacks.mozilla.org/2010/11/firefox-4-font-feature-support/",
+      "title":"Mozilla hacks article"
+    },
+    {
+      "url":"http://html5accessibility.com/",
+      "title":"Detailed tables on accessability support"
+    },
+    {
+      "url":"http://docs.webplatform.org/wiki/css/properties/font-feature-settings",
+      "title":"WebPlatform Docs"
+    }
+  ],
+  "bugs":[
+    
+  ],
+  "categories":[
+    "CSS3"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"y",
+      "11":"y"
+    },
+    "firefox":{
+      "2":"n",
+      "3":"n",
+      "3.5":"n",
+      "3.6":"n",
+      "4":"a x",
+      "5":"a x",
+      "6":"a x",
+      "7":"a x",
+      "8":"a x",
+      "9":"a x",
+      "10":"a x",
+      "11":"a x",
+      "12":"a x",
+      "13":"a x",
+      "14":"a x",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x",
+      "27":"y x",
+      "28":"y x",
+      "29":"y x",
+      "30":"y x",
+      "31":"y x",
+      "32":"y x",
+      "33":"y",
+      "34":"y",
+      "35":"y"
+    },
+    "chrome":{
+      "4":"n",
+      "5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n",
+      "12":"n",
+      "13":"n",
+      "14":"n",
+      "15":"n",
+      "16":"a x",
+      "17":"a x",
+      "18":"a x",
+      "19":"a x",
+      "20":"a x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x",
+      "27":"y x",
+      "28":"y x",
+      "29":"y x",
+      "30":"y x",
+      "31":"y x",
+      "32":"y x",
+      "33":"y x",
+      "34":"y x",
+      "35":"y x",
+      "36":"y x",
+      "37":"y x",
+      "38":"y x",
+      "39":"y x",
+      "40":"y x"
+    },
+    "safari":{
+      "3.1":"n",
+      "3.2":"n",
+      "4":"a",
+      "5":"a",
+      "5.1":"a",
+      "6":"a",
+      "6.1":"n",
+      "7":"n",
+      "8":"n"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"n",
+      "10.6":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "11.6":"n",
+      "12":"n",
+      "12.1":"n",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x"
+    },
+    "ios_saf":{
+      "3.2":"a",
+      "4.0-4.1":"a",
+      "4.2-4.3":"a",
+      "5.0-5.1":"a",
+      "6.0-6.1":"a",
+      "7.0-7.1":"n",
+      "8":"n"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"n",
+      "2.2":"n",
+      "2.3":"n",
+      "3":"n",
+      "4":"n",
+      "4.1":"n",
+      "4.2-4.3":"n",
+      "4.4":"y x",
+      "4.4.3":"y x"
+    },
+    "bb":{
+      "7":"n",
+      "10":"y x"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "12":"n",
+      "12.1":"n",
+      "22":"y x"
+    },
+    "and_chr":{
+      "37":"y x"
+    },
+    "and_ff":{
+      "32":"y x"
+    },
+    "ie_mob":{
+      "10":"n"
+    }
+  },
+  "notes":"Partial support in older Firefox versions refers to using an older syntax. Partial support in older Chrome versions refers to lacking support in Mac OS X. ",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":65.36,
+  "usage_perc_a":2.09,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"font-feature,font-feature-settings,kern,kerning,font-variant-alternates,ligatures,font-variant-ligatures",
+  "ie_id":"",
+  "chrome_id":"",
+  "shown":true
+}
+},{}],71:[function(require,module,exports){
+module.exports={
+  "title":"Full Screen API",
+  "description":"API for allowing content (like a video or canvas element) to take up the entire screen.",
+  "spec":"http://www.w3.org/TR/fullscreen/",
+  "status":"wd",
+  "links":[
+    {
+      "url":"https://developer.mozilla.org/en/DOM/Using_full-screen_mode",
+      "title":"MDN article"
+    },
+    {
+      "url":"http://jlongster.com/2011/11/21/canvas.html",
+      "title":"Blog post"
+    },
+    {
+      "url":"http://hacks.mozilla.org/2012/01/using-the-fullscreen-api-in-web-browsers/",
+      "title":"Mozilla hacks article"
+    },
+    {
+      "url":"http://docs.webplatform.org/wiki/dom/methods/requestFullscreen",
+      "title":"WebPlatform Docs"
+    }
+  ],
+  "bugs":[
+    {
+      "description":"Safari blocks access to keyboard events in fullscreen mode (as a security measure)."
+    },
+    {
+      "description":"IE 11 does not allow scrolling when document.documentElement is set to full screen."
+    }
+  ],
+  "categories":[
+    "JS API"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"y x"
+    },
+    "firefox":{
+      "2":"n",
+      "3":"n",
+      "3.5":"n",
+      "3.6":"n",
+      "4":"n",
+      "5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"a x",
+      "11":"a x",
+      "12":"a x",
+      "13":"a x",
+      "14":"a x",
+      "15":"a x",
+      "16":"a x",
+      "17":"a x",
+      "18":"a x",
+      "19":"a x",
+      "20":"a x",
+      "21":"a x",
+      "22":"a x",
+      "23":"a x",
+      "24":"a x",
+      "25":"a x",
+      "26":"a x",
+      "27":"a x",
+      "28":"a x",
+      "29":"a x",
+      "30":"a x",
+      "31":"a x",
+      "32":"a x",
+      "33":"a x",
+      "34":"a x",
+      "35":"a x"
+    },
+    "chrome":{
+      "4":"n",
+      "5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n",
+      "12":"n",
+      "13":"n",
+      "14":"n",
+      "15":"a x",
+      "16":"a x",
+      "17":"a x",
+      "18":"a x",
+      "19":"a x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x",
+      "27":"y x",
+      "28":"y x",
+      "29":"y x",
+      "30":"y x",
+      "31":"y x",
+      "32":"y x",
+      "33":"y x",
+      "34":"y x",
+      "35":"y x",
+      "36":"y x",
+      "37":"y x",
+      "38":"y x",
+      "39":"y x",
+      "40":"y x"
+    },
+    "safari":{
+      "3.1":"n",
+      "3.2":"n",
+      "4":"n",
+      "5":"n",
+      "5.1":"a x",
+      "6":"y x",
+      "6.1":"y x",
+      "7":"y x",
+      "8":"y x"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"n",
+      "10.6":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "11.6":"n",
+      "12":"n",
+      "12.1":"y",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x"
+    },
+    "ios_saf":{
+      "3.2":"n",
+      "4.0-4.1":"n",
+      "4.2-4.3":"n",
+      "5.0-5.1":"n",
+      "6.0-6.1":"n",
+      "7.0-7.1":"n",
+      "8":"n"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"n",
+      "2.2":"n",
+      "2.3":"n",
+      "3":"n",
+      "4":"n",
+      "4.1":"n",
+      "4.2-4.3":"n",
+      "4.4":"n",
+      "4.4.3":"n"
+    },
+    "bb":{
+      "7":"n",
+      "10":"a"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "12":"n",
+      "12.1":"n",
+      "22":"y x"
+    },
+    "and_chr":{
+      "37":"y x"
+    },
+    "and_ff":{
+      "32":"a x"
+    },
+    "ie_mob":{
+      "10":"n"
+    }
+  },
+  "notes":"Partial support refers to supporting an earlier draft of the spec.",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":51.5,
+  "usage_perc_a":13.9,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"full-screen",
+  "ie_id":"fullscreenapi",
+  "chrome_id":"5259513871466496",
+  "shown":true
+}
+},{}],72:[function(require,module,exports){
+module.exports={
+  "title":"Intrinsic & Extrinsic Sizing",
+  "description":"Allows for the heights and widths to be specified in intrinsic values using the fill-available, max-content, min-content, and fit-content properties.",
+  "spec":"http://www.w3.org/TR/css3-sizing/",
+  "status":"wd",
+  "links":[
+    {
+      "url":"http://demosthenes.info/blog/662/Design-From-the-Inside-Out-With-CSS-MinContent",
+      "title":"Min-Content tutorial"
+    }
+  ],
+  "bugs":[
+    
+  ],
+  "categories":[
+    "CSS3"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n"
+    },
+    "firefox":{
+      "2":"n",
+      "3":"n",
+      "3.5":"n",
+      "3.6":"n",
+      "4":"y x",
+      "5":"y x",
+      "6":"y x",
+      "7":"y x",
+      "8":"y x",
+      "9":"y x",
+      "10":"y x",
+      "11":"y x",
+      "12":"y x",
+      "13":"y x",
+      "14":"y x",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x",
+      "27":"y x",
+      "28":"y x",
+      "29":"y x",
+      "30":"y x",
+      "31":"y x",
+      "32":"y x",
+      "33":"y x",
+      "34":"y x",
+      "35":"y x"
+    },
+    "chrome":{
+      "4":"n",
+      "5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n",
+      "12":"n",
+      "13":"n",
+      "14":"n",
+      "15":"n",
+      "16":"n",
+      "17":"n",
+      "18":"n",
+      "19":"n",
+      "20":"n",
+      "21":"n",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x",
+      "27":"y x",
+      "28":"y x",
+      "29":"y x",
+      "30":"y x",
+      "31":"y x",
+      "32":"y x",
+      "33":"y x",
+      "34":"y x",
+      "35":"y x",
+      "36":"y x",
+      "37":"y x",
+      "38":"y x",
+      "39":"y x",
+      "40":"y x"
+    },
+    "safari":{
+      "3.1":"n",
+      "3.2":"n",
+      "4":"n",
+      "5":"n",
+      "5.1":"n",
+      "6":"n",
+      "6.1":"y x",
+      "7":"y x",
+      "8":"y x"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"n",
+      "10.6":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "11.6":"n",
+      "12":"n",
+      "12.1":"n",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x"
+    },
+    "ios_saf":{
+      "3.2":"n",
+      "4.0-4.1":"n",
+      "4.2-4.3":"n",
+      "5.0-5.1":"n",
+      "6.0-6.1":"n",
+      "7.0-7.1":"y x",
+      "8":"y x"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"n",
+      "2.2":"n",
+      "2.3":"n",
+      "3":"n",
+      "4":"n",
+      "4.1":"n",
+      "4.2-4.3":"n",
+      "4.4":"y x",
+      "4.4.3":"y x"
+    },
+    "bb":{
+      "7":"n",
+      "10":"y x"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "12":"n",
+      "12.1":"n",
+      "22":"y x"
+    },
+    "and_chr":{
+      "37":"y x"
+    },
+    "and_ff":{
+      "32":"y x"
+    },
+    "ie_mob":{
+      "10":"n"
+    }
+  },
+  "notes":"Prefixes are on the values, not the property names (e.g. -webkit-min-content) Firefox currently supports the \"-moz-available\" property rather than \"-moz-fill-available\".",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":64.53,
+  "usage_perc_a":0,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"fill-available,max-content,min-content,fit-content,contain-floats",
+  "ie_id":"cssintrinsicsizing",
+  "chrome_id":"5901353784180736",
+  "shown":true
+}
+},{}],73:[function(require,module,exports){
+module.exports={
+  "title":"CSS3 Multiple column layout",
+  "description":"Method of flowing information in multiple columns",
+  "spec":"http://www.w3.org/TR/css3-multicol/",
+  "status":"cr",
+  "links":[
+    {
+      "url":"http://dev.opera.com/articles/view/css3-multi-column-layout/",
+      "title":"Dev.Opera article"
+    },
+    {
+      "url":"http://webdesign.tutsplus.com/tutorials/htmlcss-tutorials/an-introduction-to-the-css3-multiple-column-layout-module/",
+      "title":"Introduction page"
+    },
+    {
+      "url":"http://docs.webplatform.org/wiki/css/properties/column-width",
+      "title":"WebPlatform Docs"
+    }
+  ],
+  "bugs":[
+    {
+      "description":"In Firefox, the property column-span (or -moz-column-span) does not yet work. See the bug 616436 on Bugzilla: https://bugzilla.mozilla.org/show_bug.cgi?id=616436."
+    }
+  ],
+  "categories":[
+    "CSS3"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"y",
+      "11":"y"
+    },
+    "firefox":{
+      "2":"a x",
+      "3":"a x",
+      "3.5":"a x",
+      "3.6":"a x",
+      "4":"a x",
+      "5":"a x",
+      "6":"a x",
+      "7":"a x",
+      "8":"a x",
+      "9":"a x",
+      "10":"a x",
+      "11":"a x",
+      "12":"a x",
+      "13":"a x",
+      "14":"a x",
+      "15":"a x",
+      "16":"a x",
+      "17":"a x",
+      "18":"a x",
+      "19":"a x",
+      "20":"a x",
+      "21":"a x",
+      "22":"a x",
+      "23":"a x",
+      "24":"a x",
+      "25":"a x",
+      "26":"a x",
+      "27":"a x",
+      "28":"a x",
+      "29":"a x",
+      "30":"a x",
+      "31":"a x",
+      "32":"a x",
+      "33":"a x",
+      "34":"a x",
+      "35":"a x"
+    },
+    "chrome":{
+      "4":"a x",
+      "5":"a x",
+      "6":"a x",
+      "7":"a x",
+      "8":"a x",
+      "9":"a x",
+      "10":"a x",
+      "11":"a x",
+      "12":"a x",
+      "13":"a x",
+      "14":"a x",
+      "15":"a x",
+      "16":"a x",
+      "17":"a x",
+      "18":"a x",
+      "19":"a x",
+      "20":"a x",
+      "21":"a x",
+      "22":"a x",
+      "23":"a x",
+      "24":"a x",
+      "25":"a x",
+      "26":"a x",
+      "27":"a x",
+      "28":"a x",
+      "29":"a x",
+      "30":"a x",
+      "31":"a x",
+      "32":"a x",
+      "33":"a x",
+      "34":"a x",
+      "35":"a x",
+      "36":"a x",
+      "37":"a x",
+      "38":"a x",
+      "39":"a x",
+      "40":"a x"
+    },
+    "safari":{
+      "3.1":"a x",
+      "3.2":"a x",
+      "4":"a x",
+      "5":"a x",
+      "5.1":"a x",
+      "6":"a x",
+      "6.1":"a x",
+      "7":"a x",
+      "8":"a x"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"n",
+      "10.6":"n",
+      "11":"n",
+      "11.1":"y",
+      "11.5":"y",
+      "11.6":"y",
+      "12":"y",
+      "12.1":"y",
+      "15":"a x",
+      "16":"a x",
+      "17":"a x",
+      "18":"a x",
+      "19":"a x",
+      "20":"a x",
+      "21":"a x",
+      "22":"a x",
+      "23":"a x",
+      "24":"a x",
+      "25":"a x",
+      "26":"a x"
+    },
+    "ios_saf":{
+      "3.2":"a x",
+      "4.0-4.1":"a x",
+      "4.2-4.3":"a x",
+      "5.0-5.1":"a x",
+      "6.0-6.1":"a x",
+      "7.0-7.1":"a x",
+      "8":"a x"
+    },
+    "op_mini":{
+      "5.0-7.0":"y"
+    },
+    "android":{
+      "2.1":"a x",
+      "2.2":"a x",
+      "2.3":"a x",
+      "3":"a x",
+      "4":"a x",
+      "4.1":"a x",
+      "4.2-4.3":"a x",
+      "4.4":"a x",
+      "4.4.3":"a x"
+    },
+    "bb":{
+      "7":"a x",
+      "10":"a x"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"n",
+      "11.1":"y",
+      "11.5":"y",
+      "12":"y",
+      "12.1":"y",
+      "22":"a x"
+    },
+    "and_chr":{
+      "37":"a x"
+    },
+    "and_ff":{
+      "32":"a x"
+    },
+    "ie_mob":{
+      "10":"y"
+    }
+  },
+  "notes":"Partial support refers to not supporting the break-before, break-after, break-inside properties. Webkit browsers do have equivalent support for the non-standard -webkit-column-break-* properties.",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":13.84,
+  "usage_perc_a":72.72,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"column-count",
+  "ie_id":"multicolumnfullsupport",
+  "chrome_id":"6526151266664448",
+  "shown":true
+}
+},{}],74:[function(require,module,exports){
+module.exports={
+  "title":"Pointer events",
+  "description":"This specification integrates various inputs from mice, touchscreens, and pens, making separate implementations no longer necessary and authoring for cross-device pointers easier. Not to be mistaken with the unrelated \"pointer-events\" CSS property.",
+  "spec":"http://www.w3.org/TR/pointerevents/",
+  "status":"cr",
+  "links":[
+    {
+      "url":"http://blogs.msdn.com/b/ie/archive/2011/09/20/touch-input-for-ie10-and-metro-style-apps.aspx",
+      "title":"Implementation of Pointer Events in IE10"
+    },
+    {
+      "url":"http://blogs.msdn.com/b/eternalcoding/archive/2013/01/16/hand-js-a-polyfill-for-supporting-pointer-events-on-every-browser.aspx",
+      "title":"Hand.js, the polyfill for browsers only supporting Touch Events"
+    },
+    {
+      "url":"http://blogs.msdn.com/b/davrous/archive/2013/02/20/handling-touch-in-your-html5-apps-thanks-to-the-pointer-events-of-ie10-and-windows-8.aspx",
+      "title":"Article & tutorial"
+    }
+  ],
+  "bugs":[
+    
+  ],
+  "categories":[
+    "DOM",
+    "JS API"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"a x",
+      "11":"y"
+    },
+    "firefox":{
+      "2":"n",
+      "3":"n",
+      "3.5":"n",
+      "3.6":"n",
+      "4":"n",
+      "5":"n",
+      "6":"p",
+      "7":"p",
+      "8":"p",
+      "9":"p",
+      "10":"p",
+      "11":"p",
+      "12":"p",
+      "13":"p",
+      "14":"p",
+      "15":"p",
+      "16":"p",
+      "17":"p",
+      "18":"p",
+      "19":"p",
+      "20":"p",
+      "21":"p",
+      "22":"p",
+      "23":"p",
+      "24":"p",
+      "25":"p",
+      "26":"p",
+      "27":"p",
+      "28":"p",
+      "29":"p",
+      "30":"p",
+      "31":"p",
+      "32":"p",
+      "33":"p",
+      "34":"p",
+      "35":"p"
+    },
+    "chrome":{
+      "4":"n",
+      "5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n",
+      "12":"n",
+      "13":"n",
+      "14":"n",
+      "15":"n",
+      "16":"n",
+      "17":"n",
+      "18":"n",
+      "19":"n",
+      "20":"n",
+      "21":"n",
+      "22":"p",
+      "23":"p",
+      "24":"p",
+      "25":"p",
+      "26":"p",
+      "27":"p",
+      "28":"p",
+      "29":"p",
+      "30":"p",
+      "31":"p",
+      "32":"p",
+      "33":"p",
+      "34":"p",
+      "35":"p",
+      "36":"p",
+      "37":"p",
+      "38":"p",
+      "39":"p",
+      "40":"p"
+    },
+    "safari":{
+      "3.1":"n",
+      "3.2":"n",
+      "4":"n",
+      "5":"n",
+      "5.1":"n",
+      "6":"n",
+      "6.1":"u",
+      "7":"u",
+      "8":"u"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"n",
+      "10.6":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "11.6":"n",
+      "12":"n",
+      "12.1":"n",
+      "15":"p",
+      "16":"p",
+      "17":"p",
+      "18":"p",
+      "19":"p",
+      "20":"p",
+      "21":"p",
+      "22":"p",
+      "23":"p",
+      "24":"p",
+      "25":"p",
+      "26":"p"
+    },
+    "ios_saf":{
+      "3.2":"p",
+      "4.0-4.1":"p",
+      "4.2-4.3":"p",
+      "5.0-5.1":"p",
+      "6.0-6.1":"p",
+      "7.0-7.1":"p",
+      "8":"p"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"p",
+      "2.2":"p",
+      "2.3":"p",
+      "3":"p",
+      "4":"p",
+      "4.1":"p",
+      "4.2-4.3":"p",
+      "4.4":"p",
+      "4.4.3":"p"
+    },
+    "bb":{
+      "7":"p",
+      "10":"p"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"p",
+      "11.1":"p",
+      "11.5":"p",
+      "12":"p",
+      "12.1":"p",
+      "22":"p"
+    },
+    "and_chr":{
+      "37":"p"
+    },
+    "and_ff":{
+      "32":"p"
+    },
+    "ie_mob":{
+      "10":"a x"
+    }
+  },
+  "notes":"Partial support in IE10 refers the lack of pointerenter and pointerleave events. Firefox Nightly provides 'dom.w3c_pointer_events.enabled' option to support this specification starting with version 28.",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":7.23,
+  "usage_perc_a":2.84,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"pointerdown,pointermove,pointerup,pointercancel,pointerover,pointerout,pointerenter,pointerleave",
+  "ie_id":"pointerevents",
+  "chrome_id":"4504699138998272",
+  "shown":true
+}
+},{}],75:[function(require,module,exports){
+module.exports={
+  "title":"text-decoration styling",
+  "description":"Method of defining the type, style and color of lines in the text-decoration property.",
+  "spec":"http://www.w3.org/TR/css-text-decor-3/#line-decoration",
+  "status":"cr",
+  "links":[
+    {
+      "url":"https://developer.mozilla.org/en-US/docs/Web/CSS/text-decoration-style",
+      "title":"MDN Documentation for text-decoration-style"
+    },
+    {
+      "url":"https://developer.mozilla.org/en-US/docs/Web/CSS/text-decoration-color",
+      "title":"MDN Documentation for text-decoration-color"
+    },
+    {
+      "url":"https://developer.mozilla.org/en-US/docs/Web/CSS/text-decoration-line",
+      "title":"MDN Documentation for text-decoration-line"
+    }
+  ],
+  "bugs":[
+    
+  ],
+  "categories":[
+    "CSS3"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n"
+    },
+    "firefox":{
+      "2":"n",
+      "3":"n",
+      "3.5":"n",
+      "3.6":"n",
+      "4":"n",
+      "5":"n",
+      "6":"y x",
+      "7":"y x",
+      "8":"y x",
+      "9":"y x",
+      "10":"y x",
+      "11":"y x",
+      "12":"y x",
+      "13":"y x",
+      "14":"y x",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x",
+      "27":"y x",
+      "28":"y x",
+      "29":"y x",
+      "30":"y x",
+      "31":"y x",
+      "32":"y x",
+      "33":"y x",
+      "34":"y x",
+      "35":"y x"
+    },
+    "chrome":{
+      "4":"n",
+      "5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n",
+      "12":"n",
+      "13":"n",
+      "14":"n",
+      "15":"n",
+      "16":"n",
+      "17":"n",
+      "18":"n",
+      "19":"n",
+      "20":"n",
+      "21":"n",
+      "22":"n",
+      "23":"n",
+      "24":"n",
+      "25":"n",
+      "26":"n x d #1",
+      "27":"n x d #1",
+      "28":"n x d #1",
+      "29":"n x d #1",
+      "30":"n x d #1",
+      "31":"n x d #1",
+      "32":"n x d #1",
+      "33":"n x d #1",
+      "34":"n x d #1",
+      "35":"n x d #1",
+      "36":"n x d #1",
+      "37":"n x d #1",
+      "38":"n x d #1",
+      "39":"n x d #1",
+      "40":"n x d #1"
+    },
+    "safari":{
+      "3.1":"n",
+      "3.2":"n",
+      "4":"n",
+      "5":"n",
+      "5.1":"n",
+      "6":"n",
+      "6.1":"n",
+      "7":"n",
+      "8":"u"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"n",
+      "10.6":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "11.6":"n",
+      "12":"n",
+      "12.1":"n",
+      "15":"n",
+      "16":"n",
+      "17":"n",
+      "18":"n",
+      "19":"n",
+      "20":"n",
+      "21":"n",
+      "22":"n",
+      "23":"n",
+      "24":"n",
+      "25":"n",
+      "26":"n"
+    },
+    "ios_saf":{
+      "3.2":"n",
+      "4.0-4.1":"n",
+      "4.2-4.3":"n",
+      "5.0-5.1":"n",
+      "6.0-6.1":"n",
+      "7.0-7.1":"n",
+      "8":"a x #2"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"n",
+      "2.2":"n",
+      "2.3":"n",
+      "3":"n",
+      "4":"n",
+      "4.1":"n",
+      "4.2-4.3":"n",
+      "4.4":"n",
+      "4.4.3":"n"
+    },
+    "bb":{
+      "7":"n",
+      "10":"n"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "12":"n",
+      "12.1":"n",
+      "22":"n"
+    },
+    "and_chr":{
+      "37":"n"
+    },
+    "and_ff":{
+      "32":"y x"
+    },
+    "ie_mob":{
+      "10":"n"
+    }
+  },
+  "notes":"",
+  "notes_by_num":{
+    "1":"Enabled in Chrome through the \"experimental Web Platform features\" flag in chrome://flags",
+    "2":"Partial support in iOS 8 refers to not supporting the text-decoration-style property."
+  },
+  "usage_perc_y":13.26,
+  "usage_perc_a":0,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"text-decoration-line,text-decoration-style,text-decoration-color",
+  "ie_id":"",
+  "chrome_id":"",
+  "shown":true
+}
+},{}],76:[function(require,module,exports){
+module.exports={
+  "title":"CSS text-size-adjust",
+  "description":"On mobile devices, the text-size-adjust CSS property allows Web authors to control if and how the text-inflating algorithm is applied to the textual content of the element it is applied to.",
+  "spec":"http://dev.w3.org/csswg/css-size-adjust/",
+  "status":"wd",
+  "links":[
+    {
+      "url":"https://developer.mozilla.org/en-US/docs/Web/CSS/text-size-adjust",
+      "title":"MDN Docs"
+    }
+  ],
+  "bugs":[
+    {
+      "description":"There is a bug in Webkit-based desktop browsers. If -webkit-text-size-adjust is explicitely set to none, Webkit-based desktop browsers, like Chrome or Safari, instead of ignoring the property, will prevent the user to zoom in or out the Web page."
+    },
+    {
+      "description":"If the viewport in IE Phone is set using <meta> element, the value of the CSS text-size-adjust property is ignored."
+    }
+  ],
+  "categories":[
+    "CSS3"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n"
+    },
+    "firefox":{
+      "2":"n",
+      "3":"n",
+      "3.5":"n",
+      "3.6":"n",
+      "4":"n",
+      "5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n",
+      "12":"n",
+      "13":"n",
+      "14":"n",
+      "15":"n",
+      "16":"n",
+      "17":"n",
+      "18":"n",
+      "19":"n",
+      "20":"n",
+      "21":"n",
+      "22":"n",
+      "23":"n",
+      "24":"n",
+      "25":"n",
+      "26":"n",
+      "27":"n",
+      "28":"n",
+      "29":"n",
+      "30":"n",
+      "31":"n",
+      "32":"n",
+      "33":"n",
+      "34":"n",
+      "35":"n"
+    },
+    "chrome":{
+      "4":"n",
+      "5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n",
+      "12":"n",
+      "13":"n",
+      "14":"n",
+      "15":"n",
+      "16":"n",
+      "17":"n",
+      "18":"n",
+      "19":"n",
+      "20":"n",
+      "21":"n",
+      "22":"n",
+      "23":"n",
+      "24":"n",
+      "25":"n",
+      "26":"n",
+      "27":"n",
+      "28":"n",
+      "29":"n",
+      "30":"n",
+      "31":"n",
+      "32":"n",
+      "33":"n",
+      "34":"n",
+      "35":"n",
+      "36":"n",
+      "37":"n",
+      "38":"n",
+      "39":"n",
+      "40":"n"
+    },
+    "safari":{
+      "3.1":"n",
+      "3.2":"n",
+      "4":"n",
+      "5":"n",
+      "5.1":"n",
+      "6":"n",
+      "6.1":"n",
+      "7":"n",
+      "8":"n"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"n",
+      "10.6":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "11.6":"n",
+      "12":"n",
+      "12.1":"n",
+      "15":"n",
+      "16":"n",
+      "17":"n",
+      "18":"n",
+      "19":"n",
+      "20":"n",
+      "21":"n",
+      "22":"n",
+      "23":"n",
+      "24":"n",
+      "25":"n",
+      "26":"n"
+    },
+    "ios_saf":{
+      "3.2":"n",
+      "4.0-4.1":"n",
+      "4.2-4.3":"n",
+      "5.0-5.1":"y x",
+      "6.0-6.1":"y x",
+      "7.0-7.1":"y x",
+      "8":"y x"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"n",
+      "2.2":"n",
+      "2.3":"n",
+      "3":"n",
+      "4":"n",
+      "4.1":"n",
+      "4.2-4.3":"n",
+      "4.4":"n",
+      "4.4.3":"n"
+    },
+    "bb":{
+      "7":"n",
+      "10":"n"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "12":"n",
+      "12.1":"n",
+      "22":"n"
+    },
+    "and_chr":{
+      "37":"n"
+    },
+    "and_ff":{
+      "32":"y x"
+    },
+    "ie_mob":{
+      "10":"y x"
+    }
+  },
+  "notes":"",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":7.5,
+  "usage_perc_a":0,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"",
+  "ie_id":"",
+  "chrome_id":"",
+  "shown":true
+}
+},{}],77:[function(require,module,exports){
+module.exports={
+  "title":"CSS3 Transforms",
+  "description":"Method of transforming an element including rotating, scaling, etc.",
+  "spec":"http://www.w3.org/TR/css3-2d-transforms/",
+  "status":"wd",
+  "links":[
+    {
+      "url":"http://www.westciv.com/tools/transforms/",
+      "title":"Live editor"
+    },
+    {
+      "url":"https://developer.mozilla.org/en/CSS/-moz-transform",
+      "title":"MDN article"
+    },
+    {
+      "url":"http://www.webresourcesdepot.com/cross-browser-css-transforms-csssandpaper/",
+      "title":"Workaround script for IE"
+    },
+    {
+      "url":"http://www.css3files.com/transform/",
+      "title":"Information page"
+    },
+    {
+      "url":"http://www.useragentman.com/IETransformsTranslator/",
+      "title":"Converter for IE"
+    },
+    {
+      "url":"https://raw.github.com/phiggins42/has.js/master/detect/css.js#css-transform",
+      "title":"has.js test"
+    },
+    {
+      "url":"http://docs.webplatform.org/wiki/css/transforms/transform",
+      "title":"WebPlatform Docs"
+    }
+  ],
+  "bugs":[
+    {
+      "description":"Scaling transforms in Android 2.3 fails to scale element background images."
+    },
+    {
+      "description":"Firefox and IE don't support CSS transforms on SVG elements (though SVG transform attributes do work)."
+    },
+    {
+      "description":"Transforms may break position:fixed styles of contained elements"
+    }
+  ],
+  "categories":[
+    "CSS3"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"p",
+      "7":"p",
+      "8":"p",
+      "9":"y x",
+      "10":"y",
+      "11":"y"
+    },
+    "firefox":{
+      "2":"n",
+      "3":"n",
+      "3.5":"y x",
+      "3.6":"y x",
+      "4":"y x",
+      "5":"y x",
+      "6":"y x",
+      "7":"y x",
+      "8":"y x",
+      "9":"y x",
+      "10":"y x",
+      "11":"y x",
+      "12":"y x",
+      "13":"y x",
+      "14":"y x",
+      "15":"y x",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y",
+      "27":"y",
+      "28":"y",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y"
+    },
+    "chrome":{
+      "4":"y x",
+      "5":"y x",
+      "6":"y x",
+      "7":"y x",
+      "8":"y x",
+      "9":"y x",
+      "10":"y x",
+      "11":"y x",
+      "12":"y x",
+      "13":"y x",
+      "14":"y x",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x",
+      "27":"y x",
+      "28":"y x",
+      "29":"y x",
+      "30":"y x",
+      "31":"y x",
+      "32":"y x",
+      "33":"y x",
+      "34":"y x",
+      "35":"y x",
+      "36":"y",
+      "37":"y",
+      "38":"y",
+      "39":"y",
+      "40":"y"
+    },
+    "safari":{
+      "3.1":"y x",
+      "3.2":"y x",
+      "4":"y x",
+      "5":"y x",
+      "5.1":"y x",
+      "6":"y x",
+      "6.1":"y x",
+      "7":"y x",
+      "8":"y x"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"y x",
+      "10.6":"y x",
+      "11":"y x",
+      "11.1":"y x",
+      "11.5":"y x",
+      "11.6":"y x",
+      "12":"y x",
+      "12.1":"y",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y"
+    },
+    "ios_saf":{
+      "3.2":"y x",
+      "4.0-4.1":"y x",
+      "4.2-4.3":"y x",
+      "5.0-5.1":"y x",
+      "6.0-6.1":"y x",
+      "7.0-7.1":"y x",
+      "8":"y x"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"y x",
+      "2.2":"y x",
+      "2.3":"y x",
+      "3":"y x",
+      "4":"y x",
+      "4.1":"y x",
+      "4.2-4.3":"y x",
+      "4.4":"y x",
+      "4.4.3":"y x"
+    },
+    "bb":{
+      "7":"y x",
+      "10":"y x"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"y",
+      "11.1":"y",
+      "11.5":"y",
+      "12":"y",
+      "12.1":"y",
+      "22":"y x"
+    },
+    "and_chr":{
+      "37":"y"
+    },
+    "and_ff":{
+      "32":"y"
+    },
+    "ie_mob":{
+      "10":"y"
+    }
+  },
+  "notes":"The scale transform can be emulated in IE < 9 using Microsoft's \"zoom\" extension, others are (not easily) possible using the MS Matrix filter",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":85.63,
+  "usage_perc_a":0,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"transformation,translate,rotation,rotate,scale,css-transforms",
+  "ie_id":"transforms",
+  "chrome_id":"6437640580628480",
+  "shown":true
+}
+},{}],78:[function(require,module,exports){
+module.exports={
+  "title":"CSS3 3D Transforms",
+  "description":"Method of transforming an element in the third dimension",
+  "spec":"http://www.w3.org/TR/css3-3d-transforms/",
+  "status":"wd",
+  "links":[
+    {
+      "url":"http://css3.bradshawenterprises.com/flip/",
+      "title":"Multi-browser demo"
+    },
+    {
+      "url":"http://hacks.mozilla.org/2011/10/css-3d-transformations-in-firefox-nightly/",
+      "title":"Mozilla hacks article"
+    },
+    {
+      "url":"http://thewebrocks.com/demos/3D-css-tester/",
+      "title":"3D CSS Tester"
+    },
+    {
+      "url":"https://raw.github.com/phiggins42/has.js/master/detect/css.js#css-transform",
+      "title":"has.js test"
+    },
+    {
+      "url":"http://docs.webplatform.org/wiki/css/transforms/transform",
+      "title":"WebPlatform Docs"
+    }
+  ],
+  "bugs":[
+    {
+      "description":"Some configurations of Linux (those without WebGL support) have trouble with 3D transforms and will treat them as if \"perspective\" was set as \"none\" using Chrome."
+    },
+    {
+      "description":"Firefox on Windows [incorrectly renders plugin content within no-op 3D transforms](https://bugzilla.mozilla.org/show_bug.cgi?id=1048279)."
+    }
+  ],
+  "categories":[
+    "CSS3"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"a",
+      "11":"a"
+    },
+    "firefox":{
+      "2":"n",
+      "3":"n",
+      "3.5":"n",
+      "3.6":"n",
+      "4":"n",
+      "5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"y x",
+      "11":"y x",
+      "12":"y x",
+      "13":"y x",
+      "14":"y x",
+      "15":"y x",
+      "16":"y",
+      "17":"y",
+      "18":"y",
+      "19":"y",
+      "20":"y",
+      "21":"y",
+      "22":"y",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y",
+      "27":"y",
+      "28":"y",
+      "29":"y",
+      "30":"y",
+      "31":"y",
+      "32":"y",
+      "33":"y",
+      "34":"y",
+      "35":"y"
+    },
+    "chrome":{
+      "4":"n",
+      "5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"n",
+      "11":"n",
+      "12":"y x",
+      "13":"y x",
+      "14":"y x",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x",
+      "27":"y x",
+      "28":"y x",
+      "29":"y x",
+      "30":"y x",
+      "31":"y x",
+      "32":"y x",
+      "33":"y x",
+      "34":"y x",
+      "35":"y x",
+      "36":"y",
+      "37":"y",
+      "38":"y",
+      "39":"y",
+      "40":"y"
+    },
+    "safari":{
+      "3.1":"n",
+      "3.2":"n",
+      "4":"y x",
+      "5":"y x",
+      "5.1":"y x",
+      "6":"y x",
+      "6.1":"y x",
+      "7":"y x",
+      "8":"y x"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"n",
+      "10.6":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "11.6":"n",
+      "12":"n",
+      "12.1":"n",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y",
+      "24":"y",
+      "25":"y",
+      "26":"y"
+    },
+    "ios_saf":{
+      "3.2":"y x",
+      "4.0-4.1":"y x",
+      "4.2-4.3":"y x",
+      "5.0-5.1":"y x",
+      "6.0-6.1":"y x",
+      "7.0-7.1":"y x",
+      "8":"y x"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"n",
+      "2.2":"n",
+      "2.3":"n",
+      "3":"y x",
+      "4":"y x",
+      "4.1":"y x",
+      "4.2-4.3":"y x",
+      "4.4":"y x",
+      "4.4.3":"y x"
+    },
+    "bb":{
+      "7":"y x",
+      "10":"y x"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "12":"n",
+      "12.1":"n",
+      "22":"y x"
+    },
+    "and_chr":{
+      "37":"y x"
+    },
+    "and_ff":{
+      "32":"y"
+    },
+    "ie_mob":{
+      "10":"a"
+    }
+  },
+  "notes":"Partial support in IE refers to not supporting [the transform-style: preserve-3d property](http://msdn.microsoft.com/en-us/library/ie/hh673529%28v=vs.85%29.aspx#the_ms_transform_style_property). This prevents nesting 3D transformed elements.",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":71.13,
+  "usage_perc_a":10.07,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"css 3d,3dtransforms,translate3d,transform3d",
+  "ie_id":"transforms,csstransformspreserve3d",
+  "chrome_id":"6437640580628480",
+  "shown":true
+}
+},{}],79:[function(require,module,exports){
+module.exports={
+  "title":"CSS user-select: none",
+  "description":"Method of preventing text/element selection using CSS. ",
+  "spec":"https://developer.mozilla.org/en-US/docs/CSS/user-select",
+  "status":"unoff",
+  "links":[
+    {
+      "url":"https://developer.mozilla.org/en-US/docs/CSS/user-select",
+      "title":"MDN article"
+    },
+    {
+      "url":"http://css-tricks.com/almanac/properties/u/user-select/",
+      "title":"CSS Tricks article"
+    },
+    {
+      "url":"http://msdn.microsoft.com/en-us/library/ie/hh781492(v=vs.85).aspx",
+      "title":"MSDN Documentation"
+    }
+  ],
+  "bugs":[
+    
+  ],
+  "categories":[
+    "CSS"
+  ],
+  "stats":{
+    "ie":{
+      "5.5":"n",
+      "6":"n",
+      "7":"n",
+      "8":"n",
+      "9":"n",
+      "10":"y x",
+      "11":"y x"
+    },
+    "firefox":{
+      "2":"y x",
+      "3":"y x",
+      "3.5":"y x",
+      "3.6":"y x",
+      "4":"y x",
+      "5":"y x",
+      "6":"y x",
+      "7":"y x",
+      "8":"y x",
+      "9":"y x",
+      "10":"y x",
+      "11":"y x",
+      "12":"y x",
+      "13":"y x",
+      "14":"y x",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x",
+      "27":"y x",
+      "28":"y x",
+      "29":"y x",
+      "30":"y x",
+      "31":"y x",
+      "32":"y x",
+      "33":"y x",
+      "34":"y x",
+      "35":"y x"
+    },
+    "chrome":{
+      "4":"u",
+      "5":"u",
+      "6":"y x",
+      "7":"y x",
+      "8":"y x",
+      "9":"y x",
+      "10":"y x",
+      "11":"y x",
+      "12":"y x",
+      "13":"y x",
+      "14":"y x",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x",
+      "27":"y x",
+      "28":"y x",
+      "29":"y x",
+      "30":"y x",
+      "31":"y x",
+      "32":"y x",
+      "33":"y x",
+      "34":"y x",
+      "35":"y x",
+      "36":"y x",
+      "37":"y x",
+      "38":"y x",
+      "39":"y x",
+      "40":"y x"
+    },
+    "safari":{
+      "3.1":"y x",
+      "3.2":"y x",
+      "4":"y x",
+      "5":"y x",
+      "5.1":"y x",
+      "6":"y x",
+      "6.1":"y x",
+      "7":"y x",
+      "8":"y x"
+    },
+    "opera":{
+      "9":"n",
+      "9.5-9.6":"n",
+      "10.0-10.1":"n",
+      "10.5":"n",
+      "10.6":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "11.6":"n",
+      "12":"n",
+      "12.1":"n",
+      "15":"y x",
+      "16":"y x",
+      "17":"y x",
+      "18":"y x",
+      "19":"y x",
+      "20":"y x",
+      "21":"y x",
+      "22":"y x",
+      "23":"y x",
+      "24":"y x",
+      "25":"y x",
+      "26":"y x"
+    },
+    "ios_saf":{
+      "3.2":"y x",
+      "4.0-4.1":"y x",
+      "4.2-4.3":"y x",
+      "5.0-5.1":"y x",
+      "6.0-6.1":"y x",
+      "7.0-7.1":"y x",
+      "8":"y x"
+    },
+    "op_mini":{
+      "5.0-7.0":"n"
+    },
+    "android":{
+      "2.1":"y x",
+      "2.2":"y x",
+      "2.3":"y x",
+      "3":"y x",
+      "4":"y x",
+      "4.1":"y x",
+      "4.2-4.3":"y x",
+      "4.4":"y x",
+      "4.4.3":"y x"
+    },
+    "bb":{
+      "7":"y x",
+      "10":"y x"
+    },
+    "op_mob":{
+      "10":"n",
+      "11":"n",
+      "11.1":"n",
+      "11.5":"n",
+      "12":"n",
+      "12.1":"n",
+      "22":"y x"
+    },
+    "and_chr":{
+      "37":"y x"
+    },
+    "and_ff":{
+      "32":"y x"
+    },
+    "ie_mob":{
+      "10":"y x"
+    }
+  },
+  "notes":"Currently the user-select property does not appear in any W3C specification. Support information here is only for \"none\" value, not others.",
+  "notes_by_num":{
+    
+  },
+  "usage_perc_y":82.76,
+  "usage_perc_a":0,
+  "ucprefix":false,
+  "parent":"",
+  "keywords":"",
+  "ie_id":"",
+  "chrome_id":"",
+  "shown":true
+}
+},{}],80:[function(require,module,exports){
+var Container = require('./container');
 
-    Container.prototype.stringifyContent = function(builder) {
-      var last;
-      if (!this.rules && !this.decls) {
-        return;
-      }
-      if (this.rules) {
-        last = this.rules.length - 1;
-        return this.rules.map(function(rule, i) {
-          return rule.stringify(builder, last === i);
+// CSS at-rule like “this.keyframes name { }”.
+//
+// Can contain declarations (like this.font-face or this.page) ot another rules.
+var AtRule = (function(super$0){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};MIXIN$0(AtRule, super$0);var $proto$0={};
+    function AtRule(defaults) {
+        this.type = 'atrule';
+        super$0.call(this, defaults);
+    }AtRule.prototype = Object.create(super$0.prototype, {"constructor": {"value": AtRule, "configurable": true, "writable": true} });try{DP$0(AtRule, "prototype", {"configurable": false, "enumerable": false, "writable": false});}catch(e){}
+
+    // Different style for this.encoding and this.page at-rules.
+    $proto$0.styleType = function() {
+        return this.type + ((this.rules || this.decls) ? '-body' : '-bodiless');
+    };
+
+    $proto$0.defaultStyle = function(type) {
+        if ( type == 'atrule-body' ) {
+            return { between: ' ', after: this.defaultAfter() };
+        } else {
+            return { between: '' };
+        }
+    };
+
+    // Load into at-rule mixin for selected content type
+    $proto$0.addMixin = function(type) {
+        var mixin = type == 'rules' ? Container.WithRules : Container.WithDecls;
+        if ( !mixin ) return;
+
+        for ( var name in mixin.prototype ) {
+            if ( name == 'constructor' ) continue;
+            var value = mixin.prototype[name];
+
+            var container = Container.prototype[name] == value;
+            var detector  = name == 'append' || name == 'prepend';
+            if ( container && !detector ) continue;
+
+            this[name] = value;
+        }
+        mixin.apply(this);
+    };
+
+    // Stringify at-rule
+    $proto$0.stringify = function(builder, last) {
+        var style = this.style();
+
+        var name   = '@' + this.name;
+        var params = this.params ? this.stringifyRaw('params') : '';
+
+        if ( typeof(this.afterName) != 'undefined' ) {
+            name += this.afterName;
+        } else if ( params ) {
+            name += ' ';
+        }
+
+        if ( this.rules || this.decls ) {
+            this.stringifyBlock(builder, name + params + style.between + '{');
+
+        } else {
+            if ( this.before ) builder(this.before);
+            var semicolon = (!last || this.semicolon) ? ';' : '';
+            builder(name + params + style.between + semicolon, this);
+        }
+    };
+
+    // Hack to detect container type by child type
+    $proto$0.append = function(child) {
+        var mixin = child.type == 'decl' ? 'decls' : 'rules';
+        this.addMixin(mixin);
+        return this.append(child);
+    };
+
+    // Hack to detect container type by child type
+    $proto$0.prepend = function(child) {
+        var mixin = child.type == 'decl' ? 'decls' : 'rules';
+        this.addMixin(mixin);
+        return this.prepend(child);
+    };
+MIXIN$0(AtRule.prototype,$proto$0);$proto$0=void 0;return AtRule;})(Container);
+
+module.exports = AtRule;
+
+},{"./container":82}],81:[function(require,module,exports){
+var Node = require('./node');
+
+// CSS comment between declarations or rules
+var Comment = (function(super$0){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};MIXIN$0(Comment, super$0);var $proto$0={};
+    function Comment(defaults) {
+        this.type = 'comment';
+        super$0.call(this, defaults);
+    }Comment.prototype = Object.create(super$0.prototype, {"constructor": {"value": Comment, "configurable": true, "writable": true} });try{DP$0(Comment, "prototype", {"configurable": false, "enumerable": false, "writable": false});}catch(e){}
+
+    // Default spaces for new node
+    $proto$0.defaultStyle = function() {
+       return { left: ' ', right: ' ' };
+    };
+
+    // Stringify declaration
+    $proto$0.stringify = function(builder) {
+        var style = this.style();
+        if ( this.before ) builder(this.before);
+        builder('/*' + style.left + this.text + style.right + '*/', this);
+    };
+MIXIN$0(Comment.prototype,$proto$0);$proto$0=void 0;return Comment;})(Node);
+
+module.exports = Comment;
+
+},{"./node":87}],82:[function(require,module,exports){
+var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};var Node        = require('./node');
+var Declaration = require('./declaration');
+
+// CSS node, that contain another nodes (like at-rules or rules with selectors)
+var Container = (function(super$0){"use strict";function Container() {super$0.apply(this, arguments)}MIXIN$0(Container, super$0);Container.prototype = Object.create(super$0.prototype, {"constructor": {"value": Container, "configurable": true, "writable": true}, first: {"get": first$get$0, "configurable": true, "enumerable": true}, last: {"get": last$get$0, "configurable": true, "enumerable": true}, list: {"get": list$get$0, "configurable": true, "enumerable": true} });try{DP$0(Container, "prototype", {"configurable": false, "enumerable": false, "writable": false});}catch(e){}var $proto$0={};var S_ITER$0 = typeof Symbol!=='undefined'&&Symbol&&Symbol.iterator||'@@iterator';var S_MARK$0 = typeof Symbol!=='undefined'&&Symbol&&Symbol["__setObjectSetter__"];function GET_ITER$0(v){if(v){if(Array.isArray(v))return 0;var f;if(S_MARK$0)S_MARK$0(v);if(typeof v==='object'&&typeof (f=v[S_ITER$0])==='function'){if(S_MARK$0)S_MARK$0(void 0);return f.call(v);}if(S_MARK$0)S_MARK$0(void 0);if((v+'')==='[object Generator]')return v;}throw new Error(v+' is not iterable')};
+    // Stringify container childs
+    $proto$0.stringifyContent = function(builder) {
+        if ( !this.rules && !this.decls ) return;
+
+        var i, last = this.list.length - 1;
+        if ( this.rules ) {
+            for ( i = 0; i < this.rules.length; i++ ) {
+                this.rules[i].stringify(builder, last == i);
+            }
+
+        } else if ( this.decls ) {
+            for ( i = 0; i < this.decls.length; i++ ) {
+                this.decls[i].stringify(builder, last != i || this.semicolon);
+            }
+        }
+    };
+
+    // Generate default spaces before }
+    $proto$0.defaultAfter = function() {
+        if ( this.list.length === 0 ) {
+            return '';
+        } else {
+            var last = this.list[0].before;
+            if ( typeof(last) != 'undefined' && last.indexOf("\n") == -1 ) {
+                return this.list[0].before;
+            } else {
+                return "\n";
+            }
+        }
+    };
+
+    // Stringify node with start (for example, selector) and brackets block
+    // with child inside
+    $proto$0.stringifyBlock = function(builder, start) {
+        var style = this.style();
+
+        if ( this.before ) builder(this.before);
+        builder(start, this, 'start');
+
+        this.stringifyContent(builder);
+
+        if ( style.after ) builder(style.after);
+        builder('}', this, 'end');
+    };
+
+    // Add child to end of list without any checks.
+    // Please, use `append()` method, `push()` is mostly for parser.
+    $proto$0.push = function(child) {
+        child.parent = this;
+        this.list.push(child);
+        return this;
+    };
+
+    // Execute `callback` on every child element. First arguments will be child
+    // node, second will be index.
+    //
+    //   css.each( (rule, i) => {
+    //       console.log(rule.type + ' at ' + i);
+    //   });
+    //
+    // It is safe for add and remove elements to list while iterating:
+    //
+    //  css.each( (rule) => {
+    //      css.insertBefore( rule, addPrefix(rule) );
+    //      # On next iteration will be next rule, regardless of that
+    //      # list size was increased
+    //  });
+    $proto$0.each = function(callback) {
+        if ( !this.lastEach ) this.lastEach = 0;
+        if ( !this.indexes )  this.indexes = { };
+
+        this.lastEach += 1;
+        var id = this.lastEach;
+        this.indexes[id] = 0;
+
+        var list = this.list;
+        if ( !list ) return;
+
+        var index, result;
+        while ( this.indexes[id] < list.length ) {
+
+          index  = this.indexes[id];
+          result = callback(list[index], index);
+          if ( result === false ) break;
+
+          this.indexes[id] += 1;
+        }
+
+        delete this.indexes[id];
+
+        if ( result === false ) return false;
+    };
+
+    // Execute callback on every child in all rules inside.
+    //
+    // First argument will be child node, second will be index inside parent.
+    //
+    //   css.eachInside( (node, i) => {
+    //       console.log(node.type + ' at ' + i);
+    //   });
+    //
+    // Also as `each` it is safe of insert/remove nodes inside iterating.
+    $proto$0.eachInside = function(callback) {
+        return this.each( function(child, i)  {
+            var result = callback(child, i);
+
+            if ( result !== false && child.eachInside ) {
+                result = child.eachInside(callback);
+            }
+
+            if ( result === false ) return result;
         });
-      } else if (this.decls) {
-        last = this.decls.length - 1;
-        return this.decls.map((function(_this) {
-          return function(decl, i) {
-            return decl.stringify(builder, last !== i || _this.semicolon);
-          };
-        })(this));
-      }
     };
 
-    Container.prototype.defaultAfter = function() {
-      var _ref;
-      if (this.list.length === 0) {
-        return '';
-      } else if (((_ref = this.list[0].before) != null ? _ref.indexOf("\n") : void 0) === -1) {
-        return this.list[0].before;
-      } else {
-        return "\n";
-      }
+    // Execute callback on every declaration in all rules inside.
+    // It will goes inside at-rules recursivelly.
+    //
+    // First argument will be declaration node, second will be index inside
+    // parent rule.
+    //
+    //   css.eachDecl( (decl, i) => {
+    //       console.log(decl.prop + ' in ' + decl.parent.selector + ':' + i);
+    //   });
+    //
+    // Also as `each` it is safe of insert/remove nodes inside iterating.
+    $proto$0.eachDecl = function(callback) {
+        // Different realization will be inside subclasses
     };
 
-    Container.prototype.stringifyBlock = function(builder, start) {
-      var style;
-      style = this.style();
-      if (this.before) {
-        builder(this.before);
-      }
-      builder(start, this, 'start');
-      this.stringifyContent(builder);
-      if (style.after) {
-        builder(style.after);
-      }
-      return builder('}', this, 'end');
+    // Execute callback on every block comment (only between rules
+    // and declarations, not inside selectors and values) in all rules inside.
+    //
+    // First argument will be comment node, second will be index inside
+    // parent rule.
+    //
+    //   css.eachComment( (comment, i) => {
+    //       console.log(comment.content + ' at ' + i);
+    //   });
+    //
+    // Also as `each` it is safe of insert/remove nodes inside iterating.
+    $proto$0.eachComment = function(callback) {
+        return this.eachInside( function(child, i)  {
+            if ( child.type == 'comment' ) {
+                var result = callback(child, i);
+                if ( result === false ) return result;
+            }
+        });
     };
 
-    Container.prototype.push = function(child) {
-      child.parent = this;
-      this.list.push(child);
-      return this;
+    // Add child to container.
+    //
+    //   css.append(rule);
+    //
+    // You can add declaration by hash:
+    //
+    //   rule.append({ prop: 'color', value: 'black' });
+    $proto$0.append = function(child) {var $D$0;var $D$1;var $D$2;
+        var childs = this.normalize(child, this.list[this.list.length - 1]);
+        $D$0 = GET_ITER$0(childs);$D$2 = $D$0 === 0;$D$1 = ($D$2 ? childs.length : void 0);for ( child ;$D$2 ? ($D$0 < $D$1) : !($D$1 = $D$0["next"]())["done"];){child = ($D$2 ? childs[$D$0++] : $D$1["value"]);
+            this.list.push(child);
+        };$D$0 = $D$1 = $D$2 = void 0;
+        return this;
     };
 
-    Container.prototype.each = function(callback) {
-      var id, index, list, result;
-      this.lastEach || (this.lastEach = 0);
-      this.indexes || (this.indexes = {});
-      this.lastEach += 1;
-      id = this.lastEach;
-      this.indexes[id] = 0;
-      list = this.list;
-      if (!list) {
-        return;
-      }
-      while (this.indexes[id] < list.length) {
-        index = this.indexes[id];
-        result = callback(list[index], index);
-        if (result === false) {
-          break;
+    // Add child to beginning of container
+    //
+    //   css.prepend(rule);
+    //
+    // You can add declaration by hash:
+    //
+    //   rule.prepend({ prop: 'color', value: 'black' });
+    $proto$0.prepend = function(child) {var $D$3;var $D$4;var $D$5;
+        var childs = this.normalize(child, this.list[0], 'prepend').reverse();
+        $D$3 = GET_ITER$0(childs);$D$5 = $D$3 === 0;$D$4 = ($D$5 ? childs.length : void 0);for ( child ;$D$5 ? ($D$3 < $D$4) : !($D$4 = $D$3["next"]())["done"];){child = ($D$5 ? childs[$D$3++] : $D$4["value"]);
+            this.list.unshift(child);
+        };$D$3 = $D$4 = $D$5 = void 0;
+
+        for ( var id in this.indexes ) {
+            this.indexes[id] = this.indexes[id] + childs.length;
         }
-        this.indexes[id] += 1;
-      }
-      delete this.indexes[id];
-      if (result === false) {
-        return false;
-      }
+
+        return this;
     };
 
-    Container.prototype.eachInside = function(callback) {
-      return this.each((function(_this) {
-        return function(child, i) {
-          var result;
-          result = callback(child, i);
-          if (result !== false && child.eachInside) {
-            result = child.eachInside(callback);
-          }
-          if (result === false) {
-            return result;
-          }
-        };
-      })(this));
-    };
+    // Insert new `added` child before `exist`.
+    // You can set node object or node index (it will be faster) in `exist`.
+    //
+    //   css.insertAfter(1, rule);
+    //
+    // You can add declaration by hash:
+    //
+    //   rule.insertBefore(1, { prop: 'color', value: 'black' });
+    $proto$0.insertBefore = function(exist, add) {var $D$6;var $D$7;var $D$8;
+        exist = this.index(exist);
 
-    Container.prototype.eachDecl = function(callback) {};
+        var type   = exist === 0 ? 'prepend' : false;
+        var childs = this.normalize(add, this.list[exist], type).reverse();
+        $D$6 = GET_ITER$0(childs);$D$8 = $D$6 === 0;$D$7 = ($D$8 ? childs.length : void 0);for ( var child ;$D$8 ? ($D$6 < $D$7) : !($D$7 = $D$6["next"]())["done"];){child = ($D$8 ? childs[$D$6++] : $D$7["value"]);
+            this.list.splice(exist, 0, child);
+        };$D$6 = $D$7 = $D$8 = void 0;
 
-    Container.prototype.eachComment = function(callback) {
-      return this.eachInside((function(_this) {
-        return function(child, i) {
-          var result;
-          result = child.type === 'comment' ? callback(child, i) : void 0;
-          if (result === false) {
-            return result;
-          }
-        };
-      })(this));
-    };
-
-    Container.prototype.append = function(child) {
-      child = this.normalize(child, this.list[this.list.length - 1]);
-      this.list.push(child);
-      return this;
-    };
-
-    Container.prototype.prepend = function(child) {
-      var id, index, _ref;
-      child = this.normalize(child, this.list[0], 'prepend');
-      this.list.unshift(child);
-      _ref = this.indexes;
-      for (id in _ref) {
-        index = _ref[id];
-        this.indexes[id] = index + 1;
-      }
-      return this;
-    };
-
-    Container.prototype.insertBefore = function(exist, add) {
-      var id, index, _ref;
-      exist = this.index(exist);
-      add = this.normalize(add, this.list[exist], exist === 0 ? 'prepend' : void 0);
-      this.list.splice(exist, 0, add);
-      _ref = this.indexes;
-      for (id in _ref) {
-        index = _ref[id];
-        if (index >= exist) {
-          this.indexes[id] = index + 1;
+        for ( var id in this.indexes ) {
+            this.indexes[id] = this.indexes[id] + childs.length;
         }
-      }
-      return this;
+
+        return this;
     };
 
-    Container.prototype.insertAfter = function(exist, add) {
-      var id, index, _ref;
-      exist = this.index(exist);
-      add = this.normalize(add, this.list[exist]);
-      this.list.splice(exist + 1, 0, add);
-      _ref = this.indexes;
-      for (id in _ref) {
-        index = _ref[id];
-        if (index > exist) {
-          this.indexes[id] = index + 1;
+    // Insert new `added` child after `exist`.
+    // You can set node object or node index (it will be faster) in `exist`.
+    //
+    //   css.insertAfter(1, rule);
+    //
+    // You can add declaration by hash:
+    //
+    //   rule.insertAfter(1, { prop: 'color', value: 'black' });
+    $proto$0.insertAfter = function(exist, add) {var $D$9;var $D$10;var $D$11;
+        exist = this.index(exist);
+
+        var childs = this.normalize(add, this.list[exist]).reverse();
+        $D$9 = GET_ITER$0(childs);$D$11 = $D$9 === 0;$D$10 = ($D$11 ? childs.length : void 0);for ( var child ;$D$11 ? ($D$9 < $D$10) : !($D$10 = $D$9["next"]())["done"];){child = ($D$11 ? childs[$D$9++] : $D$10["value"]);
+            this.list.splice(exist + 1, 0, child);
+        };$D$9 = $D$10 = $D$11 = void 0;
+
+        for ( var id in this.indexes ) {
+            this.indexes[id] = this.indexes[id] + childs.length;
         }
-      }
-      return this;
+
+        return this;
     };
 
-    Container.prototype.remove = function(child) {
-      var id, index, _ref;
-      child = this.index(child);
-      this.list.splice(child, 1);
-      _ref = this.indexes;
-      for (id in _ref) {
-        index = _ref[id];
-        if (index >= child) {
-          this.indexes[id] = index - 1;
+    // Remove `child` by index or node.
+    //
+    //   css.remove(2);
+    $proto$0.remove = function(child) {
+        child = this.index(child);
+        this.list.splice(child, 1);
+
+        for ( var id in this.indexes ) {
+            var index = this.indexes[id];
+            if ( index >= child ) {
+                this.indexes[id] = index - 1;
+            }
         }
-      }
-      return this;
+
+        return this;
     };
 
-    Container.prototype.every = function(condition) {
-      return this.list.every(condition);
+    // Return true if all childs return true in `condition`.
+    // Just shorcut for `list.every`.
+    $proto$0.every = function(condition) {
+        return this.list.every(condition);
     };
 
-    Container.prototype.some = function(condition) {
-      return this.list.some(condition);
+    // Return true if one or more childs return true in `condition`.
+    // Just shorcut for `list.some`.
+    $proto$0.some = function(condition) {
+        return this.list.some(condition);
     };
 
-    Container.prototype.index = function(child) {
-      if (typeof child === 'number') {
-        return child;
-      } else {
-        return this.list.indexOf(child);
-      }
+    // Return index of child
+    $proto$0.index = function(child) {
+        if ( typeof(child) == 'number' ) {
+            return child;
+        } else {
+            return this.list.indexOf(child);
+        }
     };
 
-    Container.prop('first', {
-      get: function() {
+    // Shortcut to get first child
+    function first$get$0() {
+        if ( !this.list ) return undefined;
         return this.list[0];
-      }
-    });
+    }
 
-    Container.prop('last', {
-      get: function() {
+    // Shortcut to get first child
+    function last$get$0() {
+        if ( !this.list ) return undefined;
         return this.list[this.list.length - 1];
-      }
-    });
+    }
 
-    Container.prop('list', {
-      get: function() {
+    // Shortcut to get current list
+    function list$get$0() {
         return this.rules || this.decls;
-      }
-    });
-
-    Container.prototype.normalize = function(child, sample) {
-      child.parent = this;
-      if ((child.before == null) && sample) {
-        child.before = sample.before;
-      }
-      return child;
-    };
-
-    return Container;
-
-  })(Node);
-
-  Container.WithRules = (function(_super) {
-    __extends(WithRules, _super);
-
-    function WithRules() {
-      this.rules = [];
-      WithRules.__super__.constructor.apply(this, arguments);
     }
 
-    WithRules.prototype.eachDecl = function(callback) {
-      return this.each(function(child) {
-        var result;
-        if (!child.eachDecl) {
-          return;
-        }
-        result = child.eachDecl(callback);
-        if (result === false) {
-          return result;
-        }
-      });
-    };
-
-    WithRules.prototype.eachRule = function(callback) {
-      return this.each((function(_this) {
-        return function(child, i) {
-          var result;
-          result = child.type === 'rule' ? callback(child, i) : child.eachRule ? child.eachRule(callback) : void 0;
-          if (result === false) {
-            return result;
-          }
-        };
-      })(this));
-    };
-
-    WithRules.prototype.eachAtRule = function(callback) {
-      return this.eachInside((function(_this) {
-        return function(child, i) {
-          var result;
-          result = child.type === 'atrule' ? callback(child, i) : void 0;
-          if (result === false) {
-            return result;
-          }
-        };
-      })(this));
-    };
-
-    return WithRules;
-
-  })(Container);
-
-  Container.WithDecls = (function(_super) {
-    __extends(WithDecls, _super);
-
-    function WithDecls() {
-      this.decls = [];
-      WithDecls.__super__.constructor.apply(this, arguments);
-    }
-
-    WithDecls.prototype.normalize = function(child, sample) {
-      if (!child.type) {
-        child = new Declaration(child);
-      }
-      return WithDecls.__super__.normalize.call(this, child, sample);
-    };
-
-    WithDecls.prototype.eachDecl = function(callback) {
-      return this.each((function(_this) {
-        return function(node, i) {
-          var result;
-          if (node.type !== 'decl') {
-            return;
-          }
-          result = callback(node, i);
-          if (result === false) {
-            return result;
-          }
-        };
-      })(this));
-    };
-
-    return WithDecls;
-
-  })(Container);
-
-  module.exports = Container;
-
-}).call(this);
-
-},{"./declaration":47,"./node":51}],47:[function(_dereq_,module,exports){
-(function() {
-  var Declaration, Node, vendor,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  Node = _dereq_('./node');
-
-  vendor = _dereq_('./vendor');
-
-  Declaration = (function(_super) {
-    __extends(Declaration, _super);
-
-    function Declaration() {
-      this.type = 'decl';
-      Declaration.__super__.constructor.apply(this, arguments);
-    }
-
-    Declaration.prototype.defaultStyle = function() {
-      return {
-        before: "\n    ",
-        between: ': '
-      };
-    };
-
-    Declaration.raw('value');
-
-    Declaration.prop('important', {
-      get: function() {
-        return !!this._important;
-      },
-      set: function(value) {
-        if (typeof value === 'string' && value !== '') {
-          return this._important = value;
-        } else if (value) {
-          return this._important = ' !important';
+    // Normalize child before insert. Copy before from `sample`.
+    $proto$0.normalize = function(child, sample) {var $D$12;var $D$13;var $D$14;
+        var childs;
+        if ( child.type == 'root' ) {
+            childs = child.rules;
+        } else if ( Array.isArray(child) ) {
+            childs = child.map( function(i ) {return i.clone()} );
         } else {
-          return this._important = false;
-        }
-      }
-    });
-
-    Declaration.prototype.stringify = function(builder, semicolon) {
-      var string, style;
-      style = this.style();
-      if (style.before) {
-        builder(style.before);
-      }
-      string = this.prop + style.between + this._value.toString();
-      string += this._important || '';
-      if (semicolon) {
-        string += ';';
-      }
-      return builder(string, this);
-    };
-
-    Declaration.prototype.clone = function(obj) {
-      var cloned;
-      cloned = Declaration.__super__.clone.apply(this, arguments);
-      delete cloned.before;
-      return cloned;
-    };
-
-    return Declaration;
-
-  })(Node);
-
-  module.exports = Declaration;
-
-}).call(this);
-
-},{"./node":51,"./vendor":59}],48:[function(_dereq_,module,exports){
-(function() {
-  var lazy;
-
-  lazy = function(klass, name, callback) {
-    var cache;
-    cache = name + 'Cache';
-    return klass.prototype[name] = function() {
-      if (this[cache] != null) {
-        return this[cache];
-      } else {
-        return this[cache] = callback.apply(this, arguments);
-      }
-    };
-  };
-
-  module.exports = lazy;
-
-}).call(this);
-
-},{}],49:[function(_dereq_,module,exports){
-(function() {
-  var list;
-
-  list = {
-    split: function(string, separators, last) {
-      var array, current, escape, func, letter, quote, separator, split, _i, _j, _len, _len1;
-      array = [];
-      current = '';
-      split = false;
-      func = 0;
-      quote = false;
-      escape = false;
-      for (_i = 0, _len = string.length; _i < _len; _i++) {
-        letter = string[_i];
-        if (quote) {
-          if (escape) {
-            escape = false;
-          } else if (letter === '\\') {
-            escape = true;
-          } else if (letter === quote) {
-            quote = false;
-          }
-        } else if (letter === '"' || letter === "'") {
-          quote = letter;
-        } else if (letter === '(') {
-          func += 1;
-        } else if (letter === ')') {
-          if (func > 0) {
-            func -= 1;
-          }
-        } else if (func === 0) {
-          for (_j = 0, _len1 = separators.length; _j < _len1; _j++) {
-            separator = separators[_j];
-            if (letter === separator) {
-              split = true;
+            if ( child.parent ) {
+                child = child.clone();
             }
-          }
+            childs = [child];
         }
-        if (split) {
-          if (current !== '') {
-            array.push(current.trim());
-          }
-          current = '';
-          split = false;
+
+        $D$12 = GET_ITER$0(childs);$D$14 = $D$12 === 0;$D$13 = ($D$14 ? childs.length : void 0);for ( child ;$D$14 ? ($D$12 < $D$13) : !($D$13 = $D$12["next"]())["done"];){child = ($D$14 ? childs[$D$12++] : $D$13["value"]);
+            child.parent = this;
+            if ( typeof(child.before) == 'undefined' && sample ) {
+                child.before = sample.before;
+            }
+        };$D$12 = $D$13 = $D$14 = void 0;
+
+        return childs;
+    };
+MIXIN$0(Container.prototype,$proto$0);$proto$0=void 0;return Container;})(Node);
+
+// Container with another rules, like this.media at-rule
+ Container.WithRules = ((function(super$0){"use strict";MIXIN$0(constructor$0, super$0);var $proto$0={};
+    function constructor$0(defaults) {
+        this.rules = [];
+        super$0.call(this, defaults);
+    }constructor$0.prototype = Object.create(super$0.prototype, {"constructor": {"value": constructor$0, "configurable": true, "writable": true} });try{DP$0(constructor$0, "prototype", {"configurable": false, "enumerable": false, "writable": false});}catch(e){}
+
+    // Execute `callback` on every declaration in all rules inside.
+    // It will goes inside at-rules recursivelly.
+    //
+    // See documentation in `Container#eachDecl`.
+    $proto$0.eachDecl = function(callback) {
+        return this.each( function(child)  {
+            if ( child.eachDecl ) {
+                var result = child.eachDecl(callback);
+                if ( result === false ) return result;
+            }
+        });
+    };
+
+    // Execute `callback` on every rule in conatiner and inside child at-rules.
+    //
+    // First argument will be rule node, second will be index inside parent.
+    //
+    //   css.eachRule( (rule, i) => {
+    //       if ( parent.type == 'atrule' ) {
+    //           console.log(rule.selector + ' in ' + rule.parent.name);
+    //       } else {
+    //           console.log(rule.selector + ' at ' + i);
+    //       }
+    //   });
+    $proto$0.eachRule = function(callback) {
+        return this.each( function(child, i)  {
+            var result;
+            if ( child.type == 'rule' ) {
+                result = callback(child, i);
+            } else if ( child.eachRule ) {
+                result = child.eachRule(callback);
+            }
+            if ( result === false ) return result;
+        });
+    };
+
+    // Execute `callback` on every at-rule in conatiner and inside at-rules.
+    //
+    // First argument will be at-rule node, second will be index inside parent.
+    //
+    //   css.eachAtRule( (atrule, parent, i) => {
+    //       if ( parent.type == 'atrule' ) {
+    //           console.log(atrule.name + ' in ' + atrule.parent.name);
+    //       } else {
+    //           console.log(atrule.name + ' at ' + i);
+    //       }
+    //   });
+    $proto$0.eachAtRule = function(callback) {
+        return this.eachInside( function(child, i)  {
+            if ( child.type == 'atrule' ) {
+                var result = callback(child, i);
+                if ( result === false ) return result;
+            }
+        });
+    };
+MIXIN$0(constructor$0.prototype,$proto$0);$proto$0=void 0;return constructor$0;})(Container));
+
+// Container with another rules, like this.media at-rule
+ Container.WithDecls = ((function(super$0){"use strict";MIXIN$0(constructor$1, super$0);var $proto$0={};
+    function constructor$1(defaults) {
+        this.decls = [];
+        super$0.call(this, defaults);
+    }constructor$1.prototype = Object.create(super$0.prototype, {"constructor": {"value": constructor$1, "configurable": true, "writable": true} });try{DP$0(constructor$1, "prototype", {"configurable": false, "enumerable": false, "writable": false});}catch(e){}
+
+    // Allow to define new declaration as hash
+    $proto$0.normalize = function(child, sample, type) {
+        if ( !child.type && !Array.isArray(child) ) {
+            child = new Declaration(child);
+        }
+        return super$0.prototype.normalize.call(this, child, sample, type);
+    };
+
+    // Execute callback on every declaration.
+    //
+    // See documentation in `Container#eachDecl`.
+    $proto$0.eachDecl = function(callback) {
+        return this.each( function(child, i)  {
+            if ( child.type == 'decl' ) {
+                var result = callback(child, i);
+                if ( result === false ) return result;
+            }
+        });
+    };
+MIXIN$0(constructor$1.prototype,$proto$0);$proto$0=void 0;return constructor$1;})(Container));
+
+module.exports = Container;
+
+},{"./declaration":84,"./node":87}],83:[function(require,module,exports){
+(function (process){
+// Error while CSS parsing
+var CssSyntaxError = (function(super$0){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};MIXIN$0(CssSyntaxError, super$0);var $proto$0={};
+    function CssSyntaxError(text, source, pos, file) {
+        this.file     = file;
+        this.line     = pos.line;
+        this.column   = pos.column;
+        this.source   = source;
+        this.reason   = text;
+
+        this.message  = file ? file : '<css input>';
+        this.message += ':' + pos.line + ':' + pos.column + ': ' + text;
+    }CssSyntaxError.prototype = Object.create(super$0.prototype, {"constructor": {"value": CssSyntaxError, "configurable": true, "writable": true} });try{DP$0(CssSyntaxError, "prototype", {"configurable": false, "enumerable": false, "writable": false});}catch(e){}
+
+    $proto$0.highlight = function(color) {
+        var num   = this.line - 1;
+        var lines = this.source.split('\n');
+
+        var prev   = num > 0 ? lines[num - 1] + '\n' : '';
+        var broken = lines[num];
+        var next   = num < lines.length - 1 ? '\n' + lines[num + 1] : '';
+
+        var mark = '\n';
+        for ( var i = 0; i < this.column - 1; i++ ) {
+            mark += ' ';
+        }
+
+        if ( typeof(color) == 'undefined' && typeof(process) != 'undefined' ) {
+            if ( process.stdout && process.env ) {
+                color = process.stdout.isTTY &&
+                       !process.env.NODE_DISABLE_COLORS;
+            }
+        }
+
+        if ( color ) {
+            mark += "\x1B[1;31m^\x1B[0m";
         } else {
-          current += letter;
+            mark += '^';
         }
-      }
-      if (last || current !== '') {
-        array.push(current.trim());
-      }
-      return array;
+
+        return prev + broken + mark + next;
+    };
+
+    $proto$0.toString = function() {
+        return this.message + "\n" + this.highlight();
+    };
+MIXIN$0(CssSyntaxError.prototype,$proto$0);$proto$0=void 0;return CssSyntaxError;})(Error);
+
+module.exports = CssSyntaxError;
+
+}).call(this,require('_process'))
+},{"_process":50}],84:[function(require,module,exports){
+var Node   = require('./node');
+var vendor = require('./vendor');
+
+// CSS declaration like “color: black” in rules
+var Declaration = (function(super$0){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};MIXIN$0(Declaration, super$0);var $proto$0={};
+    function Declaration(defaults) {
+        this.type = 'decl';
+        super$0.call(this, defaults);
+    }Declaration.prototype = Object.create(super$0.prototype, {"constructor": {"value": Declaration, "configurable": true, "writable": true} });try{DP$0(Declaration, "prototype", {"configurable": false, "enumerable": false, "writable": false});}catch(e){}
+
+    $proto$0.defaultStyle = function() {
+        return { before: "\n    ", between: ': ' };
+    };
+
+    // Stringify declaration
+    $proto$0.stringify = function(builder, semicolon) {
+        var style = this.style();
+
+        if ( style.before ) builder(style.before);
+        var string = this.prop + style.between + this.stringifyRaw('value');
+
+        if ( this.important ) {
+            string += this._important || ' !important';
+        }
+
+        if ( semicolon ) string += ';';
+        builder(string, this);
+    };
+
+    // Clean `before` and `between` property in clone to copy it from new
+    // parent rule
+    $proto$0.clone = function() {var overrides = arguments[0];if(overrides === void 0)overrides = { };
+        var cloned = super$0.prototype.clone.call(this, overrides);
+        delete cloned.before;
+        delete cloned.between;
+        return cloned;
+    };
+MIXIN$0(Declaration.prototype,$proto$0);$proto$0=void 0;return Declaration;})(Node);
+
+module.exports = Declaration;
+
+},{"./node":87,"./vendor":94}],85:[function(require,module,exports){
+// Methods to parse list and split it to array
+var list = {
+
+    // Split string to array by separator symbols with function and inside strings
+    // cheching
+    split: function (string, separators, last) {var S_ITER$0 = typeof Symbol!=='undefined'&&Symbol&&Symbol.iterator||'@@iterator';var S_MARK$0 = typeof Symbol!=='undefined'&&Symbol&&Symbol["__setObjectSetter__"];function GET_ITER$0(v){if(v){if(Array.isArray(v))return 0;var f;if(S_MARK$0)S_MARK$0(v);if(typeof v==='object'&&typeof (f=v[S_ITER$0])==='function'){if(S_MARK$0)S_MARK$0(void 0);return f.call(v);}if(S_MARK$0)S_MARK$0(void 0);if((v+'')==='[object Generator]')return v;}throw new Error(v+' is not iterable')};var $D$0;var $D$1;var $D$2;
+        var array   = [];
+        var current = '';
+        var split   = false;
+
+        var func    = 0;
+        var quote   = false;
+        var escape  = false;
+
+        for ( var i = 0; i < string.length; i++ ) {
+            var letter = string[i];
+
+            if ( quote ) {
+                if ( escape ) {
+                    escape = false;
+                } else if ( letter == '\\' ) {
+                    escape = true;
+                } else if ( letter == quote ) {
+                    quote = false;
+                }
+            } else if ( letter == '"' || letter == "'" ) {
+                quote = letter;
+            } else if ( letter == '(' ) {
+                func += 1;
+            } else if ( letter == ')' ) {
+                if ( func > 0 ) func -= 1;
+            } else if ( func === 0 ) {
+                $D$0 = GET_ITER$0(separators);$D$2 = $D$0 === 0;$D$1 = ($D$2 ? separators.length : void 0);for ( var separator ;$D$2 ? ($D$0 < $D$1) : !($D$1 = $D$0["next"]())["done"];){separator = ($D$2 ? separators[$D$0++] : $D$1["value"]);
+                    if ( letter == separator ) split = true;
+                };$D$0 = $D$1 = $D$2 = void 0;
+            }
+
+            if ( split ) {
+                if ( current !== '' ) array.push(current.trim());
+                current = '';
+                split   = false;
+            } else {
+                current += letter;
+            }
+        }
+
+        if ( last || current !== '' ) array.push(current.trim());
+        return array;
     },
-    space: function(string) {
-      return this.split(string, [' ', "\n", "\t"]);
+
+    // Split list devided by space:
+    //
+    //   list.space('a b') #=> ['a', 'b']
+    //
+    // It check for fuction and strings:
+    //
+    //   list.space('calc(1px + 1em) "b c"') #=> ['calc(1px + 1em)', '"b c"']
+    space: function (string) {
+        return this.split(string, [' ', "\n", "\t"]);
     },
-    comma: function(string) {
-      return this.split(string, [','], true);
+
+    // Split list devided by comma
+    //
+    //   list.comma('a, b') #=> ['a', 'b']
+    //
+    // It check for fuction and strings:
+    //
+    //   list.comma('rgba(0, 0, 0, 0) white') #=> ['rgba(0, 0, 0, 0)', '"white"']
+    comma: function (string) {
+        return this.split(string, [','], true);
     }
-  };
 
-  module.exports = list;
+};
 
-}).call(this);
+module.exports = list;
 
-},{}],50:[function(_dereq_,module,exports){
-(function() {
-  var MapGenerator, Result, base64js, fs, lazy, mozilla, path;
+},{}],86:[function(require,module,exports){
+var Result = require('./result');
 
-  base64js = _dereq_('base64-js');
+var mozilla = require('source-map');
+var Base64  = require('js-base64').Base64;
+var path    = require('path');
 
-  mozilla = _dereq_('source-map');
-
-  Result = _dereq_('./result');
-
-  lazy = _dereq_('./lazy');
-
-  path = _dereq_('path');
-
-  fs = _dereq_('fs');
-
-  MapGenerator = (function() {
+// All tools to generate source maps
+var MapGenerator = (function(){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};var $proto$0={};
     function MapGenerator(root, opts) {
-      this.root = root;
-      this.opts = opts;
-    }
+        this.root    = root;
+        this.opts    = opts;
+        this.mapOpts = opts.map || { };
+    }try{DP$0(MapGenerator, "prototype", {"configurable": false, "enumerable": false, "writable": false});}catch(e){}
 
-    MapGenerator.prototype.startWith = function(string, start) {
-      return string.slice(0, +(start.length - 1) + 1 || 9e9) === start;
-    };
-
-    MapGenerator.prototype.isMap = function() {
-      if (typeof this.opts.map === 'boolean') {
-        return this.opts.map;
-      }
-      return !!this.opts.inlineMap || !!this.prevMap();
-    };
-
-    lazy(MapGenerator, 'isInline', function() {
-      if (this.opts.inlineMap != null) {
-        return this.opts.inlineMap;
-      }
-      return this.isPrevInline();
-    });
-
-    lazy(MapGenerator, 'isPrevInline', function() {
-      var text;
-      if (!this.prevAnnotation()) {
-        return false;
-      }
-      text = this.prevAnnotation().text;
-      return this.startWith(text, '# sourceMappingURL=data:');
-    });
-
-    lazy(MapGenerator, 'prevMap', function() {
-      var file, map;
-      if (this.opts.map && typeof this.opts.map !== 'boolean') {
-        return this.opts.map;
-      }
-      if (this.isPrevInline()) {
-        return this.encodeInline(this.prevAnnotation().text);
-      } else if (this.opts.from) {
-        map = this.opts.from + '.map';
-        if (this.prevAnnotation()) {
-          file = this.prevAnnotation().text.replace('# sourceMappingURL=', '');
-          map = path.join(path.dirname(this.opts.from), file);
-        }
-        if (typeof fs.existsSync === "function" ? fs.existsSync(map) : void 0) {
-          return fs.readFileSync(map).toString();
+    // Should map be generated
+    $proto$0.isMap = function() {
+        if ( typeof(this.opts.map) != 'undefined' ) {
+            return !!this.opts.map;
         } else {
-          return false;
+            return this.previous().length > 0;
         }
-      }
-    });
-
-    lazy(MapGenerator, 'prevAnnotation', function() {
-      var last;
-      last = this.root.last;
-      if (!last) {
-        return null;
-      }
-      if (last.type === 'comment' && this.startWith(last.text, '# sourceMappingURL=')) {
-        return last;
-      } else {
-        return null;
-      }
-    });
-
-    MapGenerator.prototype.encodeInline = function(text) {
-      var base64, byte, bytes, uri;
-      uri = '# sourceMappingURL=data:application/json,';
-      base64 = '# sourceMappingURL=data:application/json;base64,';
-      if (this.startWith(text, uri)) {
-        return decodeURIComponent(text.slice(uri.length));
-      } else if (this.startWith(text, base64)) {
-        text = text.slice(base64.length);
-        bytes = base64js.toByteArray(text);
-        return ((function() {
-          var _i, _len, _results;
-          _results = [];
-          for (_i = 0, _len = bytes.length; _i < _len; _i++) {
-            byte = bytes[_i];
-            _results.push(String.fromCharCode(byte));
-          }
-          return _results;
-        })()).join('');
-      } else {
-        throw new Error('Unknown source map encoding');
-      }
     };
 
-    MapGenerator.prototype.clearAnnotation = function() {
-      var _ref;
-      return (_ref = this.prevAnnotation()) != null ? _ref.removeSelf() : void 0;
-    };
-
-    MapGenerator.prototype.applyPrevMap = function() {
-      var from, prev;
-      if (this.prevMap()) {
-        prev = this.prevMap();
-        prev = typeof prev === 'string' ? JSON.parse(prev) : prev instanceof mozilla.SourceMapConsumer ? mozilla.SourceMapGenerator.fromSourceMap(prev).toJSON() : typeof prev === 'object' && prev.toJSON ? prev.toJSON() : prev;
-        prev = new mozilla.SourceMapConsumer(prev);
-        from = this.relative(this.opts.from);
-        return this.map.applySourceMap(prev, from, path.dirname(from));
-      }
-    };
-
-    MapGenerator.prototype.addAnnotation = function() {
-      var bytes, char, content;
-      if (this.opts.mapAnnotation === false) {
-        return;
-      }
-      if (this.prevMap() && !this.prevAnnotation()) {
-        return;
-      }
-      content = this.isInline() ? (bytes = (function() {
-        var _i, _len, _ref, _results;
-        _ref = this.map.toString();
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          char = _ref[_i];
-          _results.push(char.charCodeAt(0));
-        }
-        return _results;
-      }).call(this), "data:application/json;base64," + base64js.fromByteArray(bytes)) : this.outputFile() + '.map';
-      return this.css += "\n/*# sourceMappingURL=" + content + " */";
-    };
-
-    MapGenerator.prototype.outputFile = function() {
-      if (this.opts.to) {
-        return path.basename(this.opts.to);
-      } else {
-        return 'to.css';
-      }
-    };
-
-    MapGenerator.prototype.generateMap = function() {
-      this.stringify();
-      this.applyPrevMap();
-      this.addAnnotation();
-      if (this.isInline()) {
-        return new Result(this.css);
-      } else {
-        return new Result(this.css, this.map.toString());
-      }
-    };
-
-    MapGenerator.prototype.relative = function(file) {
-      var from;
-      from = this.opts.to ? path.dirname(this.opts.to) : '.';
-      file = path.relative(from, file);
-      if (path.sep === '\\') {
-        file = file.replace('\\', '/');
-      }
-      return file;
-    };
-
-    MapGenerator.prototype.sourcePath = function(node) {
-      return this.relative(node.source.file || 'from.css');
-    };
-
-    MapGenerator.prototype.stringify = function() {
-      var builder, column, line;
-      this.css = '';
-      this.map = new mozilla.SourceMapGenerator({
-        file: this.outputFile()
-      });
-      line = 1;
-      column = 1;
-      builder = (function(_this) {
-        return function(str, node, type) {
-          var last, lines, _ref, _ref1;
-          _this.css += str;
-          if ((node != null ? (_ref = node.source) != null ? _ref.start : void 0 : void 0) && type !== 'end') {
-            _this.map.addMapping({
-              source: _this.sourcePath(node),
-              original: {
-                line: node.source.start.line,
-                column: node.source.start.column - 1
-              },
-              generated: {
-                line: line,
-                column: column - 1
-              }
+    // Return source map arrays from previous compilation step (like Sass)
+    $proto$0.previous = function() {var this$0 = this;
+        if ( !this.previousMaps ) {
+            this.previousMaps = [];
+            this.root.eachInside( function(node)  {
+                if ( node.source && node.source.map ) {
+                    if ( this$0.previousMaps.indexOf(node.source.map) == -1 ) {
+                        this$0.previousMaps.push(node.source.map);
+                    }
+                }
             });
-          }
-          lines = str.match(/\n/g);
-          if (lines) {
-            line += lines.length;
-            last = str.lastIndexOf("\n");
-            column = str.length - last;
-          } else {
-            column = column + str.length;
-          }
-          if ((node != null ? (_ref1 = node.source) != null ? _ref1.end : void 0 : void 0) && type !== 'start') {
-            return _this.map.addMapping({
-              source: _this.sourcePath(node),
-              original: {
-                line: node.source.end.line,
-                column: node.source.end.column
-              },
-              generated: {
-                line: line,
-                column: column
-              }
-            });
-          }
-        };
-      })(this);
-      return this.root.stringify(builder);
-    };
-
-    MapGenerator.prototype.getResult = function() {
-      this.clearAnnotation();
-      if (this.isMap()) {
-        return this.generateMap();
-      } else {
-        return new Result(this.root.toString());
-      }
-    };
-
-    return MapGenerator;
-
-  })();
-
-  module.exports = MapGenerator;
-
-}).call(this);
-
-},{"./lazy":48,"./result":55,"base64-js":60,"fs":41,"path":42,"source-map":61}],51:[function(_dereq_,module,exports){
-(function() {
-  var Node, Raw, clone, keys,
-    __hasProp = {}.hasOwnProperty;
-
-  Raw = _dereq_('./raw');
-
-  clone = function(obj, parent) {
-    var cloned, name, value;
-    if (typeof obj !== 'object') {
-      return obj;
-    }
-    cloned = new obj.constructor();
-    for (name in obj) {
-      if (!__hasProp.call(obj, name)) continue;
-      value = obj[name];
-      if (name === 'parent' && typeof value === 'object') {
-        if (parent) {
-          cloned[name] = parent;
         }
-      } else if (value instanceof Array) {
-        cloned[name] = value.map(function(i) {
-          return clone(i, cloned);
+
+        return this.previousMaps;
+    };
+
+    // Should we inline source map to annotation comment
+    $proto$0.isInline = function() {
+        if ( typeof(this.mapOpts.inline) != 'undefined' ) {
+            return this.mapOpts.inline;
+        }
+        return this.previous().some( function(i ) {return i.inline} );
+    };
+
+    // Should we set sourcesContent
+    $proto$0.isSourcesContent = function() {
+        if ( typeof(this.mapOpts.sourcesContent) != 'undefined' ) {
+            return this.mapOpts.sourcesContent;
+        }
+        return this.previous().some( function(i ) {return i.withContent()} );
+    };
+
+    // Clear source map annotation comment
+    $proto$0.clearAnnotation = function() {
+        var last = this.root.last;
+        if ( !last ) return;
+        if ( last.type != 'comment' ) return;
+
+        if ( last.text.match(/^# sourceMappingURL=/) ) {
+            last.removeSelf();
+        }
+    };
+
+    // Set origin CSS content
+    $proto$0.setSourcesContent = function() {var this$0 = this;
+        var already = { };
+        this.root.eachInside( function(node)  {
+            var file = node.source.file || node.source.id;
+            if ( node.source && !already[file] ) {
+                already[file] = true;
+                var relative = this$0.relative(file);
+                this$0.map.setSourceContent(relative, node.source.content);
+            }
         });
-      } else {
-        cloned[name] = clone(value, cloned);
-      }
+    };
+
+    // Apply source map from previous compilation step (like Sass)
+    $proto$0.applyPrevMaps = function() {var S_ITER$0 = typeof Symbol!=='undefined'&&Symbol&&Symbol.iterator||'@@iterator';var S_MARK$0 = typeof Symbol!=='undefined'&&Symbol&&Symbol["__setObjectSetter__"];function GET_ITER$0(v){if(v){if(Array.isArray(v))return 0;var f;if(S_MARK$0)S_MARK$0(v);if(typeof v==='object'&&typeof (f=v[S_ITER$0])==='function'){if(S_MARK$0)S_MARK$0(void 0);return f.call(v);}if(S_MARK$0)S_MARK$0(void 0);if((v+'')==='[object Generator]')return v;}throw new Error(v+' is not iterable')};var $D$0;var $D$1;var $D$2;var $D$3;
+        $D$3 = (this.previous());$D$0 = GET_ITER$0($D$3);$D$2 = $D$0 === 0;$D$1 = ($D$2 ? $D$3.length : void 0);for ( var prev ;$D$2 ? ($D$0 < $D$1) : !($D$1 = $D$0["next"]())["done"];){prev = ($D$2 ? $D$3[$D$0++] : $D$1["value"]);
+            var from = this.relative(prev.file);
+            var root = prev.root || path.dirname(prev.file);
+            var map;
+
+            if ( this.mapOpts.sourcesContent === false ) {
+                map = new mozilla.SourceMapConsumer(prev.text);
+                map.sourcesContent = map.sourcesContent.map( function(i ) {return null} );
+            } else {
+                map = prev.consumer();
+            }
+
+            this.map.applySourceMap(map, from, this.relative(root));
+        };$D$0 = $D$1 = $D$2 = $D$3 = void 0;
+    };
+
+    // Should we add annotation comment
+    $proto$0.isAnnotation = function() {
+        if ( this.isInline() ) {
+            return true ;
+        } else if ( typeof(this.mapOpts.annotation) != 'undefined' ) {
+            return this.mapOpts.annotation;
+        } else if ( this.previous().length ) {
+            return this.previous().some( function(i ) {return i.annotation} );
+        } else {
+            return true;
+        }
+    };
+
+    // Add source map annotation comment if it is needed
+    $proto$0.addAnnotation = function() {
+        var content;
+
+        if ( this.isInline() ) {
+            content = "data:application/json;base64," +
+                       Base64.encode( this.map.toString() );
+
+        } else if ( typeof(this.mapOpts.annotation) == 'string' ) {
+            content = this.mapOpts.annotation;
+
+        } else {
+            content = this.outputFile() + '.map';
+        }
+
+        this.css += "\n/*# sourceMappingURL=" + content + " */";
+    };
+
+    // Return output CSS file path
+    $proto$0.outputFile = function() {
+        return this.opts.to ? this.relative(this.opts.to) : 'to.css';
+    };
+
+    // Return Result object with map
+    $proto$0.generateMap = function() {
+        this.stringify();
+        if ( this.isSourcesContent() )    this.setSourcesContent();
+        if ( this.previous().length > 0 ) this.applyPrevMaps();
+        if ( this.isAnnotation() )        this.addAnnotation();
+
+        if ( this.isInline() ) {
+            return [this.css];
+        } else {
+            return [this.css, this.map];
+        }
+    };
+
+    // Return path relative from output CSS file
+    $proto$0.relative = function(file) {
+        var from = this.opts.to ? path.dirname(this.opts.to) : '.';
+
+        if ( typeof(this.mapOpts.annotation) == 'string' ) {
+            from = path.dirname( path.resolve(from, this.mapOpts.annotation) );
+        }
+
+        file = path.relative(from, file);
+        if ( path.sep == '\\' ) {
+            return file.replace('\\', '/');
+        } else {
+            return file;
+        }
+    };
+
+    // Return path of node source for map
+    $proto$0.sourcePath = function(node) {
+        return this.relative(node.source.file || node.source.id);
+    };
+
+    // Return CSS string and source map
+    $proto$0.stringify = function() {var this$0 = this;
+        this.css = '';
+        this.map = new mozilla.SourceMapGenerator({ file: this.outputFile() });
+
+        var line   = 1;
+        var column = 1;
+
+        var lines, last;
+        var builder = function(str, node, type)  {
+            this$0.css += str;
+
+            if ( node && node.source && node.source.start && type != 'end' ) {
+                this$0.map.addMapping({
+                    source:   this$0.sourcePath(node),
+                    original: {
+                        line:   node.source.start.line,
+                        column: node.source.start.column - 1
+                    },
+                    generated: {
+                        line:   line,
+                        column: column - 1
+                    }
+                });
+            }
+
+            lines = str.match(/\n/g);
+            if ( lines ) {
+                line  += lines.length;
+                last   = str.lastIndexOf("\n");
+                column = str.length - last;
+            } else {
+                column = column + str.length;
+            }
+
+            if ( node && node.source && node.source.end && type != 'start' ) {
+              this$0.map.addMapping({
+                  source:   this$0.sourcePath(node),
+                  original: {
+                      line:   node.source.end.line,
+                      column: node.source.end.column
+                  },
+                  generated: {
+                      line:   line,
+                      column: column
+                  }
+              });
+            }
+        };
+
+        this.root.stringify(builder);
+    };
+
+    // Return Result object with or without map
+    $proto$0.generate = function() {
+        this.clearAnnotation();
+
+        if ( this.isMap() ) {
+            return this.generateMap();
+        } else {
+            return [this.root.toString()];
+        }
+    };
+MIXIN$0(MapGenerator.prototype,$proto$0);$proto$0=void 0;return MapGenerator;})();
+
+module.exports = MapGenerator;
+
+},{"./result":91,"js-base64":95,"path":49,"source-map":96}],87:[function(require,module,exports){
+// Recursivly clone objects
+var clone = function (obj, parent) {
+    if ( typeof(obj) != 'object' ) return obj;
+    var cloned = new obj.constructor();
+
+    for ( var name in obj ) {
+        if ( !obj.hasOwnProperty(name) ) continue;
+        var value = obj[name];
+
+        if ( name == 'parent' && typeof(value) == 'object' ) {
+            if (parent) cloned[name] = parent;
+        } else if ( name == 'source' ) {
+            cloned[name] = value;
+        } else if ( value instanceof Array ) {
+            cloned[name] = value.map( function(i ) {return clone(i, cloned)} );
+        } else {
+            cloned[name] = clone(value, cloned);
+        }
     }
+
     return cloned;
-  };
+};
 
-  keys = function(obj, keys) {
-    var all, key;
-    all = {};
-    for (key in keys) {
-      if (obj[key] != null) {
-        all[key] = obj[key];
-      } else {
-        return false;
-      }
+// Is `obj` has all keys from `keys`. Return `false` of object with keys from
+// `keys` and values from `obj`.
+var keys = function (obj, keys) {
+    var all = { };
+
+    for ( var key in keys ) {
+        if ( typeof(obj[key]) == 'undefined' ) {
+            return false;
+        } else {
+            all[key] = obj[key];
+        }
     }
+
     return all;
-  };
+};
 
-  Node = (function() {
-    function Node(defaults) {
-      var name, value;
-      if (defaults == null) {
-        defaults = {};
-      }
-      for (name in defaults) {
-        value = defaults[name];
-        this[name] = value;
-      }
-    }
-
-    Node.prop = function(name, params) {
-      return Object.defineProperty(this.prototype, name, params);
-    };
-
-    Node.raw = function(name) {
-      var hidden;
-      hidden = '_' + name;
-      return this.prop(name, {
-        get: function() {
-          var prop;
-          prop = this[hidden];
-          if (prop instanceof Raw) {
-            return prop.value;
-          } else {
-            return prop;
-          }
-        },
-        set: function(value) {
-          if (value instanceof Raw) {
-            return this[hidden] = value;
-          } else {
-            return this[hidden] = value;
-          }
+// Some common methods for all CSS nodes
+var Node = (function(){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};var $proto$0={};
+    function Node() {var defaults = arguments[0];if(defaults === void 0)defaults = { };
+        for ( var name in defaults ) {
+            this[name] = defaults[name];
         }
-      });
-    };
+    }try{DP$0(Node, "prototype", {"configurable": false, "enumerable": false, "writable": false});}catch(e){}
 
-    Node.prototype.removeSelf = function() {
-      if (!this.parent) {
-        return;
-      }
-      this.parent.remove(this);
-      return this;
-    };
-
-    Node.prototype.toString = function() {
-      var builder, result;
-      result = '';
-      builder = function(str) {
-        return result += str;
-      };
-      this.stringify(builder);
-      return result;
-    };
-
-    Node.prototype.clone = function(overrides) {
-      var cloned, name, value;
-      if (overrides == null) {
-        overrides = {};
-      }
-      cloned = clone(this);
-      for (name in overrides) {
-        value = overrides[name];
-        cloned[name] = value;
-      }
-      return cloned;
-    };
-
-    Node.prototype.toJSON = function() {
-      var fixed, name, value;
-      fixed = {};
-      for (name in this) {
-        if (!__hasProp.call(this, name)) continue;
-        value = this[name];
-        if (name === 'parent') {
-          continue;
+    // Remove this node from parent
+    //
+    //   decl.removeSelf();
+    //
+    // Note, that removing by index is faster:
+    //
+    //   rule.each( (decl, i) => rule.remove(i) );
+    $proto$0.removeSelf = function() {
+        if ( this.parent ) {
+            this.parent.remove(this);
         }
-        fixed[name] = value instanceof Array ? value.map(function(i) {
-          if (typeof i === 'object' && i.toJSON) {
-            return i.toJSON();
-          } else {
-            return i;
-          }
-        }) : typeof value === 'object' && value.toJSON ? value.toJSON() : value;
-      }
-      return fixed;
+        return this;
     };
 
-    Node.prototype.defaultStyle = function() {
-      return {};
+    // Shortcut to insert nodes before and remove self.
+    //
+    //   importNode.replace( loadedRoot );
+    $proto$0.replace = function(nodes) {
+        this.parent.insertBefore(this, nodes);
+        this.parent.remove(this);
+        return this;
     };
 
-    Node.prototype.styleType = function() {
-      return this.type;
+    // Return CSS string of current node
+    //
+    //   decl.toString(); //=> "  color: black"
+    $proto$0.toString = function() {
+        var result  = '';
+        var builder = function(str)  {return result += str};
+        this.stringify(builder);
+        return result;
     };
 
-    Node.prototype.style = function() {
-      var all, defaults, key, merge, root, style, type;
-      type = this.styleType();
-      defaults = this.defaultStyle(type);
-      all = keys(this, defaults);
-      if (all) {
-        return all;
-      }
-      style = defaults;
-      if (this.parent) {
-        root = this;
-        while (root.parent) {
-          root = root.parent;
+    // Clone current node
+    //
+    //   rule.append( decl.clone() );
+    //
+    // You can override properties while cloning:
+    //
+    //   rule.append( decl.clone({ value: '0' }) );
+    $proto$0.clone = function() {var overrides = arguments[0];if(overrides === void 0)overrides = { };
+        var cloned = clone(this);
+        for ( var name in overrides ) {
+            cloned[name] = overrides[name];
         }
-        root.styleCache || (root.styleCache = {});
-        if (root.styleCache[type]) {
-          style = root.styleCache[type];
+        return cloned;
+    };
+
+    // Remove `parent` node on cloning to fix circular structures
+    $proto$0.toJSON = function() {
+        var fixed = { };
+
+        for ( var name in this ) {
+            if ( !this.hasOwnProperty(name) ) continue;
+            if ( name == 'parent' ) continue;
+            var value = this[name];
+
+            if ( value instanceof Array ) {
+                fixed[name] = value.map( function(i)  {
+                    return (typeof(i) == 'object' && i.toJSON) ? i.toJSON() : i;
+                });
+            } else if ( typeof(value) == 'object' && value.toJSON ) {
+                fixed[name] = value.toJSON();
+            } else {
+                fixed[name] = value;
+            }
+        }
+
+        return fixed;
+    };
+
+    // Default code style
+    $proto$0.defaultStyle = function() {
+        return { };
+    };
+
+    // Allow to split node with same type by other critera.
+    // For example, to use different style for bodiless at-rules.
+    $proto$0.styleType = function() {
+        return this.type;
+    };
+
+    // Copy code style from first node with same type
+    $proto$0.style = function() {var this$0 = this;
+        var type     = this.styleType();
+        var defaults = this.defaultStyle(type);
+
+        var all = keys(this, defaults);
+        if ( all ) return all;
+
+        var styled = defaults;
+        if ( this.parent ) {
+
+            var root = this;
+            while ( root.parent ) root = root.parent;
+
+            if ( !root.styleCache ) root.styleCache = { };
+            if ( root.styleCache[type] ) {
+                styled = root.styleCache[type];
+
+            } else {
+                root.eachInside( function(another)  {
+                    if ( another.styleType() != type ) return;
+                    if ( this$0 == another )             return;
+
+                    all = keys(another, styled);
+                    if ( all ) {
+                        styled = all;
+                        return false;
+                    }
+                });
+
+                root.styleCache[type] = styled;
+            }
+        }
+
+        var merge = { };
+        for ( var key in styled ) {
+            if ( typeof(this[key]) == 'undefined' ) {
+                merge[key] = styled[key];
+            } else {
+                merge[key] = this[key];
+            }
+        }
+
+        return merge;
+    };
+
+    // Use raw value if origin was not changed
+    $proto$0.stringifyRaw = function(prop) {
+        var value = this[prop];
+        var raw   = this['_' + prop];
+        if ( raw && raw.value === value ) {
+            return raw.raw;
         } else {
-          root.eachInside(function(another) {
-            if (another.styleType() !== type) {
-              return;
-            }
-            if (this === another) {
-              return;
-            }
-            all = keys(another, style);
-            if (all) {
-              style = all;
-              return false;
-            }
-          });
-          root.styleCache[type] = style;
+            return value;
         }
-      }
-      merge = {};
-      for (key in style) {
-        merge[key] = this[key] != null ? this[key] : style[key];
-      }
-      return merge;
     };
+MIXIN$0(Node.prototype,$proto$0);$proto$0=void 0;return Node;})();
 
-    return Node;
+module.exports = Node;
 
-  })();
+},{}],88:[function(require,module,exports){
+var CssSyntaxError = require('./css-syntax-error');
+var PreviousMap    = require('./previous-map');
+var Declaration    = require('./declaration');
+var Comment        = require('./comment');
+var AtRule         = require('./at-rule');
+var Root           = require('./root');
+var Rule           = require('./rule');
 
-  module.exports = Node;
+var path = require('path');
 
-}).call(this);
+var isSpace = /\s/;
 
-},{"./raw":54}],52:[function(_dereq_,module,exports){
-(function() {
-  var AtRule, Comment, Declaration, Parser, Raw, Root, Rule, SyntexError;
+var sequence = 0;
 
-  SyntexError = _dereq_('./syntax-error');
+// CSS parser
+var Parser = (function(){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};var $proto$0={};
+    function Parser(source) {var opts = arguments[1];if(opts === void 0)opts = { };
+        this.source = source.toString();
+        this.opts   = opts;
 
-  Declaration = _dereq_('./declaration');
+        sequence    += 1;
+        this.id      = ((new Date()).valueOf() * 10  + sequence).toString();
+        this.root    = new Root();
+        this.current = this.root;
+        this.parents = [this.current];
+        this.type    = 'rules';
+        this.types   = [this.type];
 
-  Comment = _dereq_('./comment');
+        this.pos    = -1;
+        this.line   = 1;
+        this.lines  = [];
+        this.column = 0;
+        this.buffer = '';
+    }try{DP$0(Parser, "prototype", {"configurable": false, "enumerable": false, "writable": false});}catch(e){}
 
-  AtRule = _dereq_('./at-rule');
-
-  Root = _dereq_('./root');
-
-  Rule = _dereq_('./rule');
-
-  Raw = _dereq_('./raw');
-
-  Parser = (function() {
-    function Parser(source, opts) {
-      this.opts = opts;
-      this.source = source.toString();
-      this.root = new Root();
-      this.current = this.root;
-      this.parents = [this.current];
-      this.type = 'rules';
-      this.types = [this.type];
-      this.pos = -1;
-      this.line = 1;
-      this.lines = [];
-      this.column = 0;
-      this.buffer = '';
-    }
-
-    Parser.prototype.loop = function() {
-      while (this.pos < this.source.length - 1) {
-        this.move();
-        this.nextLetter();
-      }
-      return this.endFile();
-    };
-
-    Parser.prototype.nextLetter = function() {
-      this.inString() || this.inComment() || this.isComment() || this.isString() || this.isWrong() || this.inAtrule() || this.isAtrule() || this.isBlockEnd() || this.inSelector() || this.isSelector() || this.inProperty() || this.isProperty() || this.inValue();
-      return this.unknown();
-    };
-
-    Parser.prototype.inString = function() {
-      if (this.quote) {
-        if (this.escape) {
-          this.escape = false;
-        } else if (this.letter === '\\') {
-          this.escape = true;
-        } else if (this.letter === this.quote) {
-          this.quote = void 0;
+    $proto$0.loop = function() {
+        this.next  = this.source[0];
+        var length = this.source.length - 1;
+        while ( this.pos < length ) {
+            this.move();
+            this.nextLetter();
         }
-        this.trimmed += this.letter;
-        return true;
-      }
+        this.endFile();
     };
 
-    Parser.prototype.isString = function() {
-      if (this.letter === '"' || this.letter === "'") {
-        this.quote = this.letter;
-        this.quotePos = {
-          line: this.line,
-          column: this.column
+    $proto$0.setMap = function() {
+        var map = new PreviousMap(this.root, this.opts, this.id);
+        if ( map.text ) {
+            this.root.prevMap = map;
+            this.root.eachInside( function(i ) {return i.source.map = map} );
+        }
+    };
+
+    $proto$0.nextLetter = function() {
+        return this.inString()   ||
+               this.inComment()  ||
+               this.isComment()  ||
+               this.isString()   ||
+
+               this.isWrong()    ||
+
+               this.inAtrule()   || this.isAtrule()   ||
+               this.isBlockEnd() ||
+               this.inSelector() || this.isSelector() ||
+               this.inProperty() || this.isProperty() || this.inValue();
+    };
+
+    // Parsers
+
+    $proto$0.inString = function(close) {
+        if ( this.quote ) {
+            if ( this.escape && !close ) {
+                this.escape = false;
+            } else if ( this.letter == '\\' ) {
+                this.escape = true;
+            } else if ( this.letter == this.quote || close ) {
+                this.quote = undefined;
+            }
+            this.trimmed += this.letter;
+
+            return true;
+        }
+    };
+
+    $proto$0.isString = function() {
+        if ( this.letter == '"' || this.letter == "'" ) {
+            this.quote    = this.letter;
+            this.quotePos = { line: this.line, column: this.column };
+            this.trimmed += this.letter;
+
+            return true;
+        }
+    };
+
+    $proto$0.inComment = function(close) {var $D$0;
+        if ( this.inside('comment') ) {
+            if ( close || ( this.letter == '*' && this.next == '/' ) ) {
+                var text, left, right;
+                text = ($D$0 = this.startSpaces(this.prevBuffer()))[0], left = $D$0[1], $D$0;
+                text = ($D$0 = this.endSpaces(text))[0], right = $D$0[1], $D$0;
+                this.current.text  = text;
+                this.current.left  = left;
+                this.current.right = right;
+                this.move();
+                this.pop();
+            ;$D$0 = void 0}
+            return true;
+
+        } else if ( this.inside('value-comment') ) {
+            if ( close || ( this.letter == '*' && this.next == '/' ) ) {
+                this.popType();
+                this.move();
+            }
+            return true;
+        }
+    };
+
+    $proto$0.isComment = function() {
+        if ( this.letter == '/' && this.next == '*' ) {
+            if ( this.inside('rules') || this.inside('decls') ) {
+                this.init( new Comment() );
+                this.addType('comment');
+                this.move();
+                this.buffer = '';
+            } else {
+                this.commentPos = { line: this.line, column: this.column };
+                this.addType('value-comment');
+                this.move();
+                return true;
+            }
+        }
+    };
+
+    $proto$0.isWrong = function() {
+        if ( this.letter == '{' ) {
+            if ( this.inside('decls') || this.inside('value') ) {
+                this.error("Unexpected {");
+            }
+        }
+
+        if ( this.inside('prop') ) {
+            if ( this.letter == '}' || this.letter == ';') {
+                if ( this.opts.safe ) {
+                    var string = this.current.before + this.buffer;
+                    this.current.parent.decls.pop();
+                    this.pop();
+                    this.buffer    = string;
+                    this.semicolon = this.prevSemicolon;
+                } else {
+                    this.error('Missing property value');
+                }
+            }
+        }
+    };
+
+    $proto$0.isAtrule = function() {
+        if ( this.letter == '@' && this.inside('rules') ) {
+            this.init( new AtRule() );
+            this.current.name = '';
+            this.addType('atrule-name');
+
+            return true;
+        }
+    };
+
+    $proto$0.inAtrule = function(close) {var $D$1;
+        if ( this.inside('atrule-name') ) {
+            if ( this.space() ) {
+                this.checkAtruleName();
+                this.buffer  = this.buffer.substr(this.current.name.length);
+                this.trimmed = '';
+                this.setType('atrule-param');
+
+            } else if ( this.letter == ';' || this.letter == '{' || close ) {
+                this.current.between = '';
+                this.checkAtruleName();
+                this.endAtruleParams();
+
+            } else {
+                this.current.name += this.letter;
+            }
+            return true;
+
+        } else if ( this.inside('atrule-param') ) {
+            if ( this.letter == ';' || this.letter == '{' || close ) {
+                var raw, left, right;
+                raw = ($D$1 = this.startSpaces( this.prevBuffer() ))[0], left = $D$1[1], $D$1;
+                raw = ($D$1 = this.endSpaces(raw))[0], right = $D$1[1], $D$1;
+                this.raw('params', this.trimmed.trim(), raw);
+                if ( this.current.params ) {
+                    this.current.afterName = left;
+                    this.current.between   = right;
+                } else {
+                    this.current.afterName = '';
+                    this.current.between   = left + right;
+                }
+                this.endAtruleParams();
+
+            ;$D$1 = void 0} else {
+                this.trimmed += this.letter;
+            }
+            return true;
+        }
+    };
+
+    $proto$0.inSelector = function() {var $D$2;
+        if ( this.inside('selector') ) {
+            if ( this.letter == '{' ) {
+                var raw, spaces;
+                raw = ($D$2 = this.endSpaces( this.prevBuffer() ))[0], spaces = $D$2[1], $D$2;
+                this.raw('selector', this.trimmed.trim(), raw);
+                this.current.between = spaces;
+                this.semicolon = false;
+                this.buffer    = '';
+                this.setType('decls');
+            ;$D$2 = void 0} else {
+                this.trimmed += this.letter;
+            }
+
+            return true;
+        }
+    };
+
+    $proto$0.isSelector = function() {
+        if ( !this.space() && this.inside('rules') ) {
+            this.init( new Rule() );
+
+            if ( this.letter == '{' ) {
+                this.addType('decls');
+                this.current.selector = '';
+                this.current.between  = '';
+                this.semicolon = false;
+                this.buffer    = '';
+            } else {
+                this.addType('selector');
+                this.buffer  = this.letter;
+                this.trimmed = this.letter;
+            }
+
+            return true;
+        }
+    };
+
+    $proto$0.isBlockEnd = function(close) {var this$0 = this;
+        if ( this.letter == '}' || close ) {
+            if ( this.parents.length == 1 ) {
+                if ( !this.opts.safe ) {
+                    this.error('Unexpected }');
+                }
+            } else {
+                if ( this.inside('value') ) {
+                    this.fixEnd( function()  {return this$0.inValue('close')} );
+                } else if ( this.inside('prop') && this.opts.safe ) {
+                    this.inProperty('close');
+                } else {
+                    if ( this.semicolon ) this.current.semicolon = true;
+                    this.current.after = this.prevBuffer();
+                }
+                this.pop();
+            }
+
+            return true;
+        }
+    };
+
+    $proto$0.inProperty = function(close) {
+        if ( this.inside('prop') ) {
+            if ( this.letter == ':' || close ) {
+                if ( this.buffer[0] == '*' || this.buffer[0] == '_' ) {
+                    this.current.before += this.buffer[0];
+                    this.trimmed = this.trimmed.substr(1);
+                    this.buffer  = this.buffer.substr(1);
+                }
+
+                this.current.prop = this.trimmed.trim();
+                var length = this.current.prop.length;
+                this.current.between = this.prevBuffer().substr(length);
+                this.buffer = '';
+
+                if ( close ) {
+                    this.current.value = '';
+                    this.pop();
+                } else {
+                    this.setType('value');
+                }
+                this.trimmed = '';
+            } else if ( this.letter == '{' ) {
+                this.error('Unexpected { in decls');
+            } else {
+                this.trimmed += this.letter;
+            }
+
+            return true;
+        }
+    };
+
+    $proto$0.isProperty = function() {
+        if ( this.inside('decls') && !this.space() && this.letter != ';' ) {
+            this.init( new Declaration() );
+            this.addType('prop');
+            this.buffer        = this.letter;
+            this.trimmed       = this.letter;
+            this.prevSemicolon = this.semicolon;
+            this.semicolon     = false;
+
+            return true;
+        }
+    };
+
+    $proto$0.inValue = function(close) {var $D$3;
+        if ( this.inside('value') ) {
+            if ( this.letter == '(' ) {
+                this.inBrackets = true;
+            } else if ( this.inBrackets && this.letter == ')' ) {
+                this.inBrackets = false;
+            }
+
+            if ( (this.letter == ';' && !this.inBrackets) || close ) {
+                if ( this.letter == ';' ) this.semicolon = true;
+
+                var raw, spaces;
+                raw = ($D$3 = this.startSpaces(this.prevBuffer()))[0], spaces = $D$3[1], $D$3;
+                var trim      = this.trimmed.trim();
+
+                if ( raw.indexOf('!important') != -1 ) {
+                    var match = raw.match(/\s+!important\s*$/);
+                    if ( match ) {
+                        this.current.important  = true;
+                        this.current._important = match[0];
+                        raw  = raw.slice(0, -match[0].length);
+                        trim = trim.replace(/\s+!important$/, '');
+                    }
+                }
+
+                this.raw('value', trim, raw);
+                this.current.between += ':' + spaces;
+                this.pop();
+            ;$D$3 = void 0} else {
+                this.trimmed += this.letter;
+            }
+
+            return true;
+        }
+    };
+
+    $proto$0.endFile = function() {var this$0 = this;
+        if ( this.inside('atrule-param') || this.inside('atrule-name') ) {
+            this.fixEnd( function()  {return this$0.inAtrule('close')} );
+        }
+
+        if ( this.inside('comment') || this.inside('value-comment') ) {
+            if ( this.opts.safe ) {
+                this.buffer += '/';
+                this.inComment('close');
+                this.closeBlocks();
+            } else {
+                if ( this.inside('comment') ) {
+                    this.error('Unclosed comment', this.current.source.start);
+                } else {
+                    this.error('Unclosed comment', this.commentPos);
+                }
+            }
+
+        } else if ( this.parents.length > 1 ) {
+            if ( this.opts.safe ) {
+                this.closeBlocks();
+            } else {
+                this.error('Unclosed block', this.current.source.start);
+            }
+
+        } else if ( this.quote ) {
+            if ( this.opts.safe ) {
+                this.inString('close');
+                this.closeBlocks();
+            } else {
+                this.error('Unclosed quote', this.quotePos);
+            }
+
+        } else {
+            this.root.after = this.buffer;
+        }
+    };
+
+    // Helpers
+
+    $proto$0.error = function(message) {var pos = arguments[1];if(pos === void 0)pos = { line: this.line, column: this.column };
+        throw new CssSyntaxError(message, this.source, pos, this.opts.from);
+    };
+
+    $proto$0.move = function() {
+        this.pos    += 1;
+        this.column += 1;
+        this.letter  = this.next;
+        this.next    = this.source[this.pos + 1];
+        this.buffer += this.letter;
+
+        if ( this.letter == "\n" ) {
+            this.lines[this.line] = this.column - 1;
+            this.line  += 1;
+            this.column = 0;
+        }
+    };
+
+    $proto$0.prevBuffer = function() {
+        return this.buffer.slice(0, -1);
+    };
+
+    $proto$0.inside = function(type) {
+        return this.type == type;
+    };
+
+    $proto$0.space = function() {
+        return this.letter.trim() === '';
+    };
+
+    $proto$0.init = function(node) {
+        this.current.push(node);
+        this.parents.push(node);
+        this.current = node;
+
+        this.current.source = {
+            start: {
+                line:   this.line,
+                column: this.column
+            },
+            content: this.source
         };
-        this.trimmed += this.letter;
-        return true;
-      }
-    };
-
-    Parser.prototype.inComment = function() {
-      var left, right, text, _ref, _ref1;
-      if (this.inside('comment')) {
-        if (this.next('*/')) {
-          _ref = this.startSpaces(this.prevBuffer()), text = _ref[0], left = _ref[1];
-          _ref1 = this.endSpaces(text), text = _ref1[0], right = _ref1[1];
-          this.current.text = text;
-          this.current.left = left;
-          this.current.right = right;
-          this.move();
-          this.pop();
-        }
-        return true;
-      } else if (this.inside('value-comment')) {
-        if (this.next('*/')) {
-          this.popType();
-          this.move();
-        }
-        return true;
-      }
-    };
-
-    Parser.prototype.isComment = function() {
-      if (this.next('/*')) {
-        if (this.inside('rules') || this.inside('decls')) {
-          this.init(new Comment());
-          this.addType('comment');
-          this.move();
-          return this.buffer = '';
+        if ( this.opts.from ) {
+            this.current.source.file = path.resolve(this.opts.from);
         } else {
-          this.commentPos = {
-            line: this.line,
+            this.current.source.id = this.id;
+        }
+        this.current.before = this.buffer.slice(0, -1);
+        this.buffer = '';
+    };
+
+    $proto$0.raw = function(prop, value, origin) {
+        this.current[prop] = value;
+        if ( value != origin ) {
+            this.current['_' + prop] = { value: value, raw: origin };
+        }
+    };
+
+    $proto$0.fixEnd = function(callback) {
+        var start, after;
+        if ( this.letter == '}' ) {
+            start = this.buffer.search(/\s*\}$/);
+            after = this.buffer.slice(start, -1);
+        } else {
+            start = this.buffer.search(/\s*$/);
+            after = this.buffer.substr(start);
+        }
+        this.buffer = this.buffer.substr(0, start + 1);
+
+        var el = this.current;
+        callback.apply(this);
+
+        var lines = after.match(/\n/g);
+        if ( lines ) {
+            el.source.end.line -= lines.length;
+            var all  = this.lines[el.source.end.line];
+            var last = after.indexOf("\n");
+            if ( last == -1 ) last = after.length;
+            el.source.end.column = all - last;
+        } else {
+            el.source.end.column -= after.length;
+        }
+
+        this.current.after = after;
+        this.buffer = after;
+    };
+
+    $proto$0.pop = function() {
+        this.current.source.end = {
+            line:   this.line,
             column: this.column
-          };
-          this.addType('value-comment');
-          this.move();
-          return true;
-        }
-      }
-    };
-
-    Parser.prototype.isWrong = function() {
-      if (this.letter === '{' && (this.inside('decls') || this.inside('value'))) {
-        this.error("Unexpected {");
-      }
-      if (this.inside('prop') && (this.letter === '}' || this.letter === ';')) {
-        return this.error('Missing property value');
-      }
-    };
-
-    Parser.prototype.isAtrule = function() {
-      if (this.letter === '@' && this.inside('rules')) {
-        this.init(new AtRule());
-        this.current.name = '';
-        this.addType('atrule-name');
-        return true;
-      }
-    };
-
-    Parser.prototype.inAtrule = function(close) {
-      var left, raw, right, _ref, _ref1;
-      if (this.inside('atrule-name')) {
-        if (this.space()) {
-          this.checkAtruleName();
-          this.buffer = this.buffer.slice(this.current.name.length);
-          this.trimmed = '';
-          this.setType('atrule-param');
-        } else if (this.letter === ';' || this.letter === '{' || close) {
-          this.current.between = '';
-          this.checkAtruleName();
-          this.endAtruleParams();
-        } else {
-          this.current.name += this.letter;
-        }
-        return true;
-      } else if (this.inside('atrule-param')) {
-        if (this.letter === ';' || this.letter === '{' || close) {
-          _ref = this.startSpaces(this.prevBuffer()), raw = _ref[0], left = _ref[1];
-          _ref1 = this.endSpaces(raw), raw = _ref1[0], right = _ref1[1];
-          this.current.params = this.raw(this.trimmed.trim(), raw);
-          if (this.current.params) {
-            this.current.afterName = left;
-            this.current.between = right;
-          } else {
-            this.current.afterName = '';
-            this.current.between = left + right;
-          }
-          this.endAtruleParams();
-        } else {
-          this.trimmed += this.letter;
-        }
-        return true;
-      }
-    };
-
-    Parser.prototype.inSelector = function() {
-      var raw, spaces, _ref;
-      if (this.inside('selector')) {
-        if (this.letter === '{') {
-          _ref = this.endSpaces(this.prevBuffer()), raw = _ref[0], spaces = _ref[1];
-          this.current.selector = this.raw(this.trimmed.trim(), raw);
-          this.current.between = spaces;
-          this.semicolon = false;
-          this.buffer = '';
-          this.setType('decls');
-        } else {
-          this.trimmed += this.letter;
-        }
-        return true;
-      }
-    };
-
-    Parser.prototype.isSelector = function() {
-      if (!this.space() && this.inside('rules')) {
-        this.init(new Rule());
-        if (this.letter === '{') {
-          this.addType('decls');
-          this.current.selector = '';
-          this.current.between = '';
-          this.semicolon = false;
-          this.buffer = '';
-        } else {
-          this.addType('selector');
-          this.buffer = this.letter;
-          this.trimmed = this.letter;
-        }
-        return true;
-      }
-    };
-
-    Parser.prototype.isBlockEnd = function() {
-      if (this.letter === '}') {
-        if (this.parents.length === 1) {
-          this.error('Unexpected }');
-        } else {
-          if (this.inside('value')) {
-            this.fixEnd(function() {
-              return this.inValue('close');
-            });
-          } else {
-            if (this.semicolon) {
-              this.current.semicolon = true;
-            }
-            this.current.after = this.prevBuffer();
-          }
-          this.pop();
-        }
-        return true;
-      }
-    };
-
-    Parser.prototype.inProperty = function() {
-      if (this.inside('prop')) {
-        if (this.letter === ':') {
-          if (this.buffer[0] === '*' || this.buffer[0] === '_') {
-            this.current.before += this.buffer[0];
-            this.trimmed = this.trimmed.slice(1);
-            this.buffer = this.buffer.slice(1);
-          }
-          this.current.prop = this.trimmed.trim();
-          this.current.between = this.prevBuffer().slice(this.current.prop.length);
-          this.buffer = '';
-          this.setType('value');
-          this.trimmed = '';
-        } else if (this.letter === '{') {
-          this.error('Unexpected { in decls');
-        } else {
-          this.trimmed += this.letter;
-        }
-        return true;
-      }
-    };
-
-    Parser.prototype.isProperty = function() {
-      if (this.inside('decls') && !this.space() && this.letter !== ';') {
-        this.init(new Declaration());
-        this.addType('prop');
-        this.buffer = this.letter;
-        this.trimmed = this.letter;
-        this.semicolon = false;
-        return true;
-      }
-    };
-
-    Parser.prototype.inValue = function(close) {
-      var end, match, raw, spaces, trim, _ref;
-      if (this.inside('value')) {
-        if (this.letter === '(') {
-          this.inBrackets = true;
-        } else if (this.inBrackets && this.letter === ')') {
-          this.inBrackets = false;
-        }
-        if ((this.letter === ';' && !this.inBrackets) || close) {
-          if (this.letter === ';') {
-            this.semicolon = true;
-          }
-          _ref = this.startSpaces(this.prevBuffer()), raw = _ref[0], spaces = _ref[1];
-          trim = this.trimmed.trim();
-          if (match = raw.match(/\s+!important\s*$/)) {
-            this.current._important = match[0];
-            end = -match[0].length - 1;
-            raw = raw.slice(0, +end + 1 || 9e9);
-            trim = trim.replace(/\s+!important$/, '');
-          }
-          this.current.value = this.raw(trim, raw);
-          this.current.between += ':' + spaces;
-          this.pop();
-        } else {
-          this.trimmed += this.letter;
-        }
-        return true;
-      }
-    };
-
-    Parser.prototype.unknown = function() {
-      if (!this.space) {
-        return this.error("Unexpected symbol " + this.letter);
-      }
-    };
-
-    Parser.prototype.endFile = function() {
-      if (this.inside('atrule-param') || this.inside('atrule-name')) {
-        this.fixEnd(function() {
-          return this.inAtrule('close');
-        });
-      }
-      if (this.inside('comment')) {
-        return this.error('Unclosed comment', this.current.source.start);
-      } else if (this.parents.length > 1) {
-        return this.error('Unclosed block', this.current.source.start);
-      } else if (this.inside('value-comment')) {
-        return this.error('Unclosed comment', this.commentPos);
-      } else if (this.quote) {
-        return this.error('Unclosed quote', this.quotePos);
-      } else {
-        return this.root.after = this.buffer;
-      }
-    };
-
-    Parser.prototype.error = function(message, position) {
-      if (position == null) {
-        position = {
-          line: this.line,
-          column: this.column
         };
-      }
-      throw new SyntexError(message, this.source, position, this.opts.from);
+
+        this.popType();
+        this.parents.pop();
+        this.current = this.parents[this.parents.length - 1];
+        this.buffer  = '';
     };
 
-    Parser.prototype.move = function() {
-      this.pos += 1;
-      this.column += 1;
-      this.letter = this.source[this.pos];
-      this.buffer += this.letter;
-      if (this.letter === "\n") {
-        this.lines[this.line] = this.column - 1;
-        this.line += 1;
-        return this.column = 0;
-      }
+    $proto$0.addType = function(type) {
+        this.types.push(type);
+        this.type = type;
     };
 
-    Parser.prototype.prevBuffer = function() {
-      return this.buffer.slice(0, -1);
+    $proto$0.setType = function(type) {
+        this.types[this.types.length - 1] = type;
+        this.type = type;
     };
 
-    Parser.prototype.inside = function(type) {
-      return this.type === type;
+    $proto$0.popType = function() {
+        this.types.pop();
+        this.type = this.types[this.types.length - 1];
     };
 
-    Parser.prototype.next = function(string) {
-      return this.source.slice(this.pos, +(this.pos + string.length - 1) + 1 || 9e9) === string;
-    };
-
-    Parser.prototype.space = function() {
-      return this.letter.match(/\s/);
-    };
-
-    Parser.prototype.init = function(node) {
-      this.current.push(node);
-      this.parents.push(node);
-      this.current = node;
-      this.current.source = {
-        start: {
-          line: this.line,
-          column: this.column
+    $proto$0.atruleType = function() {
+        var name = this.current.name.toLowerCase();
+        if ( name == 'page' || name == 'font-face' ) {
+            return 'decls';
+        } else if ( name.slice(-8) == 'viewport' ) {
+            return 'decls';
+        } else {
+            return 'rules';
         }
-      };
-      if (this.opts.from) {
-        this.current.source.file = this.opts.from;
-      }
-      this.current.before = this.buffer.slice(0, -1);
-      return this.buffer = '';
     };
 
-    Parser.prototype.raw = function(value, raw) {
-      if (value !== raw) {
-        return new Raw(value, raw);
-      } else {
-        return value;
-      }
-    };
-
-    Parser.prototype.fixEnd = function(callback) {
-      var after, all, el, last, lines, start;
-      if (this.letter === '}') {
-        start = this.buffer.search(/\s*\}$/);
-        after = this.buffer.slice(start, -1);
-      } else {
-        start = this.buffer.search(/\s*$/);
-        after = this.buffer.slice(start);
-      }
-      this.buffer = this.buffer.slice(0, +start + 1 || 9e9);
-      el = this.current;
-      callback.apply(this);
-      lines = after.match(/\n/g);
-      if (lines) {
-        el.source.end.line -= lines.length;
-        all = this.lines[el.source.end.line];
-        last = after.indexOf("\n");
-        if (last === -1) {
-          last = after.length;
+    $proto$0.endAtruleParams = function() {
+        if ( this.letter == '{' ) {
+            var type = this.atruleType();
+            this.current.addMixin(type);
+            this.setType(type);
+            this.buffer = '';
+        } else {
+            if ( this.letter == ';' ) this.current.semicolon = true;
+            this.pop();
         }
-        el.source.end.column = all - last;
-      } else {
-        el.source.end.column -= after.length;
-      }
-      this.current.after = after;
-      return this.buffer = after;
     };
 
-    Parser.prototype.pop = function() {
-      this.current.source.end = {
-        line: this.line,
-        column: this.column
-      };
-      this.popType();
-      this.parents.pop();
-      this.current = this.parents[this.parents.length - 1];
-      return this.buffer = '';
+    $proto$0.checkAtruleName = function() {
+        if ( this.current.name === '' ) this.error('At-rule without name');
     };
 
-    Parser.prototype.addType = function(type) {
-      this.types.push(type);
-      return this.type = type;
-    };
-
-    Parser.prototype.setType = function(type) {
-      this.types[this.types.length - 1] = type;
-      return this.type = type;
-    };
-
-    Parser.prototype.popType = function() {
-      this.types.pop();
-      return this.type = this.types[this.types.length - 1];
-    };
-
-    Parser.prototype.atruleType = function() {
-      var name;
-      name = this.current.name.toLowerCase();
-      if (name === 'page' || name === 'font-face' || name.slice(-8) === 'viewport') {
-        return 'decls';
-      } else {
-        return 'rules';
-      }
-    };
-
-    Parser.prototype.endAtruleParams = function() {
-      var type;
-      if (this.letter === '{') {
-        type = this.atruleType();
-        this.current.addMixin(type);
-        this.setType(type);
-        return this.buffer = '';
-      } else {
-        if (this.letter === ';') {
-          this.current.semicolon = true;
+    $proto$0.startSpaces = function(string) {
+        var match = string.match(/^\s+/);
+        if ( match ) {
+            var pos = match[0].length;
+            return [string.substr(pos), match[0]];
+        } else {
+            return [string, ''];
         }
-        return this.pop();
-      }
     };
 
-    Parser.prototype.checkAtruleName = function() {
-      if (this.current.name === '') {
-        return this.error('At-rule without name');
-      }
+    $proto$0.endSpaces = function(string) {
+        var match = string.match(/\s+$/);
+        if ( match ) {
+            var pos = match[0].length;
+            return [string.slice(0, -pos), match[0]];
+        } else {
+            return [string, ''];
+        }
     };
 
-    Parser.prototype.startSpaces = function(string) {
-      var match, pos;
-      match = string.match(/^\s*/);
-      if (match) {
-        pos = match[0].length;
-        return [string.slice(pos), match[0]];
-      } else {
-        return [string, ''];
-      }
+    $proto$0.closeBlocks = function() {
+        for ( var i = 0; i < this.parents.length; i++ ) {
+            this.buffer += '{';
+            this.isBlockEnd('close');
+        }
     };
+MIXIN$0(Parser.prototype,$proto$0);$proto$0=void 0;return Parser;})();
 
-    Parser.prototype.endSpaces = function(string) {
-      var match, pos;
-      match = string.match(/\s*$/);
-      if (match) {
-        pos = match[0].length + 1;
-        return [string.slice(0, +(-pos) + 1 || 9e9), match[0]];
-      } else {
-        return [string, ''];
-      }
-    };
+module.exports = function (source) {var opts = arguments[1];if(opts === void 0)opts = { };
+    if ( opts.map == 'inline' ) opts.map = { inline: true };
 
-    return Parser;
-
-  })();
-
-  module.exports = function(source, opts) {
-    var parser;
-    if (opts == null) {
-      opts = {};
-    }
-    parser = new Parser(source, opts);
+    var parser = new Parser(source, opts);
     parser.loop();
+    parser.setMap();
+
     return parser.root;
-  };
+};
 
-}).call(this);
+},{"./at-rule":80,"./comment":81,"./css-syntax-error":83,"./declaration":84,"./previous-map":90,"./root":92,"./rule":93,"path":49}],89:[function(require,module,exports){
+var Declaration = require('./declaration');
+var Comment     = require('./comment');
+var AtRule      = require('./at-rule');
+var Result      = require('./result');
+var Rule        = require('./rule');
+var Root        = require('./root');
 
-},{"./at-rule":44,"./comment":45,"./declaration":47,"./raw":54,"./root":56,"./rule":57,"./syntax-error":58}],53:[function(_dereq_,module,exports){
-(function() {
-  var AtRule, Comment, Declaration, PostCSS, Root, Rule, postcss,
-    __slice = [].slice;
+// List of functions to process CSS
+var PostCSS = (function(){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};var $proto$0={};
+    function PostCSS() {var processors = arguments[0];if(processors === void 0)processors = [];var this$0 = this;
+        this.processors = processors.map( function(i)  {return this$0.normalize(i)} );
+    }try{DP$0(PostCSS, "prototype", {"configurable": false, "enumerable": false, "writable": false});}catch(e){}
 
-  Declaration = _dereq_('./declaration');
-
-  Comment = _dereq_('./comment');
-
-  AtRule = _dereq_('./at-rule');
-
-  Rule = _dereq_('./rule');
-
-  Root = _dereq_('./root');
-
-  PostCSS = (function() {
-    function PostCSS(processors) {
-      this.processors = processors != null ? processors : [];
-    }
-
-    PostCSS.prototype.use = function(processor) {
-      this.processors.push(processor);
-      return this;
+    // Add another function to CSS processors
+    $proto$0.use = function(processor) {
+        processor = this.normalize(processor);
+        this.processors.push(processor);
+        return this;
     };
 
-    PostCSS.prototype.process = function(css, opts) {
-      var parsed, processor, returned, _i, _len, _ref;
-      if (opts == null) {
-        opts = {};
-      }
-      parsed = postcss.parse(css, opts);
-      _ref = this.processors;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        processor = _ref[_i];
-        returned = processor(parsed);
-        if (returned instanceof Root) {
-          parsed = returned;
+    // Process CSS throw installed processors
+    $proto$0.process = function(css) {var S_ITER$0 = typeof Symbol!=='undefined'&&Symbol&&Symbol.iterator||'@@iterator';var S_MARK$0 = typeof Symbol!=='undefined'&&Symbol&&Symbol["__setObjectSetter__"];function GET_ITER$0(v){if(v){if(Array.isArray(v))return 0;var f;if(S_MARK$0)S_MARK$0(v);if(typeof v==='object'&&typeof (f=v[S_ITER$0])==='function'){if(S_MARK$0)S_MARK$0(void 0);return f.call(v);}if(S_MARK$0)S_MARK$0(void 0);if((v+'')==='[object Generator]')return v;}throw new Error(v+' is not iterable')};var $D$0;var $D$1;var $D$2;var $D$3;var opts = arguments[1];if(opts === void 0)opts = { };
+        if ( opts.map == 'inline' ) opts.map = { inline: true };
+
+        var parsed;
+        if ( css instanceof Root ) {
+            parsed = css;
+        } else if ( css instanceof Result ) {
+            parsed = css.root;
+        } else {
+            parsed = postcss.parse(css, opts);
         }
-      }
-      return parsed.toResult(opts);
+
+        $D$3 = (this.processors);$D$0 = GET_ITER$0($D$3);$D$2 = $D$0 === 0;$D$1 = ($D$2 ? $D$3.length : void 0);for ( var processor ;$D$2 ? ($D$0 < $D$1) : !($D$1 = $D$0["next"]())["done"];){processor = ($D$2 ? $D$3[$D$0++] : $D$1["value"]);
+            var returned = processor(parsed, opts);
+            if ( returned instanceof Root ) parsed = returned;
+        };$D$0 = $D$1 = $D$2 = $D$3 = void 0;
+
+        return parsed.toResult(opts);
     };
 
-    return PostCSS;
+    // Return processor function
+    $proto$0.normalize = function(processor) {
+        var type = typeof(processor);
+        if ( (type == 'object' || type == 'function') && processor.postcss ) {
+            return processor.postcss;
+        } else {
+            return processor;
+        }
+    };
+MIXIN$0(PostCSS.prototype,$proto$0);$proto$0=void 0;return PostCSS;})();
 
-  })();
-
-  postcss = function() {
-    var processors;
-    processors = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+// Framework for CSS postprocessors
+//
+//   var processor = postcss(function (css) {
+//       // Change nodes in css
+//   });
+//   processor.process(css)
+var postcss = function () {var SLICE$0 = Array.prototype.slice;var processors = SLICE$0.call(arguments, 0);
     return new PostCSS(processors);
-  };
+};
 
-  postcss.parse = _dereq_('./parse');
+// Compile CSS to nodes
+postcss.parse = require('./parse');
 
-  postcss.comment = function(defaults) {
+// Nodes shortcuts
+postcss.comment = function (defaults) {
     return new Comment(defaults);
-  };
-
-  postcss.atRule = function(defaults) {
+};
+postcss.atRule = function (defaults) {
     return new AtRule(defaults);
-  };
-
-  postcss.decl = function(defaults) {
+};
+postcss.decl = function (defaults) {
     return new Declaration(defaults);
-  };
-
-  postcss.rule = function(defaults) {
+};
+postcss.rule = function (defaults) {
     return new Rule(defaults);
-  };
-
-  postcss.root = function(defaults) {
+};
+postcss.root = function (defaults) {
     return new Root(defaults);
-  };
+};
 
-  module.exports = postcss;
+module.exports = postcss;
 
-}).call(this);
+},{"./at-rule":80,"./comment":81,"./declaration":84,"./parse":88,"./result":91,"./root":92,"./rule":93}],90:[function(require,module,exports){
+var mozilla = require('source-map');
+var Base64  = require('js-base64').Base64;
+var path    = require('path');
+var fs      = require('fs');
 
-},{"./at-rule":44,"./comment":45,"./declaration":47,"./parse":52,"./root":56,"./rule":57}],54:[function(_dereq_,module,exports){
-(function() {
-  var Raw;
+// Detect previous map
+var PreviousMap = (function(){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};var $proto$0={};
+    function PreviousMap(root, opts, id) {
+        this.file = opts.from || id;
 
-  Raw = (function() {
-    Raw.load = function(value, raw) {
-      if ((raw != null) && value !== raw) {
-        return new Raw(value, raw);
-      } else {
-        return value;
-      }
+        this.loadAnnotation(root);
+        var inlinePrefix = '# sourceMappingURL=data:';
+        this.inline = this.startWith(this.annotation, inlinePrefix);
+
+        var text = this.loadMap(opts.map ? opts.map.prev : undefined);
+        if ( text ) this.text = text;
+    }try{DP$0(PreviousMap, "prototype", {"configurable": false, "enumerable": false, "writable": false});}catch(e){}
+
+    // Return SourceMapConsumer object to read map
+    $proto$0.consumer = function() {
+        if ( !this.consumerCache ) {
+            this.consumerCache = new mozilla.SourceMapConsumer(this.text);
+        }
+        return this.consumerCache;
     };
 
-    function Raw(value, raw) {
-      this.value = value;
-      this.raw = raw;
+    // Is map has sources content
+    $proto$0.withContent = function() {
+        return !!(this.consumer().sourcesContent &&
+                  this.consumer().sourcesContent.length > 0);
+    };
+
+    // Is `string` is starting with `start`
+    $proto$0.startWith = function(string, start) {
+        if ( !string ) return false;
+        return string.substr(0, start.length) == start;
+    };
+
+    // Load for annotation comment from previous compilation step
+    $proto$0.loadAnnotation = function(root) {
+        var last = root.last;
+        if ( !last ) return;
+        if ( last.type != 'comment' ) return;
+
+        if ( this.startWith(last.text, '# sourceMappingURL=') ) {
+            this.annotation = last.text;
+        }
+    };
+
+    // Encode different type of inline
+    $proto$0.decodeInline = function(text) {
+        var uri    = '# sourceMappingURL=data:application/json,';
+        var base64 = '# sourceMappingURL=data:application/json;base64,';
+
+        if ( this.startWith(text, uri) ) {
+            return decodeURIComponent( text.substr(uri.length) );
+
+        } else if ( this.startWith(text, base64) ) {
+            return Base64.decode( text.substr(base64.length) );
+
+        } else {
+            var encoding = text.match(/ata:application\/json;([^,]+),/)[1];
+            throw new Error('Unsupported source map encoding ' + encoding);
+        }
+    };
+
+    // Load previous map
+    $proto$0.loadMap = function(prev) {
+        if ( prev === false ) return;
+
+        if ( prev ) {
+            if ( typeof(prev) == 'string' ) {
+                return prev;
+            } else if ( prev instanceof mozilla.SourceMapConsumer ) {
+                return mozilla.SourceMapGenerator
+                    .fromSourceMap(prev).toString();
+            } else if ( prev instanceof mozilla.SourceMapGenerator ) {
+                return prev.toString();
+            } else if ( typeof(prev) == 'object' && prev.mappings ) {
+                return JSON.stringify(prev);
+            } else {
+                throw new Error('Unsupported previous source map format: ' +
+                    prev.toString());
+            }
+
+        } else if ( this.inline ) {
+            return this.decodeInline(this.annotation);
+
+        } else if ( this.annotation ) {
+            var map = this.annotation.replace('# sourceMappingURL=', '');
+            if ( this.file ) map = path.join(path.dirname(this.file), map);
+
+            this.root = path.dirname(map);
+            if ( fs.existsSync && fs.existsSync(map) ) {
+                return fs.readFileSync(map, 'utf-8').toString();
+            }
+        }
+    };
+MIXIN$0(PreviousMap.prototype,$proto$0);$proto$0=void 0;return PreviousMap;})();
+
+module.exports = PreviousMap;
+
+},{"fs":44,"js-base64":95,"path":49,"source-map":96}],91:[function(require,module,exports){
+var MapGenerator = require('./map-generator');
+
+// Object with processed CSS
+var Result = (function(){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};var $proto$0={};
+    function Result(root) {var opts = arguments[1];if(opts === void 0)opts = { };
+        this.root = root;
+        this.opts = opts;
+    }Object.defineProperties(Result.prototype, {map: {"get": map$get$0, "configurable": true, "enumerable": true}, css: {"get": css$get$0, "configurable": true, "enumerable": true}});try{DP$0(Result, "prototype", {"configurable": false, "enumerable": false, "writable": false});}catch(e){}
+
+    // Lazy method to return source map
+    function map$get$0() {
+        if ( !this.cssCached ) this.stringify();
+        return this.mapCached;
     }
 
-    Raw.prototype.toString = function() {
-      if (this.changed) {
-        return this.value || '';
-      } else {
-        return this.raw || this.value || '';
-      }
-    };
-
-    return Raw;
-
-  })();
-
-  module.exports = Raw;
-
-}).call(this);
-
-},{}],55:[function(_dereq_,module,exports){
-(function() {
-  var Result;
-
-  Result = (function() {
-    function Result(css, map) {
-      this.css = css;
-      if (map) {
-        this.map = map;
-      }
+    // Lazy method to return CSS string
+    function css$get$0() {
+        if ( !this.cssCached ) this.stringify();
+        return this.cssCached;
     }
 
-    Result.prototype.toString = function() {
-      return this.css;
+    // Return CSS string on any try to print
+    $proto$0.toString = function() {
+        return this.css;
     };
 
-    return Result;
+    // Generate CSS and map
+    $proto$0.stringify = function() {
+        var map = new MapGenerator(this.root, this.opts);
+        var generated  = map.generate();
+        this.cssCached = generated[0];
+        this.mapCached = generated[1];
+    };
+MIXIN$0(Result.prototype,$proto$0);$proto$0=void 0;return Result;})();
 
-  })();
+module.exports = Result;
 
-  module.exports = Result;
+},{"./map-generator":86}],92:[function(require,module,exports){
+var Declaration = require('./declaration');
+var Container   = require('./container');
+var Comment     = require('./comment');
+var AtRule      = require('./at-rule');
+var Result      = require('./result');
+var Rule        = require('./rule');
 
-}).call(this);
+// Root of CSS
+var Root = (function(super$0){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};MIXIN$0(Root, super$0);var $proto$0={};
+    function Root(defaults) {
+        this.type  = 'root';
+        this.rules = [];
+        super$0.call(this, defaults);
+    }Root.prototype = Object.create(super$0.prototype, {"constructor": {"value": Root, "configurable": true, "writable": true} });try{DP$0(Root, "prototype", {"configurable": false, "enumerable": false, "writable": false});}catch(e){}
 
-},{}],56:[function(_dereq_,module,exports){
-(function() {
-  var AtRule, Comment, Container, Declaration, MapGenerator, Root, Rule,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+    // Fix spaces on insert before first rule
+    $proto$0.normalize = function(child, sample, type) {var S_ITER$0 = typeof Symbol!=='undefined'&&Symbol&&Symbol.iterator||'@@iterator';var S_MARK$0 = typeof Symbol!=='undefined'&&Symbol&&Symbol["__setObjectSetter__"];function GET_ITER$0(v){if(v){if(Array.isArray(v))return 0;var f;if(S_MARK$0)S_MARK$0(v);if(typeof v==='object'&&typeof (f=v[S_ITER$0])==='function'){if(S_MARK$0)S_MARK$0(void 0);return f.call(v);}if(S_MARK$0)S_MARK$0(void 0);if((v+'')==='[object Generator]')return v;}throw new Error(v+' is not iterable')};var $D$0;var $D$1;var $D$2;
+        var childs = super$0.prototype.normalize.call(this, child, sample, type);
 
-  MapGenerator = _dereq_('./map-generator');
+        $D$0 = GET_ITER$0(childs);$D$2 = $D$0 === 0;$D$1 = ($D$2 ? childs.length : void 0);for ( child ;$D$2 ? ($D$0 < $D$1) : !($D$1 = $D$0["next"]())["done"];){child = ($D$2 ? childs[$D$0++] : $D$1["value"]);
+            if ( type == 'prepend' ) {
+                if ( this.rules.length > 1 ) {
+                    sample.before = this.rules[1].before;
+                } else if ( this.rules.length == 1 ) {
+                    sample.before = this.after;
+                }
+            } else {
+                if ( this.rules.length > 1 ) {
+                    child.before = sample.before;
+                } else {
+                    child.before = this.after;
+                }
+            }
+        };$D$0 = $D$1 = $D$2 = void 0;
 
-  Declaration = _dereq_('./declaration');
-
-  Container = _dereq_('./container');
-
-  Comment = _dereq_('./comment');
-
-  AtRule = _dereq_('./at-rule');
-
-  Rule = _dereq_('./rule');
-
-  Root = (function(_super) {
-    __extends(Root, _super);
-
-    function Root() {
-      this.type = 'root';
-      this.rules = [];
-      Root.__super__.constructor.apply(this, arguments);
-    }
-
-    Root.prototype.normalize = function(child, sample, type) {
-      child = Root.__super__.normalize.apply(this, arguments);
-      if (type === 'prepend') {
-        sample.before = this.rules.length > 1 ? this.rules[1].before : this.after;
-      }
-      return child;
+        return childs;
     };
 
-    Root.prototype.stringify = function(builder) {
-      this.stringifyContent(builder);
-      if (this.after) {
-        return builder(this.after);
-      }
+    // Stringify styles
+    $proto$0.stringify = function(builder) {
+        this.stringifyContent(builder);
+        if ( this.after) builder(this.after);
     };
 
-    Root.prototype.toResult = function(opts) {
-      var map;
-      if (opts == null) {
-        opts = {};
-      }
-      map = new MapGenerator(this, opts);
-      return map.getResult();
+    // Generate processing result with optional source map
+    $proto$0.toResult = function() {var opts = arguments[0];if(opts === void 0)opts = { };
+        return new Result(this, opts);
+    };
+MIXIN$0(Root.prototype,$proto$0);$proto$0=void 0;return Root;})(Container.WithRules);
+
+module.exports = Root;
+
+},{"./at-rule":80,"./comment":81,"./container":82,"./declaration":84,"./result":91,"./rule":93}],93:[function(require,module,exports){
+var Container   = require('./container');
+var Declaration = require('./declaration');
+var list        = require('./list');
+
+// CSS rule like “a { }”
+var Rule = (function(super$0){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};MIXIN$0(Rule, super$0);var $proto$0={};
+    function Rule(defaults) {
+        this.type = 'rule';
+        super$0.call(this, defaults);
+    }Rule.prototype = Object.create(super$0.prototype, {"constructor": {"value": Rule, "configurable": true, "writable": true}, selectors: {"get": selectors$get$0, "set": selectors$set$0, "configurable": true, "enumerable": true} });try{DP$0(Rule, "prototype", {"configurable": false, "enumerable": false, "writable": false});}catch(e){}
+
+    // Different style for empty and non-empty rules
+    $proto$0.styleType = function() {
+        return this.type + (this.decls.length ? '-body' : '-empty');
     };
 
-    return Root;
-
-  })(Container.WithRules);
-
-  module.exports = Root;
-
-}).call(this);
-
-},{"./at-rule":44,"./comment":45,"./container":46,"./declaration":47,"./map-generator":50,"./rule":57}],57:[function(_dereq_,module,exports){
-(function() {
-  var Container, Declaration, Rule, list,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  Container = _dereq_('./container');
-
-  Declaration = _dereq_('./declaration');
-
-  list = _dereq_('./list');
-
-  Rule = (function(_super) {
-    __extends(Rule, _super);
-
-    function Rule() {
-      this.type = 'rule';
-      Rule.__super__.constructor.apply(this, arguments);
-    }
-
-    Rule.prototype.styleType = function() {
-      return this.type + (this.decls.length ? '-body' : '-empty');
+    $proto$0.defaultStyle = function(type) {
+        if ( type == 'rule-body' ) {
+            return { between: ' ', after: this.defaultAfter() };
+        } else {
+            return { between: ' ', after: '' };
+        }
     };
 
-    Rule.prototype.defaultStyle = function(type) {
-      if (type === 'rule-body') {
-        return {
-          between: ' ',
-          after: this.defaultAfter()
-        };
-      } else {
-        return {
-          between: ' ',
-          after: ''
-        };
-      }
-    };
+    // Shortcut to get selectors as array
 
-    Rule.raw('selector');
-
-    Rule.prop('selectors', {
-      get: function() {
+    function selectors$get$0() {
         return list.comma(this.selector);
-      },
-      set: function(values) {
-        return this.selector = values.join(', ');
-      }
-    });
+    }
 
-    Rule.prototype.stringify = function(builder) {
-      return this.stringifyBlock(builder, this._selector + this.style().between + '{');
+    function selectors$set$0(values) {
+        this.selector = values.join(', ');
+    }
+
+    // Stringify rule
+    $proto$0.stringify = function(builder) {
+        this.stringifyBlock(builder,
+            this.stringifyRaw('selector') + this.style().between + '{');
     };
+MIXIN$0(Rule.prototype,$proto$0);$proto$0=void 0;return Rule;})(Container.WithDecls);
 
-    return Rule;
+module.exports = Rule;
 
-  })(Container.WithDecls);
+},{"./container":82,"./declaration":84,"./list":85}],94:[function(require,module,exports){
+// Methods to work with vendor prefixes
+var vendor = {
 
-  module.exports = Rule;
-
-}).call(this);
-
-},{"./container":46,"./declaration":47,"./list":49}],58:[function(_dereq_,module,exports){
-(function() {
-  var SyntaxError,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  SyntaxError = (function(_super) {
-    __extends(SyntaxError, _super);
-
-    function SyntaxError(text, source, pos, file) {
-      this.source = source;
-      this.file = file;
-      this.line = pos.line;
-      this.column = pos.column;
-      this.message = "Can't parse CSS: " + text;
-      this.message += " at line " + pos.line + ":" + pos.column;
-      if (this.file) {
-        this.message += " in " + this.file;
-      }
-    }
-
-    return SyntaxError;
-
-  })(Error);
-
-  module.exports = SyntaxError;
-
-}).call(this);
-
-},{}],59:[function(_dereq_,module,exports){
-(function() {
-  var vendor;
-
-  vendor = {
-    prefix: function(prop) {
-      var separator;
-      if (prop[0] === '-') {
-        separator = prop.indexOf('-', 1) + 1;
-        return prop.slice(0, separator);
-      } else {
-        return '';
-      }
+    // Return vendor prefix from property name, if it exists
+    //
+    //   vendor.prefix('-moz-box-sizing') #=> '-moz-'
+    //   vendor.prefix('box-sizing')      #=> ''
+    prefix: function (prop) {
+        if ( prop[0] == '-' ) {
+            var sep = prop.indexOf('-', 1);
+            return prop.substr(0, sep + 1);
+        } else {
+            return '';
+        }
     },
-    unprefixed: function(prop) {
-      var separator;
-      if (prop[0] === '-') {
-        separator = prop.indexOf('-', 1) + 1;
-        return prop.slice(separator);
-      } else {
-        return prop;
-      }
+
+    // Remove prefix from property name
+    //
+    //   vendor.prefix('-moz-box-sizing') #=> 'box-sizing'
+    //   vendor.prefix('box-sizing')      #=> 'box-sizing'
+    unprefixed: function (prop) {
+        if ( prop[0] == '-' ) {
+            var sep = prop.indexOf('-', 1);
+            return prop.substr(sep + 1);
+        } else {
+            return prop;
+        }
     }
-  };
 
-  module.exports = vendor;
+};
 
-}).call(this);
+module.exports = vendor;
 
-},{}],60:[function(_dereq_,module,exports){
-var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+},{}],95:[function(require,module,exports){
+(function (global){
+/*
+ * $Id: base64.js,v 2.15 2014/04/05 12:58:57 dankogai Exp dankogai $
+ *
+ *  Licensed under the MIT license.
+ *    http://opensource.org/licenses/mit-license
+ *
+ *  References:
+ *    http://en.wikipedia.org/wiki/Base64
+ */
 
-;(function (exports) {
-	'use strict';
+(function(global) {
+    'use strict';
+    // existing version for noConflict()
+    var _Base64 = global.Base64;
+    var version = "2.1.5";
+    // if node.js, we use Buffer
+    var buffer;
+    if (typeof module !== 'undefined' && module.exports) {
+        buffer = require('buffer').Buffer;
+    }
+    // constants
+    var b64chars
+        = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+    var b64tab = function(bin) {
+        var t = {};
+        for (var i = 0, l = bin.length; i < l; i++) t[bin.charAt(i)] = i;
+        return t;
+    }(b64chars);
+    var fromCharCode = String.fromCharCode;
+    // encoder stuff
+    var cb_utob = function(c) {
+        if (c.length < 2) {
+            var cc = c.charCodeAt(0);
+            return cc < 0x80 ? c
+                : cc < 0x800 ? (fromCharCode(0xc0 | (cc >>> 6))
+                                + fromCharCode(0x80 | (cc & 0x3f)))
+                : (fromCharCode(0xe0 | ((cc >>> 12) & 0x0f))
+                   + fromCharCode(0x80 | ((cc >>>  6) & 0x3f))
+                   + fromCharCode(0x80 | ( cc         & 0x3f)));
+        } else {
+            var cc = 0x10000
+                + (c.charCodeAt(0) - 0xD800) * 0x400
+                + (c.charCodeAt(1) - 0xDC00);
+            return (fromCharCode(0xf0 | ((cc >>> 18) & 0x07))
+                    + fromCharCode(0x80 | ((cc >>> 12) & 0x3f))
+                    + fromCharCode(0x80 | ((cc >>>  6) & 0x3f))
+                    + fromCharCode(0x80 | ( cc         & 0x3f)));
+        }
+    };
+    var re_utob = /[\uD800-\uDBFF][\uDC00-\uDFFFF]|[^\x00-\x7F]/g;
+    var utob = function(u) {
+        return u.replace(re_utob, cb_utob);
+    };
+    var cb_encode = function(ccc) {
+        var padlen = [0, 2, 1][ccc.length % 3],
+        ord = ccc.charCodeAt(0) << 16
+            | ((ccc.length > 1 ? ccc.charCodeAt(1) : 0) << 8)
+            | ((ccc.length > 2 ? ccc.charCodeAt(2) : 0)),
+        chars = [
+            b64chars.charAt( ord >>> 18),
+            b64chars.charAt((ord >>> 12) & 63),
+            padlen >= 2 ? '=' : b64chars.charAt((ord >>> 6) & 63),
+            padlen >= 1 ? '=' : b64chars.charAt(ord & 63)
+        ];
+        return chars.join('');
+    };
+    var btoa = global.btoa ? function(b) {
+        return global.btoa(b);
+    } : function(b) {
+        return b.replace(/[\s\S]{1,3}/g, cb_encode);
+    };
+    var _encode = buffer
+        ? function (u) { return (new buffer(u)).toString('base64') } 
+    : function (u) { return btoa(utob(u)) }
+    ;
+    var encode = function(u, urisafe) {
+        return !urisafe 
+            ? _encode(u)
+            : _encode(u).replace(/[+\/]/g, function(m0) {
+                return m0 == '+' ? '-' : '_';
+            }).replace(/=/g, '');
+    };
+    var encodeURI = function(u) { return encode(u, true) };
+    // decoder stuff
+    var re_btou = new RegExp([
+        '[\xC0-\xDF][\x80-\xBF]',
+        '[\xE0-\xEF][\x80-\xBF]{2}',
+        '[\xF0-\xF7][\x80-\xBF]{3}'
+    ].join('|'), 'g');
+    var cb_btou = function(cccc) {
+        switch(cccc.length) {
+        case 4:
+            var cp = ((0x07 & cccc.charCodeAt(0)) << 18)
+                |    ((0x3f & cccc.charCodeAt(1)) << 12)
+                |    ((0x3f & cccc.charCodeAt(2)) <<  6)
+                |     (0x3f & cccc.charCodeAt(3)),
+            offset = cp - 0x10000;
+            return (fromCharCode((offset  >>> 10) + 0xD800)
+                    + fromCharCode((offset & 0x3FF) + 0xDC00));
+        case 3:
+            return fromCharCode(
+                ((0x0f & cccc.charCodeAt(0)) << 12)
+                    | ((0x3f & cccc.charCodeAt(1)) << 6)
+                    |  (0x3f & cccc.charCodeAt(2))
+            );
+        default:
+            return  fromCharCode(
+                ((0x1f & cccc.charCodeAt(0)) << 6)
+                    |  (0x3f & cccc.charCodeAt(1))
+            );
+        }
+    };
+    var btou = function(b) {
+        return b.replace(re_btou, cb_btou);
+    };
+    var cb_decode = function(cccc) {
+        var len = cccc.length,
+        padlen = len % 4,
+        n = (len > 0 ? b64tab[cccc.charAt(0)] << 18 : 0)
+            | (len > 1 ? b64tab[cccc.charAt(1)] << 12 : 0)
+            | (len > 2 ? b64tab[cccc.charAt(2)] <<  6 : 0)
+            | (len > 3 ? b64tab[cccc.charAt(3)]       : 0),
+        chars = [
+            fromCharCode( n >>> 16),
+            fromCharCode((n >>>  8) & 0xff),
+            fromCharCode( n         & 0xff)
+        ];
+        chars.length -= [0, 0, 2, 1][padlen];
+        return chars.join('');
+    };
+    var atob = global.atob ? function(a) {
+        return global.atob(a);
+    } : function(a){
+        return a.replace(/[\s\S]{1,4}/g, cb_decode);
+    };
+    var _decode = buffer
+        ? function(a) { return (new buffer(a, 'base64')).toString() }
+    : function(a) { return btou(atob(a)) };
+    var decode = function(a){
+        return _decode(
+            a.replace(/[-_]/g, function(m0) { return m0 == '-' ? '+' : '/' })
+                .replace(/[^A-Za-z0-9\+\/]/g, '')
+        );
+    };
+    var noConflict = function() {
+        var Base64 = global.Base64;
+        global.Base64 = _Base64;
+        return Base64;
+    };
+    // export Base64
+    global.Base64 = {
+        VERSION: version,
+        atob: atob,
+        btoa: btoa,
+        fromBase64: decode,
+        toBase64: encode,
+        utob: utob,
+        encode: encode,
+        encodeURI: encodeURI,
+        btou: btou,
+        decode: decode,
+        noConflict: noConflict
+    };
+    // if ES5 is available, make Base64.extendString() available
+    if (typeof Object.defineProperty === 'function') {
+        var noEnum = function(v){
+            return {value:v,enumerable:false,writable:true,configurable:true};
+        };
+        global.Base64.extendString = function () {
+            Object.defineProperty(
+                String.prototype, 'fromBase64', noEnum(function () {
+                    return decode(this)
+                }));
+            Object.defineProperty(
+                String.prototype, 'toBase64', noEnum(function (urisafe) {
+                    return encode(this, urisafe)
+                }));
+            Object.defineProperty(
+                String.prototype, 'toBase64URI', noEnum(function () {
+                    return encode(this, true)
+                }));
+        };
+    }
+    // that's it!
+})(this);
 
-  var Arr = (typeof Uint8Array !== 'undefined')
-    ? Uint8Array
-    : Array
+if (this['Meteor']) {
+    Base64 = global.Base64; // for normal export in Meteor.js
+}
 
-	var ZERO   = '0'.charCodeAt(0)
-	var PLUS   = '+'.charCodeAt(0)
-	var SLASH  = '/'.charCodeAt(0)
-	var NUMBER = '0'.charCodeAt(0)
-	var LOWER  = 'a'.charCodeAt(0)
-	var UPPER  = 'A'.charCodeAt(0)
-
-	function decode (elt) {
-		var code = elt.charCodeAt(0)
-		if (code === PLUS)
-			return 62 // '+'
-		if (code === SLASH)
-			return 63 // '/'
-		if (code < NUMBER)
-			return -1 //no match
-		if (code < NUMBER + 10)
-			return code - NUMBER + 26 + 26
-		if (code < UPPER + 26)
-			return code - UPPER
-		if (code < LOWER + 26)
-			return code - LOWER + 26
-	}
-
-	function b64ToByteArray (b64) {
-		var i, j, l, tmp, placeHolders, arr
-
-		if (b64.length % 4 > 0) {
-			throw new Error('Invalid string. Length must be a multiple of 4')
-		}
-
-		// the number of equal signs (place holders)
-		// if there are two placeholders, than the two characters before it
-		// represent one byte
-		// if there is only one, then the three characters before it represent 2 bytes
-		// this is just a cheap hack to not do indexOf twice
-		var len = b64.length
-		placeHolders = '=' === b64.charAt(len - 2) ? 2 : '=' === b64.charAt(len - 1) ? 1 : 0
-
-		// base64 is 4/3 + up to two characters of the original data
-		arr = new Arr(b64.length * 3 / 4 - placeHolders)
-
-		// if there are placeholders, only get up to the last complete 4 chars
-		l = placeHolders > 0 ? b64.length - 4 : b64.length
-
-		var L = 0
-
-		function push (v) {
-			arr[L++] = v
-		}
-
-		for (i = 0, j = 0; i < l; i += 4, j += 3) {
-			tmp = (decode(b64.charAt(i)) << 18) | (decode(b64.charAt(i + 1)) << 12) | (decode(b64.charAt(i + 2)) << 6) | decode(b64.charAt(i + 3))
-			push((tmp & 0xFF0000) >> 16)
-			push((tmp & 0xFF00) >> 8)
-			push(tmp & 0xFF)
-		}
-
-		if (placeHolders === 2) {
-			tmp = (decode(b64.charAt(i)) << 2) | (decode(b64.charAt(i + 1)) >> 4)
-			push(tmp & 0xFF)
-		} else if (placeHolders === 1) {
-			tmp = (decode(b64.charAt(i)) << 10) | (decode(b64.charAt(i + 1)) << 4) | (decode(b64.charAt(i + 2)) >> 2)
-			push((tmp >> 8) & 0xFF)
-			push(tmp & 0xFF)
-		}
-
-		return arr
-	}
-
-	function uint8ToBase64 (uint8) {
-		var i,
-			extraBytes = uint8.length % 3, // if we have 1 byte left, pad 2 bytes
-			output = "",
-			temp, length
-
-		function encode (num) {
-			return lookup.charAt(num)
-		}
-
-		function tripletToBase64 (num) {
-			return encode(num >> 18 & 0x3F) + encode(num >> 12 & 0x3F) + encode(num >> 6 & 0x3F) + encode(num & 0x3F)
-		}
-
-		// go through the array every three bytes, we'll deal with trailing stuff later
-		for (i = 0, length = uint8.length - extraBytes; i < length; i += 3) {
-			temp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
-			output += tripletToBase64(temp)
-		}
-
-		// pad the end with zeros, but make sure to not forget the extra bytes
-		switch (extraBytes) {
-			case 1:
-				temp = uint8[uint8.length - 1]
-				output += encode(temp >> 2)
-				output += encode((temp << 4) & 0x3F)
-				output += '=='
-				break
-			case 2:
-				temp = (uint8[uint8.length - 2] << 8) + (uint8[uint8.length - 1])
-				output += encode(temp >> 10)
-				output += encode((temp >> 4) & 0x3F)
-				output += encode((temp << 2) & 0x3F)
-				output += '='
-				break
-		}
-
-		return output
-	}
-
-	module.exports.toByteArray = b64ToByteArray
-	module.exports.fromByteArray = uint8ToBase64
-}())
-
-},{}],61:[function(_dereq_,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"buffer":45}],96:[function(require,module,exports){
 /*
  * Copyright 2009-2011 Mozilla Foundation and contributors
  * Licensed under the New BSD license. See LICENSE.txt or:
  * http://opensource.org/licenses/BSD-3-Clause
  */
-exports.SourceMapGenerator = _dereq_('./source-map/source-map-generator').SourceMapGenerator;
-exports.SourceMapConsumer = _dereq_('./source-map/source-map-consumer').SourceMapConsumer;
-exports.SourceNode = _dereq_('./source-map/source-node').SourceNode;
+exports.SourceMapGenerator = require('./source-map/source-map-generator').SourceMapGenerator;
+exports.SourceMapConsumer = require('./source-map/source-map-consumer').SourceMapConsumer;
+exports.SourceNode = require('./source-map/source-node').SourceNode;
 
-},{"./source-map/source-map-consumer":66,"./source-map/source-map-generator":67,"./source-map/source-node":68}],62:[function(_dereq_,module,exports){
+},{"./source-map/source-map-consumer":101,"./source-map/source-map-generator":102,"./source-map/source-node":103}],97:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -5552,11 +13472,11 @@ exports.SourceNode = _dereq_('./source-map/source-node').SourceNode;
  * http://opensource.org/licenses/BSD-3-Clause
  */
 if (typeof define !== 'function') {
-    var define = _dereq_('amdefine')(module, _dereq_);
+    var define = require('amdefine')(module, require);
 }
-define(function (_dereq_, exports, module) {
+define(function (require, exports, module) {
 
-  var util = _dereq_('./util');
+  var util = require('./util');
 
   /**
    * A data structure which is a combination of an array and a set. Adding a new
@@ -5643,7 +13563,7 @@ define(function (_dereq_, exports, module) {
 
 });
 
-},{"./util":69,"amdefine":70}],63:[function(_dereq_,module,exports){
+},{"./util":104,"amdefine":105}],98:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -5681,11 +13601,11 @@ define(function (_dereq_, exports, module) {
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 if (typeof define !== 'function') {
-    var define = _dereq_('amdefine')(module, _dereq_);
+    var define = require('amdefine')(module, require);
 }
-define(function (_dereq_, exports, module) {
+define(function (require, exports, module) {
 
-  var base64 = _dereq_('./base64');
+  var base64 = require('./base64');
 
   // A single base 64 digit can contain 6 bits of data. For the base 64 variable
   // length quantities we use in the source map spec, the first bit is the sign,
@@ -5789,7 +13709,7 @@ define(function (_dereq_, exports, module) {
 
 });
 
-},{"./base64":64,"amdefine":70}],64:[function(_dereq_,module,exports){
+},{"./base64":99,"amdefine":105}],99:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -5797,9 +13717,9 @@ define(function (_dereq_, exports, module) {
  * http://opensource.org/licenses/BSD-3-Clause
  */
 if (typeof define !== 'function') {
-    var define = _dereq_('amdefine')(module, _dereq_);
+    var define = require('amdefine')(module, require);
 }
-define(function (_dereq_, exports, module) {
+define(function (require, exports, module) {
 
   var charToIntMap = {};
   var intToCharMap = {};
@@ -5833,7 +13753,7 @@ define(function (_dereq_, exports, module) {
 
 });
 
-},{"amdefine":70}],65:[function(_dereq_,module,exports){
+},{"amdefine":105}],100:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -5841,9 +13761,9 @@ define(function (_dereq_, exports, module) {
  * http://opensource.org/licenses/BSD-3-Clause
  */
 if (typeof define !== 'function') {
-    var define = _dereq_('amdefine')(module, _dereq_);
+    var define = require('amdefine')(module, require);
 }
-define(function (_dereq_, exports, module) {
+define(function (require, exports, module) {
 
   /**
    * Recursive implementation of binary search.
@@ -5916,7 +13836,7 @@ define(function (_dereq_, exports, module) {
 
 });
 
-},{"amdefine":70}],66:[function(_dereq_,module,exports){
+},{"amdefine":105}],101:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -5924,14 +13844,14 @@ define(function (_dereq_, exports, module) {
  * http://opensource.org/licenses/BSD-3-Clause
  */
 if (typeof define !== 'function') {
-    var define = _dereq_('amdefine')(module, _dereq_);
+    var define = require('amdefine')(module, require);
 }
-define(function (_dereq_, exports, module) {
+define(function (require, exports, module) {
 
-  var util = _dereq_('./util');
-  var binarySearch = _dereq_('./binary-search');
-  var ArraySet = _dereq_('./array-set').ArraySet;
-  var base64VLQ = _dereq_('./base64-vlq');
+  var util = require('./util');
+  var binarySearch = require('./binary-search');
+  var ArraySet = require('./array-set').ArraySet;
+  var base64VLQ = require('./base64-vlq');
 
   /**
    * A SourceMapConsumer instance represents a parsed source map which we can
@@ -6035,7 +13955,7 @@ define(function (_dereq_, exports, module) {
   Object.defineProperty(SourceMapConsumer.prototype, 'sources', {
     get: function () {
       return this._sources.toArray().map(function (s) {
-        return this.sourceRoot ? util.join(this.sourceRoot, s) : s;
+        return this.sourceRoot != null ? util.join(this.sourceRoot, s) : s;
       }, this);
     }
   });
@@ -6234,7 +14154,7 @@ define(function (_dereq_, exports, module) {
 
       if (mapping && mapping.generatedLine === needle.generatedLine) {
         var source = util.getArg(mapping, 'source', null);
-        if (source && this.sourceRoot) {
+        if (source != null && this.sourceRoot != null) {
           source = util.join(this.sourceRoot, source);
         }
         return {
@@ -6264,7 +14184,7 @@ define(function (_dereq_, exports, module) {
         return null;
       }
 
-      if (this.sourceRoot) {
+      if (this.sourceRoot != null) {
         aSource = util.relative(this.sourceRoot, aSource);
       }
 
@@ -6273,7 +14193,7 @@ define(function (_dereq_, exports, module) {
       }
 
       var url;
-      if (this.sourceRoot
+      if (this.sourceRoot != null
           && (url = util.urlParse(this.sourceRoot))) {
         // XXX: file:// URIs and absolute paths lead to unexpected behavior for
         // many users. We can help them out when they expect file:// URIs to
@@ -6316,7 +14236,7 @@ define(function (_dereq_, exports, module) {
         originalColumn: util.getArg(aArgs, 'column')
       };
 
-      if (this.sourceRoot) {
+      if (this.sourceRoot != null) {
         needle.source = util.relative(this.sourceRoot, needle.source);
       }
 
@@ -6378,7 +14298,7 @@ define(function (_dereq_, exports, module) {
       var sourceRoot = this.sourceRoot;
       mappings.map(function (mapping) {
         var source = mapping.source;
-        if (source && sourceRoot) {
+        if (source != null && sourceRoot != null) {
           source = util.join(sourceRoot, source);
         }
         return {
@@ -6396,7 +14316,7 @@ define(function (_dereq_, exports, module) {
 
 });
 
-},{"./array-set":62,"./base64-vlq":63,"./binary-search":65,"./util":69,"amdefine":70}],67:[function(_dereq_,module,exports){
+},{"./array-set":97,"./base64-vlq":98,"./binary-search":100,"./util":104,"amdefine":105}],102:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -6404,13 +14324,13 @@ define(function (_dereq_, exports, module) {
  * http://opensource.org/licenses/BSD-3-Clause
  */
 if (typeof define !== 'function') {
-    var define = _dereq_('amdefine')(module, _dereq_);
+    var define = require('amdefine')(module, require);
 }
-define(function (_dereq_, exports, module) {
+define(function (require, exports, module) {
 
-  var base64VLQ = _dereq_('./base64-vlq');
-  var util = _dereq_('./util');
-  var ArraySet = _dereq_('./array-set').ArraySet;
+  var base64VLQ = require('./base64-vlq');
+  var util = require('./util');
+  var ArraySet = require('./array-set').ArraySet;
 
   /**
    * An instance of the SourceMapGenerator represents a source map which is
@@ -6454,9 +14374,9 @@ define(function (_dereq_, exports, module) {
           }
         };
 
-        if (mapping.source) {
+        if (mapping.source != null) {
           newMapping.source = mapping.source;
-          if (sourceRoot) {
+          if (sourceRoot != null) {
             newMapping.source = util.relative(sourceRoot, newMapping.source);
           }
 
@@ -6465,7 +14385,7 @@ define(function (_dereq_, exports, module) {
             column: mapping.originalColumn
           };
 
-          if (mapping.name) {
+          if (mapping.name != null) {
             newMapping.name = mapping.name;
           }
         }
@@ -6474,7 +14394,7 @@ define(function (_dereq_, exports, module) {
       });
       aSourceMapConsumer.sources.forEach(function (sourceFile) {
         var content = aSourceMapConsumer.sourceContentFor(sourceFile);
-        if (content) {
+        if (content != null) {
           generator.setSourceContent(sourceFile, content);
         }
       });
@@ -6500,11 +14420,11 @@ define(function (_dereq_, exports, module) {
 
       this._validateMapping(generated, original, source, name);
 
-      if (source && !this._sources.has(source)) {
+      if (source != null && !this._sources.has(source)) {
         this._sources.add(source);
       }
 
-      if (name && !this._names.has(name)) {
+      if (name != null && !this._names.has(name)) {
         this._names.add(name);
       }
 
@@ -6524,18 +14444,18 @@ define(function (_dereq_, exports, module) {
   SourceMapGenerator.prototype.setSourceContent =
     function SourceMapGenerator_setSourceContent(aSourceFile, aSourceContent) {
       var source = aSourceFile;
-      if (this._sourceRoot) {
+      if (this._sourceRoot != null) {
         source = util.relative(this._sourceRoot, source);
       }
 
-      if (aSourceContent !== null) {
+      if (aSourceContent != null) {
         // Add the source content to the _sourcesContents map.
         // Create a new _sourcesContents map if the property is null.
         if (!this._sourcesContents) {
           this._sourcesContents = {};
         }
         this._sourcesContents[util.toSetString(source)] = aSourceContent;
-      } else {
+      } else if (this._sourcesContents) {
         // Remove the source file from the _sourcesContents map.
         // If the _sourcesContents map is empty, set the property to null.
         delete this._sourcesContents[util.toSetString(source)];
@@ -6563,46 +14483,47 @@ define(function (_dereq_, exports, module) {
    */
   SourceMapGenerator.prototype.applySourceMap =
     function SourceMapGenerator_applySourceMap(aSourceMapConsumer, aSourceFile, aSourceMapPath) {
+      var sourceFile = aSourceFile;
       // If aSourceFile is omitted, we will use the file property of the SourceMap
-      if (!aSourceFile) {
-        if (!aSourceMapConsumer.file) {
+      if (aSourceFile == null) {
+        if (aSourceMapConsumer.file == null) {
           throw new Error(
             'SourceMapGenerator.prototype.applySourceMap requires either an explicit source file, ' +
             'or the source map\'s "file" property. Both were omitted.'
           );
         }
-        aSourceFile = aSourceMapConsumer.file;
+        sourceFile = aSourceMapConsumer.file;
       }
       var sourceRoot = this._sourceRoot;
-      // Make "aSourceFile" relative if an absolute Url is passed.
-      if (sourceRoot) {
-        aSourceFile = util.relative(sourceRoot, aSourceFile);
+      // Make "sourceFile" relative if an absolute Url is passed.
+      if (sourceRoot != null) {
+        sourceFile = util.relative(sourceRoot, sourceFile);
       }
       // Applying the SourceMap can add and remove items from the sources and
       // the names array.
       var newSources = new ArraySet();
       var newNames = new ArraySet();
 
-      // Find mappings for the "aSourceFile"
+      // Find mappings for the "sourceFile"
       this._mappings.forEach(function (mapping) {
-        if (mapping.source === aSourceFile && mapping.originalLine) {
+        if (mapping.source === sourceFile && mapping.originalLine != null) {
           // Check if it can be mapped by the source map, then update the mapping.
           var original = aSourceMapConsumer.originalPositionFor({
             line: mapping.originalLine,
             column: mapping.originalColumn
           });
-          if (original.source !== null) {
+          if (original.source != null) {
             // Copy mapping
             mapping.source = original.source;
-            if (aSourceMapPath) {
+            if (aSourceMapPath != null) {
               mapping.source = util.join(aSourceMapPath, mapping.source)
             }
-            if (sourceRoot) {
+            if (sourceRoot != null) {
               mapping.source = util.relative(sourceRoot, mapping.source);
             }
             mapping.originalLine = original.line;
             mapping.originalColumn = original.column;
-            if (original.name !== null && mapping.name !== null) {
+            if (original.name != null && mapping.name != null) {
               // Only use the identifier name if it's an identifier
               // in both SourceMaps
               mapping.name = original.name;
@@ -6611,12 +14532,12 @@ define(function (_dereq_, exports, module) {
         }
 
         var source = mapping.source;
-        if (source && !newSources.has(source)) {
+        if (source != null && !newSources.has(source)) {
           newSources.add(source);
         }
 
         var name = mapping.name;
-        if (name && !newNames.has(name)) {
+        if (name != null && !newNames.has(name)) {
           newNames.add(name);
         }
 
@@ -6627,8 +14548,11 @@ define(function (_dereq_, exports, module) {
       // Copy sourcesContents of applied map.
       aSourceMapConsumer.sources.forEach(function (sourceFile) {
         var content = aSourceMapConsumer.sourceContentFor(sourceFile);
-        if (content) {
-          if (sourceRoot) {
+        if (content != null) {
+          if (aSourceMapPath != null) {
+            sourceFile = util.join(aSourceMapPath, sourceFile);
+          }
+          if (sourceRoot != null) {
             sourceFile = util.relative(sourceRoot, sourceFile);
           }
           this.setSourceContent(sourceFile, content);
@@ -6719,7 +14643,7 @@ define(function (_dereq_, exports, module) {
                                    - previousGeneratedColumn);
         previousGeneratedColumn = mapping.generatedColumn;
 
-        if (mapping.source) {
+        if (mapping.source != null) {
           result += base64VLQ.encode(this._sources.indexOf(mapping.source)
                                      - previousSource);
           previousSource = this._sources.indexOf(mapping.source);
@@ -6733,7 +14657,7 @@ define(function (_dereq_, exports, module) {
                                      - previousOriginalColumn);
           previousOriginalColumn = mapping.originalColumn;
 
-          if (mapping.name) {
+          if (mapping.name != null) {
             result += base64VLQ.encode(this._names.indexOf(mapping.name)
                                        - previousName);
             previousName = this._names.indexOf(mapping.name);
@@ -6750,7 +14674,7 @@ define(function (_dereq_, exports, module) {
         if (!this._sourcesContents) {
           return null;
         }
-        if (aSourceRoot) {
+        if (aSourceRoot != null) {
           source = util.relative(aSourceRoot, source);
         }
         var key = util.toSetString(source);
@@ -6768,12 +14692,14 @@ define(function (_dereq_, exports, module) {
     function SourceMapGenerator_toJSON() {
       var map = {
         version: this._version,
-        file: this._file,
         sources: this._sources.toArray(),
         names: this._names.toArray(),
         mappings: this._serializeMappings()
       };
-      if (this._sourceRoot) {
+      if (this._file != null) {
+        map.file = this._file;
+      }
+      if (this._sourceRoot != null) {
         map.sourceRoot = this._sourceRoot;
       }
       if (this._sourcesContents) {
@@ -6795,7 +14721,7 @@ define(function (_dereq_, exports, module) {
 
 });
 
-},{"./array-set":62,"./base64-vlq":63,"./util":69,"amdefine":70}],68:[function(_dereq_,module,exports){
+},{"./array-set":97,"./base64-vlq":98,"./util":104,"amdefine":105}],103:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -6803,12 +14729,19 @@ define(function (_dereq_, exports, module) {
  * http://opensource.org/licenses/BSD-3-Clause
  */
 if (typeof define !== 'function') {
-    var define = _dereq_('amdefine')(module, _dereq_);
+    var define = require('amdefine')(module, require);
 }
-define(function (_dereq_, exports, module) {
+define(function (require, exports, module) {
 
-  var SourceMapGenerator = _dereq_('./source-map-generator').SourceMapGenerator;
-  var util = _dereq_('./util');
+  var SourceMapGenerator = require('./source-map-generator').SourceMapGenerator;
+  var util = require('./util');
+
+  // Matches a Windows-style `\r\n` newline or a `\n` newline used by all other
+  // operating systems these days (capturing the result).
+  var REGEX_NEWLINE = /(\r?\n)/;
+
+  // Matches a Windows-style newline, or any character.
+  var REGEX_CHARACTER = /\r\n|[\s\S]/g;
 
   /**
    * SourceNodes provide a way to abstract over interpolating/concatenating
@@ -6825,10 +14758,10 @@ define(function (_dereq_, exports, module) {
   function SourceNode(aLine, aColumn, aSource, aChunks, aName) {
     this.children = [];
     this.sourceContents = {};
-    this.line = aLine === undefined ? null : aLine;
-    this.column = aColumn === undefined ? null : aColumn;
-    this.source = aSource === undefined ? null : aSource;
-    this.name = aName === undefined ? null : aName;
+    this.line = aLine == null ? null : aLine;
+    this.column = aColumn == null ? null : aColumn;
+    this.source = aSource == null ? null : aSource;
+    this.name = aName == null ? null : aName;
     if (aChunks != null) this.add(aChunks);
   }
 
@@ -6837,16 +14770,26 @@ define(function (_dereq_, exports, module) {
    *
    * @param aGeneratedCode The generated code
    * @param aSourceMapConsumer The SourceMap for the generated code
+   * @param aRelativePath Optional. The path that relative sources in the
+   *        SourceMapConsumer should be relative to.
    */
   SourceNode.fromStringWithSourceMap =
-    function SourceNode_fromStringWithSourceMap(aGeneratedCode, aSourceMapConsumer) {
+    function SourceNode_fromStringWithSourceMap(aGeneratedCode, aSourceMapConsumer, aRelativePath) {
       // The SourceNode we want to fill with the generated code
       // and the SourceMap
       var node = new SourceNode();
 
-      // The generated code
-      // Processed fragments are removed from this array.
-      var remainingLines = aGeneratedCode.split('\n');
+      // All even indices of this array are one line of the generated code,
+      // while all odd indices are the newlines between two adjacent lines
+      // (since `REGEX_NEWLINE` captures its match).
+      // Processed fragments are removed from this array, by calling `shiftNextLine`.
+      var remainingLines = aGeneratedCode.split(REGEX_NEWLINE);
+      var shiftNextLine = function() {
+        var lineContents = remainingLines.shift();
+        // The last line of a file might not have a newline.
+        var newLine = remainingLines.shift() || "";
+        return lineContents + newLine;
+      };
 
       // We need to remember the position of "remainingLines"
       var lastGeneratedLine = 1, lastGeneratedColumn = 0;
@@ -6863,7 +14806,7 @@ define(function (_dereq_, exports, module) {
           if (lastGeneratedLine < mapping.generatedLine) {
             var code = "";
             // Associate first line with "lastMapping"
-            addMappingWithCode(lastMapping, remainingLines.shift() + "\n");
+            addMappingWithCode(lastMapping, shiftNextLine());
             lastGeneratedLine++;
             lastGeneratedColumn = 0;
             // The remaining code is added without mapping
@@ -6887,7 +14830,7 @@ define(function (_dereq_, exports, module) {
         // to the SourceNode without any mapping.
         // Each line is added as separate string.
         while (lastGeneratedLine < mapping.generatedLine) {
-          node.add(remainingLines.shift() + "\n");
+          node.add(shiftNextLine());
           lastGeneratedLine++;
         }
         if (lastGeneratedColumn < mapping.generatedColumn) {
@@ -6902,18 +14845,19 @@ define(function (_dereq_, exports, module) {
       if (remainingLines.length > 0) {
         if (lastMapping) {
           // Associate the remaining code in the current line with "lastMapping"
-          var lastLine = remainingLines.shift();
-          if (remainingLines.length > 0) lastLine += "\n";
-          addMappingWithCode(lastMapping, lastLine);
+          addMappingWithCode(lastMapping, shiftNextLine());
         }
         // and add the remaining lines without any mapping
-        node.add(remainingLines.join("\n"));
+        node.add(remainingLines.join(""));
       }
 
       // Copy sourcesContent into SourceNode
       aSourceMapConsumer.sources.forEach(function (sourceFile) {
         var content = aSourceMapConsumer.sourceContentFor(sourceFile);
-        if (content) {
+        if (content != null) {
+          if (aRelativePath != null) {
+            sourceFile = util.join(aRelativePath, sourceFile);
+          }
           node.setSourceContent(sourceFile, content);
         }
       });
@@ -6924,9 +14868,12 @@ define(function (_dereq_, exports, module) {
         if (mapping === null || mapping.source === undefined) {
           node.add(code);
         } else {
+          var source = aRelativePath
+            ? util.join(aRelativePath, mapping.source)
+            : mapping.source;
           node.add(new SourceNode(mapping.originalLine,
                                   mapping.originalColumn,
-                                  mapping.source,
+                                  source,
                                   code,
                                   mapping.name));
         }
@@ -7146,8 +15093,8 @@ define(function (_dereq_, exports, module) {
         lastOriginalSource = null;
         sourceMappingActive = false;
       }
-      chunk.split('').forEach(function (ch, idx, array) {
-        if (ch === '\n') {
+      chunk.match(REGEX_CHARACTER).forEach(function (ch, idx, array) {
+        if (REGEX_NEWLINE.test(ch)) {
           generated.line++;
           generated.column = 0;
           // Mappings end at eol
@@ -7169,7 +15116,7 @@ define(function (_dereq_, exports, module) {
             });
           }
         } else {
-          generated.column++;
+          generated.column += ch.length;
         }
       });
     });
@@ -7184,7 +15131,7 @@ define(function (_dereq_, exports, module) {
 
 });
 
-},{"./source-map-generator":67,"./util":69,"amdefine":70}],69:[function(_dereq_,module,exports){
+},{"./source-map-generator":102,"./util":104,"amdefine":105}],104:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -7192,9 +15139,9 @@ define(function (_dereq_, exports, module) {
  * http://opensource.org/licenses/BSD-3-Clause
  */
 if (typeof define !== 'function') {
-    var define = _dereq_('amdefine')(module, _dereq_);
+    var define = require('amdefine')(module, require);
 }
-define(function (_dereq_, exports, module) {
+define(function (require, exports, module) {
 
   /**
    * This is a helper function for getting values from parameter/options
@@ -7330,6 +15277,12 @@ define(function (_dereq_, exports, module) {
    * - Joining for example 'http://' and 'www.example.com' is also supported.
    */
   function join(aRoot, aPath) {
+    if (aRoot === "") {
+      aRoot = ".";
+    }
+    if (aPath === "") {
+      aPath = ".";
+    }
     var aPathUrl = urlParse(aPath);
     var aRootUrl = urlParse(aRoot);
     if (aRootUrl) {
@@ -7367,6 +15320,31 @@ define(function (_dereq_, exports, module) {
   exports.join = join;
 
   /**
+   * Make a path relative to a URL or another path.
+   *
+   * @param aRoot The root path or URL.
+   * @param aPath The path or URL to be made relative to aRoot.
+   */
+  function relative(aRoot, aPath) {
+    if (aRoot === "") {
+      aRoot = ".";
+    }
+
+    aRoot = aRoot.replace(/\/$/, '');
+
+    // XXX: It is possible to remove this block, and the tests still pass!
+    var url = urlParse(aRoot);
+    if (aPath.charAt(0) == "/" && url && url.path == "/") {
+      return aPath.slice(1);
+    }
+
+    return aPath.indexOf(aRoot + '/') === 0
+      ? aPath.substr(aRoot.length + 1)
+      : aPath;
+  }
+  exports.relative = relative;
+
+  /**
    * Because behavior goes wacky when you set `__proto__` on objects, we
    * have to prefix all the strings in our set with an arbitrary character.
    *
@@ -7384,20 +15362,6 @@ define(function (_dereq_, exports, module) {
     return aStr.substr(1);
   }
   exports.fromSetString = fromSetString;
-
-  function relative(aRoot, aPath) {
-    aRoot = aRoot.replace(/\/$/, '');
-
-    var url = urlParse(aRoot);
-    if (aPath.charAt(0) == "/" && url && url.path == "/") {
-      return aPath.slice(1);
-    }
-
-    return aPath.indexOf(aRoot + '/') === 0
-      ? aPath.substr(aRoot.length + 1)
-      : aPath;
-  }
-  exports.relative = relative;
 
   function strcmp(aStr1, aStr2) {
     var s1 = aStr1 || "";
@@ -7488,7 +15452,7 @@ define(function (_dereq_, exports, module) {
 
 });
 
-},{"amdefine":70}],70:[function(_dereq_,module,exports){
+},{"amdefine":105}],105:[function(require,module,exports){
 (function (process,__filename){
 /** vim: et:ts=4:sw=4:sts=4
  * @license amdefine 0.1.0 Copyright (c) 2011, The Dojo Foundation All Rights Reserved.
@@ -7515,7 +15479,7 @@ function amdefine(module, requireFn) {
     var defineCache = {},
         loaderCache = {},
         alreadyCalled = false,
-        path = _dereq_('path'),
+        path = require('path'),
         makeRequire, stringRequire;
 
     /**
@@ -7790,7 +15754,6 @@ function amdefine(module, requireFn) {
 
 module.exports = amdefine;
 
-}).call(this,_dereq_("+xKvab"),"/../node_modules/postcss/node_modules/source-map/node_modules/amdefine/amdefine.js")
-},{"+xKvab":43,"path":42}]},{},[3])
-(3)
+}).call(this,require('_process'),"/../node_modules/postcss/node_modules/source-map/node_modules/amdefine/amdefine.js")
+},{"_process":50,"path":49}]},{},[1])(1)
 });
